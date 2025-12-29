@@ -27,6 +27,7 @@ export interface Scene {
   hasRandomName?: boolean;
   hasRandomCity?: boolean;
   hasRandomFileName?: boolean;
+  businessArea?: BusinessArea; // 业务领域限制（可选）
 }
 
 export interface SystemNarration {
@@ -302,14 +303,16 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [240, 520],
     numberSuffix: '',
-    soulText: '你和 12368 的关系\n比你和很多当事人都稳定'
+    soulText: '你和 12368 的关系\n比你和很多当事人都稳定',
+    businessArea: 'litigation' // 诉讼专属
   },
   {
     id: 'system_12368_hold_music',
     category: 'system_12368',
     template: '你已经记住了\n12368 的等待提示音',
     subtext: '甚至偶尔会哼出来',
-    soulText: '它不回你电话\n但它至少每天都在'
+    soulText: '它不回你电话\n但它至少每天都在',
+    businessArea: 'litigation' // 诉讼专属
   },
   {
     id: 'system_12368_connection',
@@ -318,7 +321,26 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [18, 36],
     numberSuffix: '',
-    subtext: '系统检测到你仍然会继续拨打'
+    subtext: '系统检测到你仍然会继续拨打',
+    businessArea: 'litigation' // 诉讼专属
+  },
+  {
+    id: 'system_ddcx_calls',
+    category: 'system_12368',
+    template: '你这一年拨打了 **{number}** 次 12368\n\n主要用于查询案件进度',
+    hasRandomNumber: true,
+    numberRange: [20, 80],
+    numberSuffix: '',
+    soulText: '非诉律师和 12368\n基本不打交道',
+    businessArea: 'non_litigation' // 非诉专属
+  },
+  {
+    id: 'system_ddcx_rarely',
+    category: 'system_12368',
+    template: '你几乎不拨打 12368\n\n因为你的工作\n主要是和交易对手、监管机构打交道',
+    subtext: '法院系统对你来说\n比较陌生',
+    soulText: '你的战场在谈判桌\n不在法庭',
+    businessArea: 'non_litigation' // 非诉专属
   },
 
   // ===== 深夜节点 =====
@@ -481,6 +503,54 @@ export const sceneLibrary: Scene[] = [
     numberSuffix: '',
     subtext: '有 {ratio}% 的时候发现字体变了',
     soulText: '然后重新转一遍'
+  },
+  // 非诉专属文档场景
+  {
+    id: 'documents_dd_due_diligence',
+    category: 'documents',
+    template: '你最熟悉的文档类型\n是尽职调查报告',
+    subtext: '你已经能闭着眼睛\n列出尽调清单的所有项目',
+    soulText: '有些目录\n你背得比自己电话号码还熟',
+    businessArea: 'non_litigation'
+  },
+  {
+    id: 'documents_dd_contract_review',
+    category: 'documents',
+    template: '你今年审查的合同\n加起来有 **{number}** 份',
+    hasRandomNumber: true,
+    numberRange: [80, 200],
+    numberSuffix: '',
+    subtext: '每份都有\n至少3个版本',
+    soulText: '你以为改完了\n客户说"再看看第12条"',
+    businessArea: 'non_litigation'
+  },
+  {
+    id: 'documents_dd_changes',
+    category: 'documents',
+    template: '你最怕听到的一句话：\n\n"这个条款我们再讨论一下"',
+    subtext: '通常意味着\n还要再开3次会',
+    soulText: '讨论不是结束\n是新一轮修改的开始',
+    businessArea: 'non_litigation'
+  },
+  // 诉讼专属文档场景
+  {
+    id: 'documents_litigation_filing',
+    category: 'documents',
+    template: '你最熟悉的操作\n是在 deadline 当天\n提交立案材料',
+    subtext: '法院的立案庭\n比你家还熟悉',
+    soulText: '有些窗口的办事员\n已经认识你了',
+    businessArea: 'litigation'
+  },
+  {
+    id: 'documents_litigation_evidence',
+    category: 'documents',
+    template: '你今年整理的\n证据清单有 **{number}** 份',
+    hasRandomNumber: true,
+    numberRange: [50, 150],
+    numberSuffix: '',
+    subtext: '每一份都要\n编页码、做目录',
+    soulText: '证据组织得好\n不一定能赢\n但不组织肯定输',
+    businessArea: 'litigation'
   },
 
   // ===== 时间错乱 =====
@@ -829,6 +899,17 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
 
   const businessArea = userOptions?.businessArea || 'random';
 
+  // 辅助函数：过滤适合当前业务领域的场景
+  const filterScenesByBusinessArea = (scenes: Scene[]): Scene[] => {
+    if (businessArea === 'random') {
+      return scenes;
+    }
+    // 如果指定了业务领域，只返回没有限制或匹配该领域的场景
+    return scenes.filter(scene =>
+      !scene.businessArea || scene.businessArea === businessArea || scene.businessArea === 'random'
+    );
+  };
+
   // 必选场景类别（各选1个）
   const mustHaveCategories: SceneCategory[] = ['system_12368', 'late_night', 'documents'];
 
@@ -839,7 +920,7 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
 
   // 从必选类别各选1个
   mustHaveCategories.forEach(category => {
-    const categoryScenes = sceneLibrary.filter(s => s.category === category);
+    const categoryScenes = filterScenesByBusinessArea(sceneLibrary.filter(s => s.category === category));
     const scene = randomFromArray(categoryScenes);
     selectedScenes.push(generateSceneData(scene, selectedCity, businessArea));
   });
@@ -850,7 +931,7 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
 
   for (let i = 0; i < Math.min(optionalCount, shuffledOptional.length); i++) {
     const category = shuffledOptional[i];
-    const categoryScenes = sceneLibrary.filter(s => s.category === category);
+    const categoryScenes = filterScenesByBusinessArea(sceneLibrary.filter(s => s.category === category));
 
     // 苏州彩蛋：如果是苏州且选择了 travel 类别，必定显示"苏州梅友机场"彩蛋
     if (category === 'travel' && selectedCity === '苏州') {
