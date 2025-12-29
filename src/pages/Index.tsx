@@ -120,7 +120,8 @@ const Index = () => {
     // Last page: Conclusion
     return (
       <ConclusionPage 
-        narration={report.systemNarration} 
+        narration={report.systemNarration}
+        conclusion={report.conclusion}
         onRestart={handleRestart} 
       />
     );

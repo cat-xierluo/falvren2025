@@ -1,21 +1,21 @@
 import { motion } from 'framer-motion';
 import { Share2, RotateCcw } from 'lucide-react';
-import { SystemNarration } from '@/lib/sceneLibrary';
+import { SystemNarration, Conclusion } from '@/lib/sceneLibrary';
 import wechatQr from '@/assets/wechat-qr.png';
 
 interface ConclusionPageProps {
   narration: SystemNarration;
+  conclusion: Conclusion;
   onRestart: () => void;
 }
 
-export function ConclusionPage({ narration, onRestart }: ConclusionPageProps) {
+export function ConclusionPage({ narration, conclusion, onRestart }: ConclusionPageProps) {
   const handleShare = async () => {
     const shareText = `2025 法律人年度报告
 
 年终结论：
-你没有热爱法律
-你只是比很多人
-更能忍受复杂、模糊和不被回应
+${conclusion.mainText}
+${conclusion.subText.replace(/\n/g, '')}
 
 ${narration.text.replace(/\n/g, ' ')}
 
@@ -68,11 +68,10 @@ ${narration.text.replace(/\n/g, ' ')}
         className="flex-1 flex flex-col justify-center text-center min-h-0"
       >
         <p className="text-xl sm:text-2xl md:text-3xl font-light text-foreground leading-relaxed">
-          你没有热爱法律
+          {conclusion.mainText}
         </p>
-        <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed mt-2 sm:mt-3">
-          你只是比很多人<br />
-          更能忍受复杂、模糊和不被回应
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed mt-2 sm:mt-3 whitespace-pre-line">
+          {conclusion.subText}
         </p>
         
         {/* Divider line */}
