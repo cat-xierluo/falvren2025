@@ -6,33 +6,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 90%;
+    --background: 240 10% 4%;
+    --foreground: 0 0% 92%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 90%;
+    --card: 240 8% 8%;
+    --card-foreground: 0 0% 92%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 90%;
+    --popover: 240 8% 8%;
+    --popover-foreground: 0 0% 92%;
 
     --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 4%;
+    --primary-foreground: 240 10% 4%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 240 6% 14%;
+    --secondary-foreground: 0 0% 92%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 55%;
+    --muted: 240 5% 18%;
+    --muted-foreground: 240 5% 55%;
 
-    --accent: 220 15% 25%;
-    --accent-foreground: 0 0% 90%;
+    --accent: 250 30% 35%;
+    --accent-foreground: 0 0% 92%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 0 0% 40%;
+    --border: 240 6% 20%;
+    --input: 240 6% 20%;
+    --ring: 250 30% 50%;
 
     --radius: 0.5rem;
 
@@ -41,8 +41,18 @@
     --highlight-foreground: 0 0% 4%;
     
     --data-primary: 0 0% 100%;
-    --data-secondary: 0 0% 65%;
+    --data-secondary: 240 5% 65%;
     --data-accent: 200 60% 60%;
+    
+    /* Gradient colors */
+    --gradient-start: 260 50% 20%;
+    --gradient-mid: 240 40% 12%;
+    --gradient-end: 220 35% 8%;
+    
+    /* Glow colors */
+    --glow-purple: 270 60% 50%;
+    --glow-blue: 220 70% 50%;
+    --glow-teal: 180 60% 40%;
     
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -52,8 +62,8 @@
   }
 
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 90%;
+    --background: 240 10% 4%;
+    --foreground: 0 0% 92%;
   }
 }
 
@@ -141,6 +151,74 @@
   .progress-fill {
     @apply h-full bg-gradient-to-r from-muted-foreground/50 to-muted-foreground rounded-full transition-all duration-1000;
   }
+
+  /* Background with gradient and glow effects */
+  .bg-gradient-dark {
+    background: 
+      radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--glow-purple) / 0.15), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 50%, hsl(var(--glow-blue) / 0.1), transparent),
+      radial-gradient(ellipse 50% 30% at 0% 80%, hsl(var(--glow-teal) / 0.08), transparent),
+      linear-gradient(180deg, 
+        hsl(var(--gradient-start)) 0%, 
+        hsl(var(--gradient-mid)) 40%, 
+        hsl(var(--gradient-end)) 100%
+      );
+  }
+
+  /* Subtle noise texture overlay */
+  .bg-noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Animated gradient orbs */
+  .glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .glow-orb-1 {
+    width: 300px;
+    height: 300px;
+    background: hsl(var(--glow-purple) / 0.3);
+    top: -10%;
+    left: 20%;
+    animation-delay: 0s;
+  }
+
+  .glow-orb-2 {
+    width: 250px;
+    height: 250px;
+    background: hsl(var(--glow-blue) / 0.25);
+    bottom: 10%;
+    right: -5%;
+    animation-delay: -7s;
+  }
+
+  .glow-orb-3 {
+    width: 200px;
+    height: 200px;
+    background: hsl(var(--glow-teal) / 0.2);
+    bottom: 30%;
+    left: -10%;
+    animation-delay: -14s;
+  }
+
+  /* Grid pattern overlay */
+  .bg-grid {
+    background-image: 
+      linear-gradient(to right, hsl(var(--border) / 0.3) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
 }
 
 @layer utilities {
@@ -193,6 +271,30 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(10px, -20px) scale(1.05);
+  }
+  50% {
+    transform: translate(-5px, 10px) scale(0.95);
+  }
+  75% {
+    transform: translate(-15px, -10px) scale(1.02);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
   }
 }
 
