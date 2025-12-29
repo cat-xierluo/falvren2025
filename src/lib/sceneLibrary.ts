@@ -1,15 +1,18 @@
 // Complete scene library for the lawyer annual report
 
-export type SceneCategory = 
-  | 'phone' 
-  | 'system_12368' 
-  | 'late_night' 
-  | 'travel' 
-  | 'documents' 
-  | 'time_disorder' 
-  | 'industry_jargon' 
-  | 'cognition_change' 
+export type SceneCategory =
+  | 'phone'
+  | 'system_12368'
+  | 'late_night'
+  | 'travel'
+  | 'documents'
+  | 'time_disorder'
+  | 'industry_jargon'
+  | 'cognition_change'
   | 'identity_overflow';
+
+export type BusinessArea = 'litigation' | 'non_litigation' | 'random';
+export type Gender = 'male' | 'female' | 'random';
 
 export interface Scene {
   id: string;
@@ -61,6 +64,166 @@ const emailSubjects = [
   '尽职调查报告', '法律意见书（第三稿）', '合同修改意见',
   '关于XX项目的初步分析', '补充材料清单', '会议纪要及后续安排',
   '紧急 - 请审阅', '回复：关于合同条款的疑问'
+];
+
+// ========== 用户选择数据 ==========
+
+// 所有可用城市
+export const availableCities = [
+  '北京', '上海', '深圳', '广州', '杭州', '成都',
+  '苏州', '南京', '武汉', '西安', '重庆', '天津',
+  '长沙', '青岛', '大连', '厦门', '昆明', '贵阳'
+];
+
+// 城市特色内容
+export const cityFeatures: Record<string, {
+  drink?: string;          // 特色饮品
+  food?: string;           // 特色食物
+  spot?: string;           // 特色地点
+  weather?: string;        // 天气特征
+  transportation?: string; // 交通特色
+  easterEgg?: string;      // 彩蛋
+}> = {
+  '北京': {
+    drink: '豆汁',
+    food: '烤鸭',
+    spot: '三里屯',
+    weather: '干燥多风',
+    transportation: '堵车'
+  },
+  '上海': {
+    drink: '咖啡',
+    food: '生煎包',
+    spot: '外滩',
+    weather: '湿润多雨',
+    transportation: '地铁'
+  },
+  '深圳': {
+    drink: '奶茶',
+    food: '早茶点心',
+    spot: '深圳湾',
+    weather: '温暖湿润',
+    transportation: '地铁'
+  },
+  '广州': {
+    drink: '凉茶',
+    food: '早茶',
+    spot: '珠江新城',
+    weather: '湿热',
+    transportation: '地铁'
+  },
+  '杭州': {
+    drink: '龙井茶',
+    food: '西湖醋鱼',
+    spot: '西湖',
+    weather: '温和',
+    transportation: '共享单车'
+  },
+  '成都': {
+    drink: '盖碗茶',
+    food: '火锅',
+    spot: '春熙路',
+    weather: '多云雾',
+    transportation: '地铁'
+  },
+  '苏州': {
+    drink: '碧螺春',
+    food: '苏式面',
+    spot: '平江路',
+    weather: '温和',
+    transportation: '地铁',
+    easterEgg: '苏州梅友机场'
+  },
+  '南京': {
+    drink: '鸭血粉丝汤',
+    food: '盐水鸭',
+    spot: '夫子庙',
+    weather: '四季分明',
+    transportation: '地铁'
+  },
+  '武汉': {
+    drink: '热干面配豆浆',
+    food: '热干面',
+    spot: '江汉路',
+    weather: '火炉城市',
+    transportation: '地铁'
+  },
+  '西安': {
+    drink: '冰峰',
+    food: '肉夹馍',
+    spot: '大雁塔',
+    weather: '干燥',
+    transportation: '地铁'
+  },
+  '重庆': {
+    drink: '老鹰茶',
+    food: '小面',
+    spot: '解放碑',
+    weather: '湿热多雾',
+    transportation: '轻轨穿楼'
+  },
+  '天津': {
+    drink: '面茶',
+    food: '煎饼果子',
+    spot: '五大道',
+    weather: '多风',
+    transportation: '地铁'
+  },
+  '长沙': {
+    drink: '奶茶',
+    food: '臭豆腐',
+    spot: '五一广场',
+    weather: '湿热',
+    transportation: '地铁'
+  },
+  '青岛': {
+    drink: '啤酒',
+    food: '海鲜',
+    spot: '五四广场',
+    weather: '海洋性',
+    transportation: '地铁'
+  },
+  '大连': {
+    drink: '海鲜粥',
+    food: '海鲜',
+    spot: '星海广场',
+    weather: '海洋性',
+    transportation: '轻轨'
+  },
+  '厦门': {
+    drink: '铁观音',
+    food: '沙茶面',
+    spot: '鼓浪屿',
+    weather: '温暖湿润',
+    transportation: 'BRT'
+  },
+  '昆明': {
+    drink: '普洱茶',
+    food: '过桥米线',
+    spot: '滇池',
+    weather: '四季如春',
+    transportation: '地铁'
+  },
+  '贵阳': {
+    drink: '折耳根水',
+    food: '丝娃娃',
+    spot: '甲秀楼',
+    weather: '凉爽',
+    transportation: '地铁'
+  }
+};
+
+// 业务领域相关文件名
+const litigationFilePrefixes = [
+  '起诉状', '答辩状', '代理词', '证据清单', '质证意见',
+  '诉讼策略分析', '庭审提纲', '上诉状', '再审申请书',
+  '保全申请书', '执行申请书', '管辖权异议', '回避申请书'
+];
+
+const nonLitigationFilePrefixes = [
+  '尽职调查报告', '法律意见书', '合同审查意见', '股权转让协议',
+  '投资协议', '合规报告', '公司章程', '股东会决议',
+  '并购方案', '尽职调查清单', '交易结构设计', '法律备忘录'
 ];
 
 // ========== 场景库 ==========
@@ -174,6 +337,13 @@ export const sceneLibrary: Scene[] = [
     soulText: '有些夜晚\n不属于今天\n也不属于明天'
   },
   {
+    id: 'late_night_drink',
+    category: 'late_night',
+    template: '你在深夜喝过最多的是\n\n**{cityDrink}**',
+    subtext: '通常在加班时',
+    soulText: '它让你保持清醒\n或者至少看起来清醒'
+  },
+  {
     id: 'late_night_delivery',
     category: 'late_night',
     template: '你在凌晨点过 **{number}** 次外卖',
@@ -202,6 +372,13 @@ export const sceneLibrary: Scene[] = [
     numberSuffix: '',
     hasRandomCity: true,
     soulText: '你对城市的记忆\n主要来自：高铁站和酒店'
+  },
+  {
+    id: 'travel_suzhou_easter_egg',
+    category: 'travel',
+    template: '你今年最常吐槽的是：\n\n**{easterEgg}**',
+    subtext: '没有机场的苏州人\n都知道这是什么意思',
+    soulText: '有些城市\n没有机场\n但有段子'
   },
   {
     id: 'travel_hotel_work',
@@ -592,8 +769,24 @@ function generateRandomTime(): string {
   return `${hour}:${minute.toString().padStart(2, '0')}`;
 }
 
-function generateRandomFileName(): string {
-  return randomFromArray(fileNamePrefixes) + randomFromArray(fileNameSuffixes) + '.docx';
+function generateRandomFileName(businessArea: BusinessArea = 'random'): string {
+  // 根据业务领域选择不同的文件名前缀
+  let prefixes = fileNamePrefixes;
+
+  if (businessArea === 'litigation') {
+    prefixes = litigationFilePrefixes;
+  } else if (businessArea === 'non_litigation') {
+    prefixes = nonLitigationFilePrefixes;
+  } else {
+    // 随机选择
+    prefixes = Math.random() > 0.5
+      ? [...litigationFilePrefixes, ...nonLitigationFilePrefixes]
+      : fileNamePrefixes;
+  }
+
+  const prefix = randomFromArray(prefixes);
+  const suffix = randomFromArray(fileNameSuffixes);
+  return `${prefix}${suffix}.docx`;
 }
 
 // ========== 场景生成器 ==========
@@ -605,6 +798,10 @@ export interface GeneratedScene {
   randomName?: string;
   randomCity?: string;
   randomFileName?: string;
+  cityDrink?: string;        // 城市特色饮品
+  cityFood?: string;         // 城市特色食物
+  citySpot?: string;         // 城市特色地点
+  easterEgg?: string;        // 彩蛋
   confidenceStart?: number;
   confidenceEnd?: number;
 }
@@ -618,40 +815,63 @@ export interface GeneratedReport {
   trustInNextYear: number;
 }
 
-export function generateReport(): GeneratedReport {
+export interface UserOptions {
+  city?: string;
+  gender?: Gender;
+  businessArea?: BusinessArea;
+}
+
+export function generateReport(userOptions?: UserOptions): GeneratedReport {
+  // 解析用户选项
+  const selectedCity = userOptions?.city && userOptions.city !== '随机'
+    ? userOptions.city
+    : randomFromArray(availableCities);
+
+  const businessArea = userOptions?.businessArea || 'random';
+
   // 必选场景类别（各选1个）
   const mustHaveCategories: SceneCategory[] = ['system_12368', 'late_night', 'documents'];
-  
+
   // 可选场景类别
   const optionalCategories: SceneCategory[] = ['phone', 'travel', 'time_disorder', 'industry_jargon', 'cognition_change', 'identity_overflow'];
-  
+
   const selectedScenes: GeneratedScene[] = [];
-  
+
   // 从必选类别各选1个
   mustHaveCategories.forEach(category => {
     const categoryScenes = sceneLibrary.filter(s => s.category === category);
     const scene = randomFromArray(categoryScenes);
-    selectedScenes.push(generateSceneData(scene));
+    selectedScenes.push(generateSceneData(scene, selectedCity, businessArea));
   });
-  
+
   // 从可选类别随机选4-5个（确保类别不重复）
   const shuffledOptional = shuffleArray(optionalCategories);
   const optionalCount = randomBetween(4, 5);
-  
+
   for (let i = 0; i < Math.min(optionalCount, shuffledOptional.length); i++) {
     const category = shuffledOptional[i];
     const categoryScenes = sceneLibrary.filter(s => s.category === category);
+
+    // 苏州彩蛋：如果是苏州且选择了 travel 类别，必定显示"苏州梅友机场"彩蛋
+    if (category === 'travel' && selectedCity === '苏州') {
+      const easterEggScene = sceneLibrary.find(s => s.id === 'travel_suzhou_easter_egg');
+      if (easterEggScene) {
+        selectedScenes.push(generateSceneData(easterEggScene, selectedCity, businessArea));
+        continue;
+      }
+    }
+
     const scene = randomFromArray(categoryScenes);
-    selectedScenes.push(generateSceneData(scene));
+    selectedScenes.push(generateSceneData(scene, selectedCity, businessArea));
   }
-  
+
   // 打乱顺序（但保持12368在前面）
   const first = selectedScenes[0];
   const rest = shuffleArray(selectedScenes.slice(1));
-  
+
   // 随机选择一个年终结论
   const conclusion = randomFromArray(conclusions);
-  
+
   return {
     scenes: [first, ...rest],
     systemNarration: randomFromArray(systemNarrations),
@@ -662,66 +882,106 @@ export function generateReport(): GeneratedReport {
   };
 }
 
-function generateSceneData(scene: Scene): GeneratedScene {
+function generateSceneData(
+  scene: Scene,
+  city: string,
+  businessArea: BusinessArea
+): GeneratedScene {
   const generated: GeneratedScene = { scene };
-  
+
   if (scene.hasRandomNumber && scene.numberRange) {
     generated.randomNumber = randomBetween(scene.numberRange[0], scene.numberRange[1]);
   }
-  
+
   if (scene.hasRandomTime) {
     generated.randomTime = generateRandomTime();
   }
-  
+
   if (scene.hasRandomName) {
     generated.randomName = randomFromArray(names);
   }
-  
+
   if (scene.hasRandomCity) {
-    generated.randomCity = randomFromArray(cities);
+    // 使用传入的城市参数
+    generated.randomCity = city;
   }
-  
+
   if (scene.hasRandomFileName) {
-    generated.randomFileName = generateRandomFileName();
+    generated.randomFileName = generateRandomFileName(businessArea);
   }
-  
+
+  // 添加城市特色内容
+  const cityFeature = cityFeatures[city];
+  if (cityFeature) {
+    // 根据场景 ID 决定添加哪些城市特色
+    if (scene.id === 'late_night_drink' && cityFeature.drink) {
+      generated.cityDrink = cityFeature.drink;
+    }
+    if (scene.template.includes('{cityFood}') && cityFeature.food) {
+      generated.cityFood = cityFeature.food;
+    }
+    if (scene.template.includes('{citySpot}') && cityFeature.spot) {
+      generated.citySpot = cityFeature.spot;
+    }
+    // 彩蛋支持
+    if (scene.template.includes('{easterEgg}') && cityFeature.easterEgg) {
+      generated.easterEgg = cityFeature.easterEgg;
+    }
+  }
+
   if (scene.id === 'cognition_confidence') {
     generated.confidenceStart = randomBetween(72, 85);
     generated.confidenceEnd = randomBetween(35, 48);
   }
-  
+
   return generated;
 }
 
 // 格式化场景文本
 export function formatSceneText(generated: GeneratedScene): string {
   let text = generated.scene.template;
-  
+
   if (generated.randomNumber !== undefined) {
     text = text.replace('{number}', generated.randomNumber.toString());
   }
-  
+
   if (generated.randomTime) {
     text = text.replace('{time}', generated.randomTime);
   }
-  
+
   if (generated.randomName) {
     text = text.replace('{name}', generated.randomName);
   }
-  
+
   if (generated.randomCity) {
     text = text.replace('{city}', generated.randomCity);
   }
-  
+
   if (generated.randomFileName) {
     text = text.replace('{filename}', generated.randomFileName);
   }
-  
+
+  if (generated.cityDrink) {
+    text = text.replace('{cityDrink}', generated.cityDrink);
+  }
+
+  if (generated.cityFood) {
+    text = text.replace('{cityFood}', generated.cityFood);
+  }
+
+  if (generated.citySpot) {
+    text = text.replace('{citySpot}', generated.citySpot);
+  }
+
+  if (generated.easterEgg) {
+    text = text.replace('{easterEgg}', generated.easterEgg);
+  }
+
   if (generated.confidenceStart !== undefined && generated.confidenceEnd !== undefined) {
     text = text.replace('{start}', generated.confidenceStart.toString());
     text = text.replace('{end}', generated.confidenceEnd.toString());
   }
-  
+
   return text;
 }
 

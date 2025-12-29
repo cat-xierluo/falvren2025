@@ -8,24 +8,26 @@ import { ConclusionPage } from '@/components/report/ConclusionPage';
 import { SharePage } from '@/components/report/SharePage';
 import { PromotePage } from '@/components/report/PromotePage';
 import { SaveButton } from '@/components/report/SaveButton';
-import { generateReport, GeneratedReport } from '@/lib/sceneLibrary';
+import { generateReport, GeneratedReport, UserOptions } from '@/lib/sceneLibrary';
 
 const Index = () => {
   const [started, setStarted] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const [reportKey, setReportKey] = useState(0);
+  const [userOptions, setUserOptions] = useState<UserOptions | undefined>(undefined);
   const pageRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
-  // Generate new report when key changes
-  const report: GeneratedReport = useMemo(() => generateReport(), [reportKey]);
+  // Generate new report when key changes or user options change
+  const report: GeneratedReport = useMemo(() => generateReport(userOptions), [reportKey, userOptions]);
 
   // Total pages = 1 (identity) + scenes count + 1 (conclusion) + 1 (share) + 1 (promote)
   const totalPages = 1 + report.scenes.length + 1 + 1 + 1;
 
-  const handleStart = useCallback(() => {
+  const handleStart = useCallback((options?: UserOptions) => {
+    setUserOptions(options);
     setStarted(true);
     setCurrentPage(0);
     setDirection(1);
