@@ -57,9 +57,9 @@ export default {
           accent: "hsl(var(--data-accent))",
         },
         glow: {
-          purple: "hsl(var(--glow-purple))",
-          blue: "hsl(var(--glow-blue))",
-          teal: "hsl(var(--glow-teal))",
+          amber: "hsl(var(--glow-amber))",
+          orange: "hsl(var(--glow-orange))",
+          rose: "hsl(var(--glow-rose))",
         },
       },
       fontFamily: {
