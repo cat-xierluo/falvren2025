@@ -496,6 +496,77 @@ export const systemNarrations: SystemNarration[] = [
   { id: 'narration_6', text: '你看到的不是数据\n是一年的切片' },
 ];
 
+// ========== 年终结论池 ==========
+
+export interface Conclusion {
+  id: string;
+  mainText: string;
+  subText: string;
+}
+
+export const conclusions: Conclusion[] = [
+  {
+    id: 'conclusion_1',
+    mainText: '你没有热爱法律',
+    subText: '你只是比很多人\n更能忍受复杂、模糊和不被回应'
+  },
+  {
+    id: 'conclusion_2',
+    mainText: '你不是变冷漠了',
+    subText: '你只是学会了\n在情绪和规则之间选择后者'
+  },
+  {
+    id: 'conclusion_3',
+    mainText: '你没有麻木',
+    subText: '你只是把敏感\n藏在了专业的外壳里'
+  },
+  {
+    id: 'conclusion_4',
+    mainText: '你不是不累',
+    subText: '你只是习惯了\n把疲惫当成工作的一部分'
+  },
+  {
+    id: 'conclusion_5',
+    mainText: '你没有变强',
+    subText: '你只是知道了\n哪些事不值得再期待'
+  },
+  {
+    id: 'conclusion_6',
+    mainText: '你不是无所谓',
+    subText: '你只是学会了\n在失望之前降低预期'
+  },
+  {
+    id: 'conclusion_7',
+    mainText: '你没有看透一切',
+    subText: '你只是比去年\n更清楚什么不会改变'
+  },
+  {
+    id: 'conclusion_8',
+    mainText: '你不是天生适合这行',
+    subText: '你只是比很多人\n更能接受"没有标准答案"'
+  },
+  {
+    id: 'conclusion_9',
+    mainText: '你没有放弃理想',
+    subText: '你只是把它\n放在了更安全的地方'
+  },
+  {
+    id: 'conclusion_10',
+    mainText: '你不是不在乎了',
+    subText: '你只是学会了\n选择性在乎'
+  },
+  {
+    id: 'conclusion_11',
+    mainText: '你没有变得世故',
+    subText: '你只是知道了\n哪些话不用再说第二遍'
+  },
+  {
+    id: 'conclusion_12',
+    mainText: '你不是失去热情',
+    subText: '你只是把热情\n分配给了更值得的事'
+  },
+];
+
 // ========== 工具函数 ==========
 
 function randomBetween(min: number, max: number): number {
@@ -541,6 +612,7 @@ export interface GeneratedScene {
 export interface GeneratedReport {
   scenes: GeneratedScene[];
   systemNarration: SystemNarration;
+  conclusion: Conclusion;
   workDays: number;
   fullRestWeekends: number;
   trustInNextYear: number;
@@ -577,9 +649,13 @@ export function generateReport(): GeneratedReport {
   const first = selectedScenes[0];
   const rest = shuffleArray(selectedScenes.slice(1));
   
+  // 随机选择一个年终结论
+  const conclusion = randomFromArray(conclusions);
+  
   return {
     scenes: [first, ...rest],
     systemNarration: randomFromArray(systemNarrations),
+    conclusion,
     workDays: randomBetween(295, 335),
     fullRestWeekends: randomBetween(1, 4) + (Math.random() > 0.5 ? 0.5 : 0),
     trustInNextYear: randomBetween(8, 18),
