@@ -152,7 +152,12 @@ const Index = () => {
 
   return (
     <>
-      <SaveButton pageRef={pageRef} currentPage={currentPage} totalPages={totalPages} />
+      <SaveButton
+        pageRef={pageRef}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        report={report}
+      />
       <div
         ref={pageRef}
         className="relative"

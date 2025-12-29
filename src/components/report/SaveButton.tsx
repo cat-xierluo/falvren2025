@@ -1,29 +1,32 @@
 import { useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import { Download, Check } from 'lucide-react';
 import html2canvas from 'html2canvas';
+import { SaveCard } from './SaveCard';
+import { GeneratedReport } from '@/lib/sceneLibrary';
 
 interface SaveButtonProps {
   pageRef: React.RefObject<HTMLDivElement>;
   currentPage: number;
   totalPages: number;
+  report: GeneratedReport;
 }
 
-export function SaveButton({ pageRef }: SaveButtonProps) {
+export function SaveButton({ pageRef, currentPage, totalPages, report }: SaveButtonProps) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const handleSave = async () => {
-    if (!pageRef.current || saving) return;
+    if (saving) return;
 
     setSaving(true);
 
     try {
-      const element = pageRef.current;
-
-      // 创建固定尺寸的临时容器
+      // 固定尺寸
       const cardWidth = 390;
       const cardHeight = 700;
 
+      // 创建临时容器
       const container = document.createElement('div');
       container.style.cssText = `
         position: fixed;
@@ -31,58 +34,19 @@ export function SaveButton({ pageRef }: SaveButtonProps) {
         top: 0;
         width: ${cardWidth}px;
         height: ${cardHeight}px;
-        background: #0a0a0a;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+        z-index: 9999;
       `;
 
-      // 克隆页面内容
-      const pageClone = element.cloneNode(true) as HTMLElement;
-
-      // 移除进度条
-      const progressBar = pageClone.querySelector('.h-\\[2px\\]');
-      if (progressBar?.parentElement) {
-        progressBar.parentElement.remove();
-      }
-
-      // 移除返回按钮
-      const backButtons = pageClone.querySelectorAll('button');
-      backButtons.forEach(btn => btn.remove());
-
-      // 移除页码指示器
-      const pageDots = pageClone.querySelector('.pb-2.sm\\:pb-3');
-      if (pageDots) {
-        pageDots.remove();
-      }
-
-      // 显示二维码 footer
-      const qrFooter = pageClone.querySelector('.save-footer-only');
-      if (qrFooter instanceof HTMLElement) {
-        qrFooter.classList.remove('hidden');
-      }
-
-      // 修正高度相关的样式
-      const fullHeightNodes = pageClone.querySelectorAll<HTMLElement>('[class*="h-\\[100dvh\\]"]');
-      fullHeightNodes.forEach(node => {
-        node.style.height = 'auto';
-        node.style.minHeight = 'auto';
-      });
-
-      // 设置克隆元素的样式
-      pageClone.style.cssText = `
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      `;
-
-      container.appendChild(pageClone);
       document.body.appendChild(container);
 
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // 渲染 SaveCard 组件
+      const root = createRoot(container);
+      root.render(<SaveCard report={report} currentPage={currentPage} />);
 
+      // 等待渲染完成
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      // 截图
       const canvas = await html2canvas(container, {
         backgroundColor: '#0a0a0a',
         scale: 3,
@@ -94,6 +58,7 @@ export function SaveButton({ pageRef }: SaveButtonProps) {
       });
 
       // 清理
+      root.unmount();
       document.body.removeChild(container);
 
       // 转换为 blob
