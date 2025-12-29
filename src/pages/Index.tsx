@@ -17,8 +17,6 @@ const Index = () => {
   const [reportKey, setReportKey] = useState(0);
   const [userOptions, setUserOptions] = useState<UserOptions | undefined>(undefined);
   const pageRef = useRef<HTMLDivElement>(null);
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
 
   // Generate new report when key changes or user options change
   const report: GeneratedReport = useMemo(() => generateReport(userOptions), [reportKey, userOptions]);
@@ -54,34 +52,6 @@ const Index = () => {
     setDirection(1);
   }, []);
 
-  // Touch handlers for swipe navigation
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  }, []);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    const diff = touchStartX.current - touchEndX.current;
-    const threshold = 50; // minimum swipe distance
-
-    if (Math.abs(diff) > threshold) {
-      if (diff > 0) {
-        // Swipe left -> next page
-        handleNext();
-      } else {
-        // Swipe right -> previous page
-        handleBack();
-      }
-    }
-    
-    // Reset
-    touchStartX.current = 0;
-    touchEndX.current = 0;
-  }, [handleNext, handleBack]);
-
   if (!started) {
     return <StartPage onStart={handleStart} />;
   }
@@ -107,24 +77,24 @@ const Index = () => {
     if (currentPage === 0) {
       return <IdentityPage report={report} onNext={handleNext} />;
     }
-    
+
     // Pages 1 to scenes.length: Scene pages
     const sceneIndex = currentPage - 1;
     if (sceneIndex < report.scenes.length) {
       const isLast = sceneIndex === report.scenes.length - 1;
       return (
-        <ScenePage 
-          generated={report.scenes[sceneIndex]} 
+        <ScenePage
+          generated={report.scenes[sceneIndex]}
           onNext={handleNext}
           isLast={isLast}
         />
       );
     }
-    
+
     // Conclusion page (after all scenes)
     if (sceneIndex === report.scenes.length) {
       return (
-        <ConclusionPage 
+        <ConclusionPage
           narration={report.systemNarration}
           conclusion={report.conclusion}
           onRestart={handleRestart}
@@ -155,24 +125,16 @@ const Index = () => {
       <SaveButton
         pageRef={pageRef}
         currentPage={currentPage}
-        totalPages={totalPages}
-        report={report}
       />
-      <div
-        ref={pageRef}
-        className="relative"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <ReportLayout 
-          currentPage={currentPage + 1} 
+      <div ref={pageRef} className="relative">
+        <ReportLayout
+          currentPage={currentPage + 1}
           totalPages={totalPages}
           onBack={handleBack}
           canGoBack={currentPage > 0}
         >
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.div 
+            <motion.div
               key={`${reportKey}-${currentPage}`}
               custom={direction}
               variants={pageVariants}

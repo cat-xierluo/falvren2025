@@ -796,7 +796,7 @@ export const sceneLibrary: Scene[] = [
     id: 'ai_first_lawyer',
     category: 'ai_conflict',
     template: '你这一年\n听到过无数次这句话：\n\n"{aiName} 不是这么说的"',
-    subtext: 'AI 成了当事人的第一位律师（2025专属）',
+    subtext: 'AI 成了当事人的第一位律师',
     soulText: '你还没开始解释\n他已经先引用完了'
   },
   {
@@ -810,7 +810,7 @@ export const sceneLibrary: Scene[] = [
     id: 'ai_explain_ai',
     category: 'ai_conflict',
     template: '你已经习惯\n在解释法律之前\n先解释\n**AI 为什么会这么回答**',
-    subtext: '这是 2025 新增的开场白（2025专属）',
+    subtext: '这是 2025 新增的开场白',
     soulText: '解释 AI\n成了新的专业环节'
   },
   {
@@ -831,7 +831,7 @@ export const sceneLibrary: Scene[] = [
     id: 'ai_generate_evidence',
     category: 'ai_conflict',
     template: '当事人发现\n缺少关键证据之后\n问你：\n\n"能不能让豆包生成一张图？"',
-    subtext: '证据被当成素材库（2025专属）',
+    subtext: '证据被当成素材库',
     soulText: '那一刻\n你突然不知道从哪解释起'
   },
   {
@@ -845,7 +845,7 @@ export const sceneLibrary: Scene[] = [
     id: 'ai_cannot_generate_truth',
     category: 'ai_conflict',
     template: '你不得不解释\nAI 可以生成图片\n但不能生成\n**案件发生过的事实**',
-    subtext: '这是 2025 新型误区（2025专属）',
+    subtext: '这是 2025 新型误区',
     soulText: '真实\n不是算法产物'
   },
   {
@@ -866,7 +866,7 @@ export const sceneLibrary: Scene[] = [
     id: 'ai_doc_review',
     category: 'ai_conflict',
     template: '当事人递给你一份文书\n说：\n\n"我用豆包写的，你帮我看看？"',
-    subtext: '这是 2025 的新常态（2025专属）',
+    subtext: '这是 2025 的新常态',
     soulText: '你知道\n这不是最后一次'
   },
   {
@@ -929,7 +929,7 @@ export const sceneLibrary: Scene[] = [
     id: 'ai_cleanup_boundary',
     category: 'ai_conflict',
     template: '你不是在和 AI 竞争\n你是在\n**替它收拾边界**',
-    subtext: '这是 2025 的新角色（2025专属）',
+    subtext: '这是 2025 的新角色',
     soulText: '边界\n才是你要守的东西'
   },
   {
@@ -943,7 +943,7 @@ export const sceneLibrary: Scene[] = [
     id: 'ai_fix_hallucination',
     category: 'ai_conflict',
     template: '你逐渐意识到\n自己的工作\n正在从“提供信息”\n变成“校正幻觉”',
-    subtext: '这是 2025 的隐形劳动（2025专属）',
+    subtext: '这是 2025 的隐形劳动',
     soulText: '你在帮他\n回到现实'
   },
   {
@@ -959,10 +959,7 @@ export const sceneLibrary: Scene[] = [
 
 export const systemNarrations: SystemNarration[] = [
   { id: 'narration_1', text: '系统未读取你的隐私\n但好像什么都知道' },
-  { id: 'narration_2', text: '数据为随机生成\n但你会觉得很熟悉' },
-  { id: 'narration_3', text: '这不是你的全部一年\n但已经足够真实' },
   { id: 'narration_4', text: '有些内容\n不是记录\n是痕迹' },
-  { id: 'narration_5', text: '这份报告\n不需要准确\n只需要真实' },
   { id: 'narration_6', text: '你看到的不是数据\n是一年的切片' },
   { id: 'narration_ai_1', text: 'AI 先回答了你要说的话\n你只好回答它的答案' },
   { id: 'narration_ai_2', text: '系统检测到\n当事人更相信句号' },
@@ -1127,10 +1124,10 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
   };
 
   // 必选场景类别（各选1个）
-  // 非诉律师不包含 12368 场景
+  // 非诉律师不包含 12368 场景，但 AI 时代冲突必定出现
   const mustHaveCategories: SceneCategory[] = businessArea === 'non_litigation'
-    ? ['late_night', 'documents']
-    : ['system_12368', 'late_night', 'documents'];
+    ? ['late_night', 'documents', 'ai_conflict']
+    : ['system_12368', 'late_night', 'documents', 'ai_conflict'];
 
   // 可选场景类别
   const optionalCategories: SceneCategory[] = ['phone', 'travel', 'time_disorder', 'industry_jargon', 'cognition_change', 'identity_overflow'];
@@ -1163,17 +1160,6 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
 
     const scene = randomFromArray(categoryScenes);
     selectedScenes.push(generateSceneData(scene, selectedCity, businessArea));
-  }
-
-  // AI 冲突场景：20% 概率 1 条，10% 概率 2 条
-  const aiScenes = sceneLibrary.filter(s => s.category === 'ai_conflict');
-  const aiRoll = Math.random();
-  const aiCount = aiRoll < 0.1 ? 2 : aiRoll < 0.3 ? 1 : 0;
-  if (aiCount > 0 && aiScenes.length > 0) {
-    const shuffledAi = shuffleArray(aiScenes);
-    for (let i = 0; i < Math.min(aiCount, shuffledAi.length); i++) {
-      selectedScenes.push(generateSceneData(shuffledAi[i], selectedCity, businessArea));
-    }
   }
 
   // 打乱顺序（但保持第一个场景在前面）

@@ -1,54 +1,174 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Download, Check } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import html2canvas from 'html2canvas';
-import { SaveCard } from './SaveCard';
-import { GeneratedReport } from '@/lib/sceneLibrary';
 
 interface SaveButtonProps {
   pageRef: React.RefObject<HTMLDivElement>;
   currentPage: number;
-  totalPages: number;
-  report: GeneratedReport;
 }
 
-export function SaveButton({ pageRef, currentPage, totalPages, report }: SaveButtonProps) {
+export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const siteUrl = 'https://falvren2025.lovable.app';
 
   const handleSave = async () => {
-    if (saving) return;
+    if (!pageRef.current || saving) return;
 
     setSaving(true);
 
     try {
-      // 固定尺寸
+      // 固定尺寸（9:16 比例，确保不显得过长）
       const cardWidth = 390;
-      const cardHeight = 700;
+      const cardHeight = Math.round((cardWidth * 16) / 9);
+      const footerSpace = 120;
+      const qrSize = 56;
+      const contentOffset = 36;
 
       // 创建临时容器
       const container = document.createElement('div');
+      container.className = 'bg-gradient-dark';
       container.style.cssText = `
         position: fixed;
         left: -9999px;
         top: 0;
         width: ${cardWidth}px;
         height: ${cardHeight}px;
+        overflow: hidden;
         z-index: 9999;
       `;
 
+      // 克隆当前页面
+      const pageClone = pageRef.current.cloneNode(true) as HTMLElement;
+      pageClone.style.cssText = `
+        width: 100%;
+        height: 100%;
+        position: relative;
+        margin: 0;
+      `;
+
+      // 移除进度条
+      const progressBar = pageClone.querySelector('.h-\\[2px\\]');
+      if (progressBar?.parentElement) {
+        progressBar.parentElement.remove();
+      }
+
+      // 移除噪点层，避免导出过重
+      pageClone.querySelectorAll('.bg-noise').forEach(node => node.remove());
+
+      // 移除底部页码
+      const dots = pageClone.querySelectorAll('.flex.items-center.gap-1\\.5, .flex.items-center.gap-2');
+      dots.forEach(dot => {
+        if (dot.querySelector('.rounded-full')) {
+          dot.parentElement?.remove();
+        }
+      });
+
+      // 隐藏所有按钮（保留布局占位）
+      pageClone.querySelectorAll('button').forEach(btn => {
+        (btn as HTMLElement).style.visibility = 'hidden';
+      });
+
+      // 为二维码预留空间（不增加总高度）
+      const layoutRoot = pageClone.querySelector<HTMLElement>('.h-\\[100dvh\\]');
+      const contentRoot = layoutRoot ?? pageClone;
+      contentRoot.style.height = `${cardHeight}px`;
+      contentRoot.style.boxSizing = 'border-box';
+      contentRoot.style.position = 'relative';
+
+      const contentWrapper = document.createElement('div');
+      contentWrapper.style.cssText = `
+        height: ${cardHeight - footerSpace}px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0;
+        transform: translateY(-${contentOffset}px);
+      `;
+
+      while (contentRoot.firstChild) {
+        contentWrapper.appendChild(contentRoot.firstChild);
+      }
+      contentRoot.appendChild(contentWrapper);
+
+      // 添加二维码覆盖层（嵌入图片内部）
+      const footer = document.createElement('div');
+      footer.style.cssText = `
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        z-index: 5;
+      `;
+
+      const divider = document.createElement('div');
+      divider.style.cssText = `
+        width: 76%;
+        height: 1px;
+        background: rgba(255,255,255,0.08);
+      `;
+      footer.appendChild(divider);
+
+      const label = document.createElement('div');
+      label.textContent = '扫码生成你的法律人年度报告';
+      label.style.cssText = `
+        font-size: 9px;
+        color: rgba(255,255,255,0.45);
+        text-align: center;
+      `;
+      footer.appendChild(label);
+
+      const qrBox = document.createElement('div');
+      qrBox.style.cssText = `
+        background: white;
+        padding: 8px;
+        border-radius: 6px;
+      `;
+      qrBox.id = 'site-qr-placeholder';
+      footer.appendChild(qrBox);
+      contentRoot.appendChild(footer);
+
+      container.appendChild(pageClone);
       document.body.appendChild(container);
 
-      // 渲染 SaveCard 组件
-      const root = createRoot(container);
-      root.render(<SaveCard report={report} currentPage={currentPage} />);
+      // 强制显示动画元素，避免导出时仍处于初始透明状态
+      pageClone.querySelectorAll<HTMLElement>('[style]').forEach(node => {
+        if (node.style.opacity === '0') {
+          node.style.opacity = '1';
+        }
+        if (node.style.transform && node.style.transform.includes('translate')) {
+          node.style.transform = 'none';
+        }
+        if (node.style.transition) {
+          node.style.transition = 'none';
+        }
+      });
+
+      // 渲染二维码
+      const qrPlaceholder = container.querySelector('#site-qr-placeholder');
+      const qrRoot = qrPlaceholder ? createRoot(qrPlaceholder) : null;
+      qrRoot?.render(<QRCodeSVG value={siteUrl} size={qrSize} level="M" />);
 
       // 等待渲染完成
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // 适配内容高度，避免与二维码区重叠
+      const available = cardHeight - footerSpace - contentOffset;
+      const actual = contentWrapper.scrollHeight;
+      if (actual > available && available > 0) {
+        const scale = available / actual;
+        contentWrapper.style.transformOrigin = 'top center';
+        contentWrapper.style.transform = `translateY(-${contentOffset}px) scale(${scale})`;
+      }
 
       // 截图
       const canvas = await html2canvas(container, {
-        backgroundColor: '#0a0a0a',
         scale: 3,
         useCORS: true,
         allowTaint: true,
@@ -58,7 +178,7 @@ export function SaveButton({ pageRef, currentPage, totalPages, report }: SaveBut
       });
 
       // 清理
-      root.unmount();
+      qrRoot?.unmount();
       document.body.removeChild(container);
 
       // 转换为 blob

@@ -115,7 +115,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="flex-1 flex flex-col justify-center min-h-0 py-4"
+        className="flex-1 flex flex-col justify-center min-h-0 py-4 pt-8 sm:pt-12"
       >
         {!showPreview ? (
           /* Customization form */
@@ -194,71 +194,87 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
           <div className="space-y-4">
             <div
               ref={cardRef}
-              className="bg-gradient-to-br from-background via-background to-muted/30 border border-border rounded-2xl p-4 sm:p-5 w-full max-w-[360px] aspect-[390/700] mx-auto flex flex-col overflow-hidden"
+              className="relative border border-border/60 rounded-3xl w-full max-w-[360px] aspect-[9/16] mx-auto overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
             >
-              {/* Card header */}
-              <div className="text-center">
-                <p className="text-base sm:text-lg text-muted-foreground/80 font-medium tracking-widest">2025 法律人年度报告</p>
-                {userName && (
-                  <p className="text-base sm:text-lg font-medium text-foreground mt-1 sm:mt-2">{userName}</p>
-                )}
-              </div>
+              <div className="absolute inset-0 bg-gradient-dark" />
+              <div
+                className="absolute -top-10 -right-6 w-44 h-44 rounded-full blur-[50px] opacity-35"
+                style={{ background: 'hsl(var(--glow-amber)/0.35)' }}
+              />
+              <div
+                className="absolute top-24 -left-10 w-36 h-36 rounded-full blur-[60px] opacity-35"
+                style={{ background: 'hsl(var(--glow-rose)/0.3)' }}
+              />
+              <div
+                className="absolute bottom-24 right-6 w-40 h-40 rounded-full blur-[60px] opacity-35"
+                style={{ background: 'hsl(var(--glow-orange)/0.3)' }}
+              />
 
-              {/* Conclusion */}
-              <div className="text-center py-3 sm:py-4 flex-1 flex flex-col justify-center relative">
-                <motion.button
-                  onClick={shuffleConclusion}
-                  className="absolute -right-2 top-0 p-2 text-muted-foreground/40 hover:text-muted-foreground/80 transition-colors"
-                  whileHover={{ scale: 1.1, rotate: 180 }}
-                  whileTap={{ scale: 0.9 }}
-                  title="换一句"
-                >
-                  <Shuffle className="w-4 h-4" />
-                </motion.button>
-                <p className="text-xl sm:text-2xl font-light text-foreground leading-relaxed tracking-wide">
-                  {currentConclusion.mainText}
-                </p>
-                <p className="text-sm sm:text-base text-muted-foreground/80 leading-relaxed mt-2 whitespace-pre-line font-light">
-                  {currentConclusion.subText}
-                </p>
-              </div>
+              <div className="relative z-10 h-full px-5 py-6 flex flex-col">
+                {/* Card header */}
+                <div className="text-center space-y-1">
+                  <p className="text-[11px] text-muted-foreground/70 font-mono tracking-[0.24em]">2025 法律人年度报告</p>
+                  {userName && (
+                    <p className="text-lg sm:text-xl font-semibold text-foreground">{userName}</p>
+                  )}
+                </div>
 
-              {/* Divider */}
-              <div className="w-10 h-px bg-border mx-auto" />
+                {/* Conclusion */}
+                <div className="flex-1 flex flex-col justify-center text-center px-2 relative">
+                  <motion.button
+                    onClick={shuffleConclusion}
+                    className="absolute -right-2 -top-2 p-2 text-muted-foreground/40 hover:text-muted-foreground/80 transition-colors"
+                    whileHover={{ scale: 1.1, rotate: 180 }}
+                    whileTap={{ scale: 0.9 }}
+                    title="换一句"
+                  >
+                    <Shuffle className="w-4 h-4" />
+                  </motion.button>
+                  <p className="text-xl sm:text-2xl font-light text-foreground leading-relaxed tracking-wide">
+                    {currentConclusion.mainText}
+                  </p>
+                  <p className="text-sm sm:text-base text-muted-foreground/80 leading-relaxed mt-2 whitespace-pre-line font-light">
+                    {currentConclusion.subText}
+                  </p>
+                </div>
 
-              {/* Narration */}
-              <p className="text-[10px] sm:text-xs text-muted-foreground/50 text-center whitespace-pre-line">
-                {narration.text}
-              </p>
+                {/* Narration */}
+                <div className="text-center space-y-2">
+                  <div className="w-12 h-px bg-border/70 mx-auto" />
+                  <p className="text-[11px] text-muted-foreground/60 whitespace-pre-line">
+                    {narration.text}
+                  </p>
+                </div>
 
-              {/* Footer with QR codes */}
-              <div className="flex items-center justify-between gap-2 sm:gap-3 pt-1 sm:pt-2 mt-auto">
-                {/* User QR (if uploaded) */}
-                {userQrImage && (
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-16 h-16 sm:w-[68px] sm:h-[68px] bg-white rounded-lg p-1.5">
-                      <img
-                        src={userQrImage}
-                        alt="我的二维码"
-                        className="w-full h-full object-contain"
+                {/* Footer with QR codes */}
+                <div className="flex items-center justify-between gap-3 pt-4">
+                  {/* User QR (if uploaded) */}
+                  {userQrImage && (
+                    <div className="flex flex-col items-center gap-1.5">
+                      <div className="w-[68px] h-[68px] bg-white rounded-lg p-1.5 shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
+                        <img
+                          src={userQrImage}
+                          alt="我的二维码"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <p className="text-[10px] text-muted-foreground/60 text-center leading-tight">
+                        {userName ? `添加${userName}` : '添加我'}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Project QR */}
+                  <div className={`flex flex-col items-center gap-1.5 ${!userQrImage ? 'mx-auto' : ''}`}>
+                    <div className="w-[68px] h-[68px] bg-white rounded-lg p-1.5 flex items-center justify-center shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
+                      <QRCodeSVG
+                        value={projectUrl}
+                        size={52}
+                        level="M"
                       />
                     </div>
-                    <p className="text-[9px] sm:text-[10px] text-muted-foreground/50 text-center leading-tight">
-                      {userName ? `添加${userName}` : '添加我'}
-                    </p>
+                    <p className="text-[10px] text-muted-foreground/60 text-center leading-tight whitespace-nowrap">扫码生成你的年报</p>
                   </div>
-                )}
-
-                {/* Project QR */}
-                <div className={`flex flex-col items-center gap-1 ${!userQrImage ? 'mx-auto' : ''}`}>
-                  <div className="w-16 h-16 sm:w-[68px] sm:h-[68px] bg-white rounded-lg p-1.5 flex items-center justify-center">
-                    <QRCodeSVG
-                      value={projectUrl}
-                      size={52}
-                      level="M"
-                    />
-                  </div>
-                  <p className="text-[9px] sm:text-[10px] text-muted-foreground/50 text-center leading-tight">扫码生成你的年报</p>
                 </div>
               </div>
             </div>

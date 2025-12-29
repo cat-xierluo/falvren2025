@@ -50,8 +50,8 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
         transition={{ delay: 0.1, duration: 0.3 }}
         className="flex-shrink-0 flex items-center gap-2 mb-6 sm:mb-8 pt-3"
       >
-        <span className="text-2xl sm:text-3xl">{icon}</span>
-        <p className="font-mono text-lg sm:text-xl text-muted-foreground tracking-wider uppercase">
+        <span className="text-3xl sm:text-3xl">{icon}</span>
+        <p className="font-mono text-xl sm:text-xl text-muted-foreground tracking-wider uppercase">
           {categoryName}
         </p>
       </motion.div>
@@ -66,32 +66,32 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
           className="card-report py-5 px-5 sm:py-8 sm:px-10"
         >
           {/* 主文案 - 移动端字体加大 */}
-          <p className="text-lg leading-relaxed sm:text-xl md:text-2xl text-foreground whitespace-pre-line">
+          <p className="text-xl leading-relaxed sm:text-xl md:text-2xl text-foreground whitespace-pre-line">
             {parseText(mainText)}
           </p>
-          
+
           {/* 补充说明 */}
           {subtext && (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.3 }}
-              className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-border/30 text-sm sm:text-base text-muted-foreground"
+              className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-border/30 text-base sm:text-base text-muted-foreground"
             >
               {parseText(subtext)}
             </motion.p>
           )}
         </motion.div>
 
-        {/* 点睛句（灵魂吐槽）*/}
+        {/* 点睛句（灵魂吐槽）- 居中样式 */}
         {soulText && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="mt-4 sm:mt-6 px-1"
+            className="mt-6 sm:mt-8 px-1"
           >
-            <p className="text-sm sm:text-base text-muted-foreground/60 italic whitespace-pre-line leading-relaxed">
+            <p className="text-lg sm:text-xl text-muted-foreground/70 italic whitespace-pre-line leading-relaxed text-center">
               {soulText}
             </p>
           </motion.div>
@@ -103,11 +103,11 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.3 }}
-        className="flex-shrink-0 flex justify-center mt-0.5 sm:mt-1"
+        className="flex-shrink-0 flex justify-center -mt-1 sm:mt-0"
       >
-        <button 
-          onClick={onNext} 
-          className="btn-secondary text-sm sm:text-base px-5 py-2.5 sm:px-6 sm:py-3"
+        <button
+          onClick={onNext}
+          className="btn-secondary text-base sm:text-base px-6 py-3 sm:px-6 sm:py-3"
         >
           {isLast ? '查看年终结论 →' : '继续 →'}
         </button>

@@ -34,11 +34,6 @@ export function AuthorCard() {
           </div>
         </div>
       </div>
-
-      {/* 底部提示 */}
-      <p className="text-center text-xs sm:text-xs text-muted-foreground/40 mt-2">
-        转发给那个此刻正在加班的法律人
-      </p>
     </motion.div>
   );
 }

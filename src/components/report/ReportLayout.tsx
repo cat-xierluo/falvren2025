@@ -33,7 +33,7 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
         {canGoBack && onBack && (
           <button
             onClick={onBack}
-            className="absolute top-3 left-3 sm:top-4 sm:left-4 z-40 flex items-center gap-1 px-2 py-1.5 text-muted-foreground hover:text-foreground text-xs transition-colors backdrop-blur-sm bg-background/20 rounded-full"
+            className="absolute top-3 left-3 sm:top-4 sm:left-4 z-50 flex items-center gap-1 px-2 py-1.5 text-muted-foreground hover:text-foreground text-xs transition-colors backdrop-blur-sm bg-background/20 rounded-full"
           >
             <ChevronLeft className="w-4 h-4" />
             <span className="hidden sm:inline">返回</span>
@@ -42,7 +42,7 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
       </div>
 
       {/* Main content - fills remaining space */}
-      <main className="flex-1 flex items-center justify-center px-4 py-4 sm:px-8 sm:py-10 overflow-hidden relative z-10">
+      <main className="flex-1 flex items-center justify-center px-6 pt-40 pb-10 sm:px-8 sm:pb-12 overflow-hidden relative z-10">
         <div className="w-full max-w-2xl mx-auto h-full flex flex-col justify-center">
           {children}
         </div>

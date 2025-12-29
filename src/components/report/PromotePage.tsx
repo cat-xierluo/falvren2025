@@ -25,24 +25,12 @@ export function PromotePage({ onRestart }: PromotePageProps) {
       exit={{ opacity: 0 }}
       className="flex flex-col h-full justify-between"
     >
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.3 }}
-        className="flex-shrink-0 text-center"
-      >
-        <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider">
-          🎉 邀请好友来玩
-        </p>
-      </motion.div>
-
       {/* Main content */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="flex-1 flex flex-col justify-center min-h-0"
+        className="flex-1 flex flex-col justify-center min-h-0 pt-8 sm:pt-12"
       >
         <div className="text-center space-y-6">
           {/* Title */}
@@ -88,11 +76,6 @@ export function PromotePage({ onRestart }: PromotePageProps) {
             </div>
           </div>
 
-          {/* Call to action */}
-          <p className="text-sm text-muted-foreground/50">
-            转发给你的法律人朋友<br />
-            让TA也生成自己的年度报告
-          </p>
         </div>
       </motion.div>
 
