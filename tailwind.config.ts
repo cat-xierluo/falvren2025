@@ -56,6 +56,11 @@ export default {
           secondary: "hsl(var(--data-secondary))",
           accent: "hsl(var(--data-accent))",
         },
+        glow: {
+          purple: "hsl(var(--glow-purple))",
+          blue: "hsl(var(--glow-blue))",
+          teal: "hsl(var(--glow-teal))",
+        },
       },
       fontFamily: {
         sans: ['Noto Sans SC', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],

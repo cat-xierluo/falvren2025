@@ -6,12 +6,20 @@ interface StartPageProps {
 
 export function StartPage({ onStart }: StartPageProps) {
   return (
-    <div className="h-[100dvh] bg-background flex flex-col items-center justify-center px-6 overflow-hidden">
+    <div className="h-[100dvh] bg-gradient-dark relative flex flex-col items-center justify-center px-6 overflow-hidden">
+      {/* Animated glow orbs */}
+      <div className="glow-orb glow-orb-1" />
+      <div className="glow-orb glow-orb-2" />
+      <div className="glow-orb glow-orb-3" />
+      
+      {/* Noise texture overlay */}
+      <div className="absolute inset-0 bg-noise pointer-events-none" />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-        className="text-center max-w-xl"
+        className="text-center max-w-xl relative z-10"
       >
         {/* Year badge */}
         <motion.div
@@ -20,7 +28,7 @@ export function StartPage({ onStart }: StartPageProps) {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="inline-block mb-6 sm:mb-8"
         >
-          <span className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground border border-border px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
+          <span className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground border border-border/50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm bg-background/20">
             2025
           </span>
         </motion.div>
@@ -63,7 +71,7 @@ export function StartPage({ onStart }: StartPageProps) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onStart}
-          className="btn-primary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
+          className="btn-primary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4 shadow-lg shadow-primary/20"
         >
           生成我的年度报告
         </motion.button>
@@ -77,17 +85,6 @@ export function StartPage({ onStart }: StartPageProps) {
         >
           点击开始 · 预计阅读时间 2 分钟
         </motion.p>
-      </motion.div>
-
-      {/* Background decoration */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.03 }}
-        transition={{ delay: 1, duration: 2 }}
-        className="fixed inset-0 pointer-events-none overflow-hidden"
-      >
-        <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-foreground rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-foreground rounded-full blur-3xl" />
       </motion.div>
     </div>
   );
