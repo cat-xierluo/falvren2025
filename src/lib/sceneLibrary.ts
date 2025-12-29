@@ -9,7 +9,8 @@ export type SceneCategory =
   | 'time_disorder'
   | 'industry_jargon'
   | 'cognition_change'
-  | 'identity_overflow';
+  | 'identity_overflow'
+  | 'ai_conflict';
 
 export type BusinessArea = 'litigation' | 'non_litigation' | 'random';
 export type Gender = 'male' | 'female' | 'random';
@@ -66,6 +67,9 @@ const emailSubjects = [
   '关于XX项目的初步分析', '补充材料清单', '会议纪要及后续安排',
   '紧急 - 请审阅', '回复：关于合同条款的疑问'
 ];
+
+// AI 工具名
+const aiNames = ['豆包', 'Kimi', 'DeepSeek'];
 
 // ========== 用户选择数据 ==========
 
@@ -310,7 +314,7 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [500, 1000],
     numberSuffix: '',
-    subtext: '平均每天 {number} 次',
+    subtext: '平均每天 {daily} 次',
     soulText: '你和 12368 的关系\n比你和很多当事人都稳定',
     businessArea: 'litigation' // 诉讼专属
   },
@@ -783,6 +787,169 @@ export const sceneLibrary: Scene[] = [
     template: '有时候你会突然想起\n自己好像\n还有别的身份',
     subtext: '但也只是想起而已',
     soulText: '律师身份\n已经成了主角'
+  },
+
+  // ===== AI 时代冲突场景 =====
+  {
+    id: 'ai_first_lawyer',
+    category: 'ai_conflict',
+    template: '你这一年\n听到过无数次这句话：\n\n"{aiName} 不是这么说的"',
+    subtext: 'AI 成了当事人的第一位律师（2025专属）',
+    soulText: '你还没开始解释\n他已经先引用完了'
+  },
+  {
+    id: 'ai_more_certain',
+    category: 'ai_conflict',
+    template: '当事人在引用 AI 结论时\n语气往往\n**比引用你更笃定**',
+    subtext: '确定性来自答案格式\n不是来自事实',
+    soulText: '你给的是风险区间\n它给的是句号'
+  },
+  {
+    id: 'ai_explain_ai',
+    category: 'ai_conflict',
+    template: '你已经习惯\n在解释法律之前\n先解释\n**AI 为什么会这么回答**',
+    subtext: '这是 2025 新增的开场白（2025专属）',
+    soulText: '解释 AI\n成了新的专业环节'
+  },
+  {
+    id: 'ai_search_replaced',
+    category: 'ai_conflict',
+    template: 'AI 取代了百度\n但顺带\n增加了你的解释成本',
+    subtext: '你不是多了助手\n是多了校对员',
+    soulText: '你要纠正的\n不止是答案'
+  },
+  {
+    id: 'ai_proofread',
+    category: 'ai_conflict',
+    template: '有些咨询\n本质上已经变成了：\n\n"请你帮我校对一下 AI 的判断"',
+    subtext: 'AI 先写结论\n你来背后果',
+    soulText: '看起来是省时\n其实是转移'
+  },
+  {
+    id: 'ai_generate_evidence',
+    category: 'ai_conflict',
+    template: '当事人发现\n缺少关键证据之后\n问你：\n\n"能不能让豆包生成一张图？"',
+    subtext: '证据被当成素材库（2025专属）',
+    soulText: '那一刻\n你突然不知道从哪解释起'
+  },
+  {
+    id: 'ai_evidence_not_fact',
+    category: 'ai_conflict',
+    template: '你第一次意识到\n有些人是真的以为\n**证据是可以补生成的**',
+    subtext: '技术进步\n没有同步带来规则理解',
+    soulText: '不是不会\n是以为可以'
+  },
+  {
+    id: 'ai_cannot_generate_truth',
+    category: 'ai_conflict',
+    template: '你不得不解释\nAI 可以生成图片\n但不能生成\n**案件发生过的事实**',
+    subtext: '这是 2025 新型误区（2025专属）',
+    soulText: '真实\n不是算法产物'
+  },
+  {
+    id: 'ai_evidence_silence',
+    category: 'ai_conflict',
+    template: '有些沉默\n出现在你解释\n"证据真实性"的那一刻',
+    subtext: '对方第一次意识到\n生成 ≠ 发生',
+    soulText: '你看见了\n规则的边界'
+  },
+  {
+    id: 'ai_rule_gap',
+    category: 'ai_conflict',
+    template: '那一刻你突然意识到\n技术进步\n并没有同步带来\n规则理解',
+    subtext: '理解滞后\n比技术更难补',
+    soulText: '你在补的是\n认知差'
+  },
+  {
+    id: 'ai_doc_review',
+    category: 'ai_conflict',
+    template: '当事人递给你一份文书\n说：\n\n"我用豆包写的，你帮我看看？"',
+    subtext: '这是 2025 的新常态（2025专属）',
+    soulText: '你知道\n这不是最后一次'
+  },
+  {
+    id: 'ai_logic_not_valid',
+    category: 'ai_conflict',
+    template: '你一眼就看出来\n这份文书\n**语法没问题，但逻辑不成立**',
+    subtext: '像对\n不等于能用',
+    soulText: '顺畅\n不是合法'
+  },
+  {
+    id: 'ai_explain_usability',
+    category: 'ai_conflict',
+    template: '你需要花很长时间\n才能解释清楚：\n\n"看起来像对，不等于能用"',
+    subtext: '解释成本\n比重写还高',
+    soulText: '有些话\n必须重复很多遍'
+  },
+  {
+    id: 'ai_rewrite_cost',
+    category: 'ai_conflict',
+    template: '有些文书\n修改成本\n反而高于重写',
+    subtext: 'AI 没有节省时间\n它只是提前交付错误',
+    soulText: '你在修补\n它的确定性'
+  },
+  {
+    id: 'ai_no_time_saved',
+    category: 'ai_conflict',
+    template: 'AI 没有节省你的时间\n它只是\n把错误提前交给了你',
+    subtext: '看起来是效率\n其实是转嫁',
+    soulText: '你省下的\n只是它的时间'
+  },
+  {
+    id: 'ai_fixed_answer',
+    category: 'ai_conflict',
+    template: '当事人相信\nAI 的“确定性”\n却无法接受\n法律的“不确定性”',
+    subtext: '他们想要答案\n你只能给风险',
+    soulText: '你给的是区间\n它给的是结论'
+  },
+  {
+    id: 'ai_risk_range',
+    category: 'ai_conflict',
+    template: 'AI 给的是答案\n而你给的是\n风险区间',
+    subtext: '专业的价值\n藏在不确定里',
+    soulText: '你越专业\n越难一句话'
+  },
+  {
+    id: 'ai_not_affirmation',
+    category: 'ai_conflict',
+    template: '有些失望\n并不是因为结果\n而是因为\n你没有像 AI 那样给出肯定句',
+    subtext: '你无法保证\n只能评估',
+    soulText: '你不敢说“能”\n因为你要负责'
+  },
+  {
+    id: 'ai_one_sentence_gap',
+    category: 'ai_conflict',
+    template: '你发现\n越需要专业判断的地方\n越难用一句话说完',
+    subtext: '复杂问题\n被期待成一句话',
+    soulText: '专业\n不是一句话能装下'
+  },
+  {
+    id: 'ai_cleanup_boundary',
+    category: 'ai_conflict',
+    template: '你不是在和 AI 竞争\n你是在\n**替它收拾边界**',
+    subtext: '这是 2025 的新角色（2025专属）',
+    soulText: '边界\n才是你要守的东西'
+  },
+  {
+    id: 'ai_world_collapse',
+    category: 'ai_conflict',
+    template: 'AI 给了当事人\n一个“看起来完整的世界”\n你负责告诉他\n哪里会塌',
+    subtext: '你是结构工程师',
+    soulText: '看起来完整\n不代表能承受'
+  },
+  {
+    id: 'ai_fix_hallucination',
+    category: 'ai_conflict',
+    template: '你逐渐意识到\n自己的工作\n正在从“提供信息”\n变成“校正幻觉”',
+    subtext: '这是 2025 的隐形劳动（2025专属）',
+    soulText: '你在帮他\n回到现实'
+  },
+  {
+    id: 'ai_understood_misread',
+    category: 'ai_conflict',
+    template: '法律没有被 AI 取代\n只是\n被更多人\n误以为已经理解',
+    subtext: '理解的错觉\n更难纠正',
+    soulText: '你面对的\n是“自信的误解”'
   }
 ];
 
@@ -795,6 +962,9 @@ export const systemNarrations: SystemNarration[] = [
   { id: 'narration_4', text: '有些内容\n不是记录\n是痕迹' },
   { id: 'narration_5', text: '这份报告\n不需要准确\n只需要真实' },
   { id: 'narration_6', text: '你看到的不是数据\n是一年的切片' },
+  { id: 'narration_ai_1', text: 'AI 先回答了你要说的话\n你只好回答它的答案' },
+  { id: 'narration_ai_2', text: '系统检测到\n当事人更相信句号' },
+  { id: 'narration_ai_3', text: '你在做的不是纠错\n是边界维护' },
 ];
 
 // ========== 年终结论池 ==========
@@ -918,10 +1088,12 @@ function generateRandomFileName(businessArea: BusinessArea = 'random'): string {
 export interface GeneratedScene {
   scene: Scene;
   randomNumber?: number;
+  dailyCount?: number;       // 平均每天次数
   randomTime?: string;
   randomName?: string;
   randomCity?: string;
   randomFileName?: string;
+  randomAiName?: string;
   cityDrink?: string;        // 城市特色饮品
   cityFood?: string;         // 城市特色食物
   citySpot?: string;         // 城市特色地点
@@ -1000,6 +1172,17 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
     selectedScenes.push(generateSceneData(scene, selectedCity, businessArea));
   }
 
+  // AI 冲突场景：20% 概率 1 条，10% 概率 2 条
+  const aiScenes = sceneLibrary.filter(s => s.category === 'ai_conflict');
+  const aiRoll = Math.random();
+  const aiCount = aiRoll < 0.1 ? 2 : aiRoll < 0.3 ? 1 : 0;
+  if (aiCount > 0 && aiScenes.length > 0) {
+    const shuffledAi = shuffleArray(aiScenes);
+    for (let i = 0; i < Math.min(aiCount, shuffledAi.length); i++) {
+      selectedScenes.push(generateSceneData(shuffledAi[i], selectedCity, businessArea));
+    }
+  }
+
   // 打乱顺序（但保持12368在前面）
   const first = selectedScenes[0];
   const rest = shuffleArray(selectedScenes.slice(1));
@@ -1026,6 +1209,12 @@ function generateSceneData(
 
   if (scene.hasRandomNumber && scene.numberRange) {
     generated.randomNumber = randomBetween(scene.numberRange[0], scene.numberRange[1]);
+
+    // 特殊处理：system_12368_calls 场景需要计算平均每天次数
+    if (scene.id === 'system_12368_calls') {
+      // 假设按 250 个工作日计算，平均每天拨打次数
+      generated.dailyCount = Math.round(generated.randomNumber / 250);
+    }
   }
 
   if (scene.hasRandomTime) {
@@ -1043,6 +1232,9 @@ function generateSceneData(
 
   if (scene.hasRandomFileName) {
     generated.randomFileName = generateRandomFileName(businessArea);
+  }
+  if (scene.id === 'ai_first_lawyer') {
+    generated.randomAiName = randomFromArray(aiNames);
   }
 
   // 添加城市特色内容
@@ -1080,6 +1272,10 @@ export function formatSceneText(generated: GeneratedScene): string {
     text = text.replace('{number}', generated.randomNumber.toString());
   }
 
+  if (generated.dailyCount !== undefined) {
+    text = text.replace('{daily}', generated.dailyCount.toString());
+  }
+
   if (generated.randomTime) {
     text = text.replace('{time}', generated.randomTime);
   }
@@ -1094,6 +1290,9 @@ export function formatSceneText(generated: GeneratedScene): string {
 
   if (generated.randomFileName) {
     text = text.replace('{filename}', generated.randomFileName);
+  }
+  if (generated.randomAiName) {
+    text = text.replace('{aiName}', generated.randomAiName);
   }
 
   if (generated.cityDrink) {
@@ -1122,14 +1321,18 @@ export function formatSceneText(generated: GeneratedScene): string {
 
 export function formatSubtext(generated: GeneratedScene): string | undefined {
   if (!generated.scene.subtext) return undefined;
-  
+
   let text = generated.scene.subtext;
-  
+
   if (generated.randomNumber !== undefined) {
     text = text.replace('{number}', generated.randomNumber.toString());
     text = text.replace('{ratio}', randomBetween(30, 60).toString());
   }
-  
+
+  if (generated.dailyCount !== undefined) {
+    text = text.replace('{daily}', generated.dailyCount.toString());
+  }
+
   return text;
 }
 
@@ -1157,6 +1360,7 @@ export function getSceneIcon(category: SceneCategory): string {
     industry_jargon: '💬',
     cognition_change: '🧠',
     identity_overflow: '👤',
+    ai_conflict: '🤖',
   };
   return icons[category];
 }
@@ -1173,6 +1377,7 @@ export function getCategoryName(category: SceneCategory): string {
     industry_jargon: '行业语言',
     cognition_change: '认知变化',
     identity_overflow: '身份边界',
+    ai_conflict: 'AI 时代冲突',
   };
   return names[category];
 }
