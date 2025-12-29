@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
-import { Upload, Download, ArrowRight, User, X } from 'lucide-react';
-import { Conclusion, SystemNarration } from '@/lib/sceneLibrary';
+import { Upload, Download, ArrowRight, User, X, Shuffle } from 'lucide-react';
+import { Conclusion, SystemNarration, conclusions } from '@/lib/sceneLibrary';
 import html2canvas from 'html2canvas';
 
 interface SharePageProps {
@@ -11,14 +11,21 @@ interface SharePageProps {
   onNext: () => void;
 }
 
-export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
+export function SharePage({ conclusion: initialConclusion, narration, onNext }: SharePageProps) {
   const [userName, setUserName] = useState('');
   const [userQrImage, setUserQrImage] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [currentConclusion, setCurrentConclusion] = useState(initialConclusion);
   const cardRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const projectUrl = window.location.origin;
+  const shuffleConclusion = () => {
+    const available = conclusions.filter(c => c.id !== currentConclusion.id);
+    const random = available[Math.floor(Math.random() * available.length)];
+    setCurrentConclusion(random);
+  };
+
+  const projectUrl = 'https://falvren2025.lovable.app';
 
   const handleQrUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,14 +47,47 @@ export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
 
   const handleSaveCard = async () => {
     if (!cardRef.current) return;
-    
+
+    // 隐藏随机按钮
+    const shuffleButton = cardRef.current.querySelector('button[title="换一句"]');
+    if (shuffleButton) {
+      (shuffleButton as HTMLElement).style.display = 'none';
+    }
+
     try {
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 2,
+      const exportWidth = 390;
+      const exportHeight = 700;
+
+      const exportContainer = document.createElement('div');
+      exportContainer.style.cssText = `
+        position: fixed;
+        left: -9999px;
+        top: 0;
+        width: ${exportWidth}px;
+        height: ${exportHeight}px;
+      `;
+
+      const cardClone = cardRef.current.cloneNode(true) as HTMLElement;
+      cardClone.style.width = `${exportWidth}px`;
+      cardClone.style.height = `${exportHeight}px`;
+      cardClone.style.maxWidth = 'none';
+      cardClone.style.maxHeight = 'none';
+      cardClone.style.aspectRatio = 'auto';
+      cardClone.style.margin = '0';
+      cardClone.style.overflow = 'hidden';
+
+      exportContainer.appendChild(cardClone);
+      document.body.appendChild(exportContainer);
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const canvas = await html2canvas(cardClone, {
+        scale: 3,
         backgroundColor: null,
         useCORS: true,
       });
-      
+
+      document.body.removeChild(exportContainer);
+
       const link = document.createElement('a');
       link.download = `法律人2025年报-${userName || '我的'}.png`;
       link.href = canvas.toDataURL('image/png');
@@ -55,6 +95,11 @@ export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
     } catch (error) {
       console.error('保存失败', error);
       alert('保存失败，请重试');
+    } finally {
+      // 恢复随机按钮显示
+      if (shuffleButton) {
+        (shuffleButton as HTMLElement).style.display = '';
+      }
     }
   };
 
@@ -63,14 +108,14 @@ export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col h-full justify-between"
+      className="flex flex-col h-full"
     >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.3 }}
-        className="flex-shrink-0 text-center"
+        className="flex-shrink-0 text-center pt-4 pb-2"
       >
         <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider">
           📤 分享你的年报
@@ -82,7 +127,7 @@ export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="flex-1 flex flex-col justify-center min-h-0 overflow-y-auto py-2"
+        className="flex-1 flex flex-col min-h-0 overflow-y-auto py-2 px-1"
       >
         {!showPreview ? (
           /* Customization form */
@@ -156,23 +201,32 @@ export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
           <div className="space-y-4">
             <div
               ref={cardRef}
-              className="bg-gradient-to-br from-background via-background to-muted/30 border border-border rounded-2xl p-5 space-y-4"
+              className="bg-gradient-to-br from-background via-background to-muted/30 border border-border rounded-2xl p-4 sm:p-5 w-full max-w-[360px] aspect-[390/700] mx-auto flex flex-col overflow-hidden"
             >
               {/* Card header */}
               <div className="text-center">
-                <p className="text-xs text-muted-foreground/60 font-mono">2025 法律人年度报告</p>
+                <p className="text-base sm:text-lg text-muted-foreground/80 font-medium tracking-widest">2025 法律人年度报告</p>
                 {userName && (
-                  <p className="text-lg font-medium text-foreground mt-1">{userName}</p>
+                  <p className="text-base sm:text-lg font-medium text-foreground mt-1 sm:mt-2">{userName}</p>
                 )}
               </div>
 
               {/* Conclusion */}
-              <div className="text-center py-3">
-                <p className="text-lg font-light text-foreground leading-relaxed">
-                  {conclusion.mainText}
+              <div className="text-center py-3 sm:py-4 flex-1 flex flex-col justify-center relative">
+                <motion.button
+                  onClick={shuffleConclusion}
+                  className="absolute -right-2 top-0 p-2 text-muted-foreground/40 hover:text-muted-foreground/80 transition-colors"
+                  whileHover={{ scale: 1.1, rotate: 180 }}
+                  whileTap={{ scale: 0.9 }}
+                  title="换一句"
+                >
+                  <Shuffle className="w-4 h-4" />
+                </motion.button>
+                <p className="text-xl sm:text-2xl font-light text-foreground leading-relaxed tracking-wide">
+                  {currentConclusion.mainText}
                 </p>
-                <p className="text-sm text-muted-foreground leading-relaxed mt-1 whitespace-pre-line">
-                  {conclusion.subText}
+                <p className="text-sm sm:text-base text-muted-foreground/80 leading-relaxed mt-2 whitespace-pre-line font-light">
+                  {currentConclusion.subText}
                 </p>
               </div>
 
@@ -180,23 +234,23 @@ export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
               <div className="w-10 h-px bg-border mx-auto" />
 
               {/* Narration */}
-              <p className="text-xs text-muted-foreground/50 text-center whitespace-pre-line">
+              <p className="text-[10px] sm:text-xs text-muted-foreground/50 text-center whitespace-pre-line">
                 {narration.text}
               </p>
 
               {/* Footer with QR codes */}
-              <div className="flex items-center justify-between gap-3 pt-2">
+              <div className="flex items-center justify-between gap-2 sm:gap-3 pt-1 sm:pt-2 mt-auto">
                 {/* User QR (if uploaded) */}
                 {userQrImage && (
                   <div className="flex flex-col items-center gap-1">
-                    <div className="w-16 h-16 bg-white rounded-lg p-1">
-                      <img 
-                        src={userQrImage} 
-                        alt="我的二维码" 
+                    <div className="w-16 h-16 sm:w-[68px] sm:h-[68px] bg-white rounded-lg p-1.5">
+                      <img
+                        src={userQrImage}
+                        alt="我的二维码"
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <p className="text-[10px] text-muted-foreground/50">
+                    <p className="text-[9px] sm:text-[10px] text-muted-foreground/50 text-center leading-tight">
                       {userName ? `添加${userName}` : '添加我'}
                     </p>
                   </div>
@@ -204,14 +258,14 @@ export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
 
                 {/* Project QR */}
                 <div className={`flex flex-col items-center gap-1 ${!userQrImage ? 'mx-auto' : ''}`}>
-                  <div className="w-16 h-16 bg-white rounded-lg p-1.5 flex items-center justify-center">
-                    <QRCodeSVG 
-                      value={projectUrl} 
+                  <div className="w-16 h-16 sm:w-[68px] sm:h-[68px] bg-white rounded-lg p-1.5 flex items-center justify-center">
+                    <QRCodeSVG
+                      value={projectUrl}
                       size={52}
                       level="M"
                     />
                   </div>
-                  <p className="text-[10px] text-muted-foreground/50">扫码生成你的年报</p>
+                  <p className="text-[9px] sm:text-[10px] text-muted-foreground/50 text-center leading-tight">扫码生成你的年报</p>
                 </div>
               </div>
             </div>
@@ -241,7 +295,7 @@ export function SharePage({ conclusion, narration, onNext }: SharePageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.3 }}
-        className="flex-shrink-0 text-center"
+        className="flex-shrink-0 text-center pb-4 pt-2"
       >
         {!showPreview && (
           <button

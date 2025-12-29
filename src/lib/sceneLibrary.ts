@@ -29,6 +29,7 @@ export interface Scene {
   hasRandomCity?: boolean;
   hasRandomFileName?: boolean;
   businessArea?: BusinessArea; // 业务领域限制（可选）
+  negative?: boolean;        // 是否包含否定内容（不在随机选择时出现）
 }
 
 export interface SystemNarration {
@@ -300,7 +301,7 @@ export const sceneLibrary: Scene[] = [
     category: 'phone',
     template: '你的微信未读消息\n最高峰值达到 **{number}** 条',
     hasRandomNumber: true,
-    numberRange: [99, 200],
+    numberRange: [500, 2000],
     numberSuffix: '',
     subtext: '你已经学会选择性已读',
     soulText: '未读不是没看\n是还没想好怎么回'
@@ -342,7 +343,7 @@ export const sceneLibrary: Scene[] = [
     category: 'system_12368',
     template: '你这一年拨打了 **{number}** 次 12368\n\n主要用于查询案件进度',
     hasRandomNumber: true,
-    numberRange: [20, 80],
+    numberRange: [500, 1500],
     numberSuffix: '',
     subtext: '主要是帮当事人查',
     soulText: '法院系统\n还是有用的',
@@ -354,7 +355,8 @@ export const sceneLibrary: Scene[] = [
     template: '你几乎不拨打 12368\n\n因为你的工作\n主要是和交易对手、监管机构打交道',
     subtext: '法院系统对你来说\n比较陌生',
     soulText: '你的战场在谈判桌\n不在法庭',
-    businessArea: 'non_litigation' // 非诉专属
+    businessArea: 'non_litigation', // 非诉专属
+    negative: true // 包含否定内容
   },
 
   // ===== 深夜节点 =====
@@ -457,7 +459,7 @@ export const sceneLibrary: Scene[] = [
     category: 'travel',
     template: '你今年坐了 **{number}** 趟高铁',
     hasRandomNumber: true,
-    numberRange: [24, 68],
+    numberRange: [48, 60],
     numberSuffix: '',
     subtext: '已经能闭眼找到充电口的位置',
     soulText: '高铁座位\n比你家沙发还熟悉'
@@ -977,11 +979,6 @@ export interface Conclusion {
 
 export const conclusions: Conclusion[] = [
   {
-    id: 'conclusion_1',
-    mainText: '你没有热爱法律',
-    subText: '你只是比很多人\n更能忍受复杂、模糊和不被回应'
-  },
-  {
     id: 'conclusion_2',
     mainText: '你不是变冷漠了',
     subText: '你只是学会了\n在情绪和规则之间选择后者'
@@ -997,11 +994,6 @@ export const conclusions: Conclusion[] = [
     subText: '你只是习惯了\n把疲惫当成工作的一部分'
   },
   {
-    id: 'conclusion_5',
-    mainText: '你没有变强',
-    subText: '你只是知道了\n哪些事不值得再期待'
-  },
-  {
     id: 'conclusion_6',
     mainText: '你不是无所谓',
     subText: '你只是学会了\n在失望之前降低预期'
@@ -1010,11 +1002,6 @@ export const conclusions: Conclusion[] = [
     id: 'conclusion_7',
     mainText: '你没有看透一切',
     subText: '你只是比去年\n更清楚什么不会改变'
-  },
-  {
-    id: 'conclusion_8',
-    mainText: '你不是天生适合这行',
-    subText: '你只是比很多人\n更能接受"没有标准答案"'
   },
   {
     id: 'conclusion_9',
@@ -1128,16 +1115,21 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
   // 辅助函数：过滤适合当前业务领域的场景
   const filterScenesByBusinessArea = (scenes: Scene[]): Scene[] => {
     if (businessArea === 'random') {
-      return scenes;
+      // 过滤掉包含否定内容的场景
+      return scenes.filter(scene => !scene.negative);
     }
-    // 如果指定了业务领域，只返回没有限制或匹配该领域的场景
+    // 如果指定了业务领域，只返回没有限制或匹配该领域的场景，同时过滤掉否定内容
     return scenes.filter(scene =>
-      !scene.businessArea || scene.businessArea === businessArea || scene.businessArea === 'random'
+      !scene.negative &&
+      (!scene.businessArea || scene.businessArea === businessArea || scene.businessArea === 'random')
     );
   };
 
   // 必选场景类别（各选1个）
-  const mustHaveCategories: SceneCategory[] = ['system_12368', 'late_night', 'documents'];
+  // 非诉律师不包含 12368 场景
+  const mustHaveCategories: SceneCategory[] = businessArea === 'non_litigation'
+    ? ['late_night', 'documents']
+    : ['system_12368', 'late_night', 'documents'];
 
   // 可选场景类别
   const optionalCategories: SceneCategory[] = ['phone', 'travel', 'time_disorder', 'industry_jargon', 'cognition_change', 'identity_overflow'];
@@ -1183,7 +1175,7 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
     }
   }
 
-  // 打乱顺序（但保持12368在前面）
+  // 打乱顺序（但保持第一个场景在前面）
   const first = selectedScenes[0];
   const rest = shuffleArray(selectedScenes.slice(1));
 
@@ -1331,6 +1323,10 @@ export function formatSubtext(generated: GeneratedScene): string | undefined {
 
   if (generated.dailyCount !== undefined) {
     text = text.replace('{daily}', generated.dailyCount.toString());
+  }
+
+  if (generated.randomName) {
+    text = text.replace('{name}', generated.randomName);
   }
 
   return text;

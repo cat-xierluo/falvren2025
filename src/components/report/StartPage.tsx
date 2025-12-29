@@ -12,13 +12,15 @@ const hotCities = ['北京', '上海', '深圳', '广州', '杭州', '成都'];
 export function StartPage({ onStart }: StartPageProps) {
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [showAllCities, setShowAllCities] = useState(false);
+  const [customCityInput, setCustomCityInput] = useState<string>('');
+  const [showCustomInput, setShowCustomInput] = useState(false);
   const [selectedGender, setSelectedGender] = useState<Gender>('random');
   const [selectedBusinessArea, setSelectedBusinessArea] = useState<BusinessArea>('random');
   const [showOptions, setShowOptions] = useState(false);
 
   const handleStart = () => {
     onStart({
-      city: selectedCity || undefined,
+      city: selectedCity === '自己填写' ? '随机' : (selectedCity || undefined),
       gender: selectedGender,
       businessArea: selectedBusinessArea
     });
@@ -132,6 +134,7 @@ export function StartPage({ onStart }: StartPageProps) {
                       onClick={() => {
                         setSelectedCity(city);
                         setShowAllCities(false);
+                        setShowCustomInput(false);
                       }}
                       className={`px-3 py-2 text-xs sm:text-sm rounded-lg border transition-all ${
                         selectedCity === city
@@ -166,6 +169,7 @@ export function StartPage({ onStart }: StartPageProps) {
                             onClick={() => {
                               setSelectedCity(city);
                               setShowAllCities(false);
+                              setShowCustomInput(false);
                             }}
                             className={`px-3 py-2 text-xs sm:text-sm rounded-lg border transition-all ${
                               selectedCity === city
@@ -176,6 +180,43 @@ export function StartPage({ onStart }: StartPageProps) {
                             {city}
                           </button>
                         ))}
+                      <button
+                        onClick={() => {
+                          setSelectedCity('自己填写');
+                          setShowAllCities(false);
+                          setShowCustomInput(true);
+                        }}
+                        className={`px-3 py-2 text-xs sm:text-sm rounded-lg border transition-all ${
+                          selectedCity === '自己填写'
+                            ? 'bg-primary text-primary-foreground border-primary'
+                            : 'bg-background/20 border-border/50 hover:border-border hover:bg-background/30'
+                        }`}
+                      >
+                        自己填写
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <AnimatePresence>
+                  {showCustomInput && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-2 overflow-hidden"
+                    >
+                      <input
+                        type="text"
+                        value={customCityInput}
+                        onChange={(e) => setCustomCityInput(e.target.value)}
+                        placeholder="输入你的城市"
+                        maxLength={10}
+                        className="w-full px-4 py-2 bg-background/20 border border-border/50 rounded-lg text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+                      />
+                      <p className="mt-1.5 text-xs text-muted-foreground/60">
+                        内容仍为随机生成，仅供展示
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -192,23 +233,32 @@ export function StartPage({ onStart }: StartPageProps) {
                   你的性别
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { value: 'male' as Gender, label: '男' },
-                    { value: 'female' as Gender, label: '女' },
-                    { value: 'random' as Gender, label: '随机' }
-                  ].map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => setSelectedGender(option.value)}
-                      className={`px-3 py-2 text-xs sm:text-sm rounded-lg border transition-all ${
-                        selectedGender === option.value
-                          ? 'bg-primary text-primary-foreground border-primary'
-                          : 'bg-background/20 border-border/50 hover:border-border hover:bg-background/30'
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
+                  {(() => {
+                    const baseOptions = [
+                      { value: 'male' as Gender, label: '男' },
+                      { value: 'female' as Gender, label: '女' },
+                      { value: 'random' as Gender, label: '随机' }
+                    ];
+
+                    // 成都彩蛋：添加"未知"选项
+                    if (selectedCity === '成都') {
+                      baseOptions.splice(2, 0, { value: 'random' as Gender, label: '未知' });
+                    }
+
+                    return baseOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setSelectedGender(option.value)}
+                        className={`px-3 py-2 text-xs sm:text-sm rounded-lg border transition-all ${
+                          selectedGender === option.value
+                            ? 'bg-primary text-primary-foreground border-primary'
+                            : 'bg-background/20 border-border/50 hover:border-border hover:bg-background/30'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ));
+                  })()}
                 </div>
               </motion.div>
 
