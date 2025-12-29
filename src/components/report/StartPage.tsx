@@ -60,16 +60,12 @@ export function StartPage({ onStart }: StartPageProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.6 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={onStart}
-          className="group relative inline-flex items-center justify-center"
+          className="btn-primary text-base"
         >
-          <span className="btn-primary text-base">
-            生成我的年度报告
-          </span>
-          <motion.span
-            className="absolute -inset-1 rounded-lg bg-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity"
-            layoutId="button-hover"
-          />
+          生成我的年度报告
         </motion.button>
 
         {/* Bottom hint */}
@@ -81,6 +77,17 @@ export function StartPage({ onStart }: StartPageProps) {
         >
           点击开始 · 预计阅读时间 2 分钟
         </motion.p>
+      </motion.div>
+
+      {/* Background decoration */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.03 }}
+        transition={{ delay: 1, duration: 2 }}
+        className="fixed inset-0 pointer-events-none overflow-hidden"
+      >
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-foreground rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-foreground rounded-full blur-3xl" />
       </motion.div>
     </div>
   );

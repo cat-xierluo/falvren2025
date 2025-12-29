@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
-import { ReportData } from '@/lib/reportData';
+import { GeneratedReport } from '@/lib/sceneLibrary';
 
 interface IdentityPageProps {
-  data: ReportData;
+  report: GeneratedReport;
   onNext: () => void;
 }
 
-export function IdentityPage({ data, onNext }: IdentityPageProps) {
+export function IdentityPage({ report, onNext }: IdentityPageProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -33,7 +33,7 @@ export function IdentityPage({ data, onNext }: IdentityPageProps) {
       </motion.div>
 
       {/* Stats grid */}
-      <div className="space-y-8">
+      <div className="space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -41,7 +41,7 @@ export function IdentityPage({ data, onNext }: IdentityPageProps) {
           className="card-report"
         >
           <p className="text-sm text-muted-foreground mb-2">全年工作天数</p>
-          <p className="stat-number">{data.workDays}</p>
+          <p className="stat-number">{report.workDays}</p>
           <p className="stat-label mt-2">天</p>
         </motion.div>
 
@@ -52,7 +52,7 @@ export function IdentityPage({ data, onNext }: IdentityPageProps) {
           className="card-report"
         >
           <p className="text-sm text-muted-foreground mb-2">真正完整休息的周末</p>
-          <p className="stat-number">{data.fullRestWeekends}</p>
+          <p className="stat-number">{report.fullRestWeekends}</p>
           <p className="stat-label mt-2">个</p>
         </motion.div>
 
@@ -63,7 +63,10 @@ export function IdentityPage({ data, onNext }: IdentityPageProps) {
           className="card-report"
         >
           <p className="text-sm text-muted-foreground mb-2">对"明年一定轻松点"的信任度</p>
-          <p className="stat-number">{data.trustInNextYear}%</p>
+          <div className="flex items-end gap-2">
+            <p className="stat-number">{report.trustInNextYear}</p>
+            <p className="stat-label mb-2">%</p>
+          </div>
         </motion.div>
       </div>
 
