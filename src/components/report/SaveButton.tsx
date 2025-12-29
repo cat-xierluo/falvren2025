@@ -20,55 +20,81 @@ export function SaveButton({ pageRef }: SaveButtonProps) {
     try {
       const element = pageRef.current;
 
-      // 隐藏不需要保存的元素
-      const progressBar = element.querySelector('.h-\\[2px\\]');
-      const backButtons = element.querySelectorAll('button');
-      const pageDots = element.querySelector('.pb-2.sm\\:pb-3');
+      // 创建固定尺寸的临时容器
+      const cardWidth = 390;
+      const cardHeight = 700;
 
-      const hiddenElements: (HTMLElement | null)[] = [];
+      const container = document.createElement('div');
+      container.style.cssText = `
+        position: fixed;
+        left: -9999px;
+        top: 0;
+        width: ${cardWidth}px;
+        height: ${cardHeight}px;
+        background: #0a0a0a;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      `;
 
-      if (progressBar?.parentElement instanceof HTMLElement) {
-        progressBar.parentElement.style.visibility = 'hidden';
-        hiddenElements.push(progressBar.parentElement);
+      // 克隆页面内容
+      const pageClone = element.cloneNode(true) as HTMLElement;
+
+      // 移除进度条
+      const progressBar = pageClone.querySelector('.h-\\[2px\\]');
+      if (progressBar?.parentElement) {
+        progressBar.parentElement.remove();
       }
 
-      backButtons.forEach(btn => {
-        if (btn instanceof HTMLElement) {
-          btn.style.visibility = 'hidden';
-          hiddenElements.push(btn);
-        }
-      });
+      // 移除返回按钮
+      const backButtons = pageClone.querySelectorAll('button');
+      backButtons.forEach(btn => btn.remove());
 
-      if (pageDots instanceof HTMLElement) {
-        pageDots.style.visibility = 'hidden';
-        hiddenElements.push(pageDots);
+      // 移除页码指示器
+      const pageDots = pageClone.querySelector('.pb-2.sm\\:pb-3');
+      if (pageDots) {
+        pageDots.remove();
       }
 
-      // 显示二维码 footer (只在保存时)
-      const qrFooter = element.querySelector('.save-footer-only');
+      // 显示二维码 footer
+      const qrFooter = pageClone.querySelector('.save-footer-only');
       if (qrFooter instanceof HTMLElement) {
         qrFooter.classList.remove('hidden');
       }
 
+      // 修正高度相关的样式
+      const fullHeightNodes = pageClone.querySelectorAll<HTMLElement>('[class*="h-\\[100dvh\\]"]');
+      fullHeightNodes.forEach(node => {
+        node.style.height = 'auto';
+        node.style.minHeight = 'auto';
+      });
+
+      // 设置克隆元素的样式
+      pageClone.style.cssText = `
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      `;
+
+      container.appendChild(pageClone);
+      document.body.appendChild(container);
+
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      const canvas = await html2canvas(element, {
+      const canvas = await html2canvas(container, {
         backgroundColor: '#0a0a0a',
         scale: 3,
         useCORS: true,
         allowTaint: true,
         logging: false,
+        width: cardWidth,
+        height: cardHeight,
       });
 
-      // 恢复隐藏的元素
-      hiddenElements.forEach(el => {
-        el.style.visibility = 'visible';
-      });
-
-      // 恢复二维码 footer 为隐藏
-      if (qrFooter instanceof HTMLElement) {
-        qrFooter.classList.add('hidden');
-      }
+      // 清理
+      document.body.removeChild(container);
 
       // 转换为 blob
       canvas.toBlob(async (blob) => {
