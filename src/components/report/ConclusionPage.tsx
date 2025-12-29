@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Share2, RotateCcw } from 'lucide-react';
+import { Share2, RotateCcw, ArrowRight } from 'lucide-react';
 import { SystemNarration, Conclusion } from '@/lib/sceneLibrary';
 import wechatQr from '@/assets/wechat-qr.png';
 
@@ -7,9 +7,10 @@ interface ConclusionPageProps {
   narration: SystemNarration;
   conclusion: Conclusion;
   onRestart: () => void;
+  onNext?: () => void;
 }
 
-export function ConclusionPage({ narration, conclusion, onRestart }: ConclusionPageProps) {
+export function ConclusionPage({ narration, conclusion, onRestart, onNext }: ConclusionPageProps) {
   const handleShare = async () => {
     const shareText = `2025 法律人年度报告
 
@@ -124,22 +125,33 @@ ${narration.text.replace(/\n/g, ' ')}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.3 }}
-        className="flex-shrink-0 flex items-center justify-center gap-2 sm:gap-3 mt-2 sm:mt-4"
+        className="flex-shrink-0 flex flex-col items-center gap-2 sm:gap-3 mt-2 sm:mt-4"
       >
-        <button 
-          onClick={handleShare} 
-          className="btn-primary flex items-center gap-1.5 text-sm sm:text-base px-4 py-2.5 sm:px-6 sm:py-3"
-        >
-          <Share2 className="w-4 h-4 sm:w-4 sm:h-4" />
-          分享报告
-        </button>
-        <button 
-          onClick={onRestart} 
-          className="btn-secondary flex items-center gap-1.5 text-sm sm:text-base px-4 py-2.5 sm:px-5 sm:py-3"
-        >
-          <RotateCcw className="w-4 h-4 sm:w-4 sm:h-4" />
-          再来一次
-        </button>
+        {onNext && (
+          <button 
+            onClick={onNext} 
+            className="btn-primary flex items-center gap-1.5 text-sm sm:text-base px-6 py-2.5 sm:px-8 sm:py-3 w-full max-w-xs justify-center"
+          >
+            生成我的分享卡片
+            <ArrowRight className="w-4 h-4 sm:w-4 sm:h-4" />
+          </button>
+        )}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button 
+            onClick={handleShare} 
+            className="btn-secondary flex items-center gap-1.5 text-sm sm:text-base px-4 py-2.5 sm:px-5 sm:py-3"
+          >
+            <Share2 className="w-4 h-4 sm:w-4 sm:h-4" />
+            复制文字
+          </button>
+          <button 
+            onClick={onRestart} 
+            className="btn-secondary flex items-center gap-1.5 text-sm sm:text-base px-4 py-2.5 sm:px-5 sm:py-3"
+          >
+            <RotateCcw className="w-4 h-4 sm:w-4 sm:h-4" />
+            再来一次
+          </button>
+        </div>
       </motion.div>
     </motion.div>
   );
