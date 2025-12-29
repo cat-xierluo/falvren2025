@@ -5,6 +5,8 @@ import { ReportLayout } from '@/components/report/ReportLayout';
 import { IdentityPage } from '@/components/report/IdentityPage';
 import { ScenePage } from '@/components/report/ScenePage';
 import { ConclusionPage } from '@/components/report/ConclusionPage';
+import { SharePage } from '@/components/report/SharePage';
+import { PromotePage } from '@/components/report/PromotePage';
 import { SaveButton } from '@/components/report/SaveButton';
 import { generateReport, GeneratedReport } from '@/lib/sceneLibrary';
 
@@ -20,8 +22,8 @@ const Index = () => {
   // Generate new report when key changes
   const report: GeneratedReport = useMemo(() => generateReport(), [reportKey]);
 
-  // Total pages = 1 (identity) + scenes count + 1 (conclusion)
-  const totalPages = 1 + report.scenes.length + 1;
+  // Total pages = 1 (identity) + scenes count + 1 (conclusion) + 1 (share) + 1 (promote)
+  const totalPages = 1 + report.scenes.length + 1 + 1 + 1;
 
   const handleStart = useCallback(() => {
     setStarted(true);
@@ -117,13 +119,32 @@ const Index = () => {
       );
     }
     
-    // Last page: Conclusion
+    // Conclusion page (after all scenes)
+    if (sceneIndex === report.scenes.length) {
+      return (
+        <ConclusionPage 
+          narration={report.systemNarration}
+          conclusion={report.conclusion}
+          onRestart={handleRestart}
+          onNext={handleNext}
+        />
+      );
+    }
+
+    // Share page (after conclusion)
+    if (sceneIndex === report.scenes.length + 1) {
+      return (
+        <SharePage
+          conclusion={report.conclusion}
+          narration={report.systemNarration}
+          onNext={handleNext}
+        />
+      );
+    }
+
+    // Last page: Promote page
     return (
-      <ConclusionPage 
-        narration={report.systemNarration}
-        conclusion={report.conclusion}
-        onRestart={handleRestart} 
-      />
+      <PromotePage onRestart={handleRestart} />
     );
   };
 

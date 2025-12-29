@@ -1,0 +1,143 @@
+import { motion } from 'framer-motion';
+import { QRCodeSVG } from 'qrcode.react';
+import { RotateCcw, Copy, Check } from 'lucide-react';
+import { useState } from 'react';
+import wechatQr from '@/assets/wechat-qr.png';
+
+interface PromotePageProps {
+  onRestart: () => void;
+}
+
+export function PromotePage({ onRestart }: PromotePageProps) {
+  const [copied, setCopied] = useState(false);
+  const projectUrl = window.location.origin;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(projectUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex flex-col h-full justify-between"
+    >
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.3 }}
+        className="flex-shrink-0 text-center"
+      >
+        <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider">
+          🎉 邀请好友来玩
+        </p>
+      </motion.div>
+
+      {/* Main content */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="flex-1 flex flex-col justify-center min-h-0"
+      >
+        <div className="text-center space-y-6">
+          {/* Title */}
+          <div>
+            <h2 className="text-xl sm:text-2xl font-light text-foreground">
+              2025 法律人年度报告
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground mt-2">
+              生成专属于你的法律人年度总结
+            </p>
+          </div>
+
+          {/* QR Code */}
+          <div className="flex justify-center">
+            <div className="bg-white rounded-2xl p-4 shadow-lg">
+              <QRCodeSVG 
+                value={projectUrl} 
+                size={160}
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+          </div>
+
+          {/* URL display */}
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground/60">扫码或访问</p>
+            <div className="flex items-center justify-center gap-2">
+              <code className="text-sm sm:text-base font-mono text-foreground bg-muted/30 px-3 py-1.5 rounded-lg">
+                {projectUrl.replace(/^https?:\/\//, '')}
+              </code>
+              <button
+                onClick={handleCopyLink}
+                className="p-2 hover:bg-muted/50 rounded-lg transition-colors"
+                title="复制链接"
+              >
+                {copied ? (
+                  <Check className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Copy className="w-4 h-4 text-muted-foreground" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Call to action */}
+          <p className="text-sm text-muted-foreground/50">
+            转发给你的法律人朋友<br />
+            让TA也生成自己的年度报告
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Author section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.4 }}
+        className="flex-shrink-0"
+      >
+        <div className="card-report bg-muted/20 py-3 px-4 sm:py-4 sm:px-5">
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* QR Code */}
+            <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 bg-white rounded-lg p-1.5 sm:p-1.5">
+              <img 
+                src={wechatQr} 
+                alt="微信二维码" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+            {/* Author info */}
+            <div className="flex-1 text-left">
+              <p className="text-xs sm:text-xs text-muted-foreground">作者</p>
+              <p className="text-base sm:text-base text-foreground font-medium">杨卫薪律师</p>
+              <p className="text-sm sm:text-sm text-muted-foreground font-mono">微信 ywxlaw</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Restart button */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.3 }}
+        className="flex-shrink-0 flex justify-center mt-3"
+      >
+        <button 
+          onClick={onRestart} 
+          className="btn-secondary flex items-center gap-1.5 text-sm sm:text-base px-5 py-2.5"
+        >
+          <RotateCcw className="w-4 h-4" />
+          再来一次
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+}
