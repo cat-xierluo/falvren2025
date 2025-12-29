@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Share2, RotateCcw } from 'lucide-react';
 import { SystemNarration } from '@/lib/sceneLibrary';
+import wechatQr from '@/assets/wechat-qr.png';
 
 interface ConclusionPageProps {
   narration: SystemNarration;
@@ -16,7 +17,9 @@ export function ConclusionPage({ narration, onRestart }: ConclusionPageProps) {
 你只是比很多人
 更能忍受复杂、模糊和不被回应
 
-${narration.text.replace(/\n/g, ' ')}`;
+${narration.text.replace(/\n/g, ' ')}
+
+作者：杨卫薪律师（微信 ywxlaw）`;
 
     if (navigator.share) {
       try {
@@ -43,7 +46,7 @@ ${narration.text.replace(/\n/g, ' ')}`;
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col h-full justify-between py-2 sm:py-0 sm:block sm:space-y-8 md:space-y-12"
+      className="flex flex-col h-full justify-between py-2 sm:py-0 sm:block sm:space-y-6 md:space-y-8"
     >
       {/* Header */}
       <motion.div
@@ -62,34 +65,46 @@ ${narration.text.replace(/\n/g, ' ')}`;
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.5 }}
-        className="flex-1 flex flex-col justify-center text-center space-y-3 sm:space-y-6 sm:flex-none sm:py-6"
+        className="flex-1 flex flex-col justify-center text-center space-y-2 sm:space-y-4 sm:flex-none sm:py-4"
       >
-        <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-foreground leading-relaxed">
+        <p className="text-lg sm:text-2xl md:text-3xl font-light text-foreground leading-relaxed">
           你没有热爱法律
         </p>
-        <p className="text-base sm:text-xl md:text-2xl text-muted-foreground leading-relaxed">
+        <p className="text-sm sm:text-lg md:text-xl text-muted-foreground leading-relaxed">
           你只是比很多人<br />
           更能忍受复杂、模糊和不被回应
         </p>
+        
+        {/* System narration */}
+        <p className="text-xs text-muted-foreground/50 whitespace-pre-line pt-2">
+          {narration.text}
+        </p>
       </motion.div>
 
-      {/* System narration & Share prompt */}
+      {/* Author section */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.5 }}
-        className="flex-shrink-0 space-y-3 sm:space-y-4"
+        className="flex-shrink-0"
       >
-        {/* System narration */}
-        <p className="text-xs sm:text-sm text-muted-foreground/50 text-center whitespace-pre-line">
-          {narration.text}
-        </p>
-
-        {/* Share prompt */}
-        <div className="card-report bg-muted/20 text-center py-3 px-4 sm:py-4 sm:px-6">
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            如果这是你的 2025，欢迎转给那个凌晨还在回你消息的法律人
-          </p>
+        <div className="card-report bg-muted/20 py-3 px-4 sm:py-4 sm:px-6">
+          <div className="flex items-center justify-center gap-4">
+            {/* QR Code */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-white rounded-lg p-1.5 sm:p-2">
+              <img 
+                src={wechatQr} 
+                alt="微信二维码" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+            {/* Author info */}
+            <div className="text-left">
+              <p className="text-xs text-muted-foreground mb-1">作者</p>
+              <p className="text-sm sm:text-base text-foreground font-medium">杨卫薪律师</p>
+              <p className="text-xs sm:text-sm text-muted-foreground font-mono">微信 ywxlaw</p>
+            </div>
+          </div>
         </div>
       </motion.div>
 
@@ -109,6 +124,16 @@ ${narration.text.replace(/\n/g, ' ')}`;
           重新生成
         </button>
       </motion.div>
+
+      {/* Footer hint */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7, duration: 0.4 }}
+        className="flex-shrink-0 text-center text-xs text-muted-foreground/30 pt-1 sm:pt-2"
+      >
+        欢迎转给那个凌晨还在回你消息的法律人
+      </motion.p>
     </motion.div>
   );
 }
