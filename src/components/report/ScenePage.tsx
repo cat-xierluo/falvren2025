@@ -50,8 +50,8 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
         transition={{ delay: 0.1, duration: 0.3 }}
         className="flex-shrink-0 flex items-center gap-2 mb-2 sm:mb-4"
       >
-        <span className="text-base sm:text-lg">{icon}</span>
-        <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider uppercase">
+        <span className="text-2xl sm:text-3xl">{icon}</span>
+        <p className="font-mono text-base sm:text-lg text-muted-foreground tracking-wider uppercase">
           {categoryName}
         </p>
       </motion.div>

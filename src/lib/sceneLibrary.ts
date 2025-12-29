@@ -247,12 +247,14 @@ export const sceneLibrary: Scene[] = [
     subtext: '实际通话时长：{number} 分钟',
     hasRandomNumber: true,
     numberRange: [47, 89],
-    numberSuffix: ''
+    numberSuffix: '',
+    soulText: '简单咨询\n从来都不简单'
   },
   {
     id: 'phone_friend_said',
     category: 'phone',
     template: '你听到最多的一句话是：\n\n"我朋友说这个不复杂"',
+    subtext: '朋友的判断标准\n通常只有两个：难不难、贵不贵',
     soulText: '你已经学会\n在心里默数三秒'
   },
   {
@@ -261,7 +263,9 @@ export const sceneLibrary: Scene[] = [
     template: '有些电话你一接起来\n就已经知道\n这通不会有明确结论',
     hasRandomNumber: true,
     numberRange: [23, 67],
-    numberSuffix: '通'
+    numberSuffix: '通',
+    subtext: '但你还是会认真听完',
+    soulText: '因为这是职业'
   },
   {
     id: 'phone_payment_prediction',
@@ -270,12 +274,14 @@ export const sceneLibrary: Scene[] = [
     subtext: '准确率约 {number}%',
     hasRandomNumber: true,
     numberRange: [78, 94],
-    numberSuffix: ''
+    numberSuffix: '',
+    soulText: '第六感\n是工作经验的别名'
   },
   {
     id: 'phone_check_calendar',
     category: 'phone',
     template: '有几次你接起电话\n却下意识地\n先看了一眼日历',
+    subtext: '条件反射级别的动作',
     soulText: '你在确认\n这是不是一个\n可以说"不方便"的日子'
   },
   {
@@ -292,7 +298,8 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [99, 200],
     numberSuffix: '',
-    subtext: '你已经学会选择性已读'
+    subtext: '你已经学会选择性已读',
+    soulText: '未读不是没看\n是还没想好怎么回'
   },
 
   // ===== 12368 / 系统沟通 =====
@@ -301,8 +308,9 @@ export const sceneLibrary: Scene[] = [
     category: 'system_12368',
     template: '你这一年拨打了 **{number}** 次 12368\n\n获得最多的回应是：\n「对方忙碌中，请稍后再拨」',
     hasRandomNumber: true,
-    numberRange: [240, 520],
+    numberRange: [500, 1000],
     numberSuffix: '',
+    subtext: '平均每天 {number} 次',
     soulText: '你和 12368 的关系\n比你和很多当事人都稳定',
     businessArea: 'litigation' // 诉讼专属
   },
@@ -322,6 +330,7 @@ export const sceneLibrary: Scene[] = [
     numberRange: [18, 36],
     numberSuffix: '',
     subtext: '系统检测到你仍然会继续拨打',
+    soulText: '接通率很低\n但你还是打',
     businessArea: 'litigation' // 诉讼专属
   },
   {
@@ -331,7 +340,8 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [20, 80],
     numberSuffix: '',
-    soulText: '非诉律师和 12368\n基本不打交道',
+    subtext: '主要是帮当事人查',
+    soulText: '法院系统\n还是有用的',
     businessArea: 'non_litigation' // 非诉专属
   },
   {
@@ -350,12 +360,14 @@ export const sceneLibrary: Scene[] = [
     template: '你最晚的一次工作时间\n是 **凌晨 {time}**\n\n那天你发出了一封邮件',
     hasRandomTime: true,
     hasRandomName: true,
+    subtext: '收件人：{name}',
     soulText: '你已经不记得\n{name} 是客户、同事\n还是你的人生见证者'
   },
   {
     id: 'late_night_habit',
     category: 'late_night',
     template: '那一刻你已经不太确定\n自己是在工作\n还是在完成一种惯性',
+    subtext: '身体记得\n脑子已经麻木',
     soulText: '有些夜晚\n不属于今天\n也不属于明天'
   },
   {
@@ -372,7 +384,8 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [12, 45],
     numberSuffix: '',
-    subtext: '骑手已经认识你了'
+    subtext: '骑手已经认识你了',
+    soulText: '胃饿的时候\n不分时间'
   },
   {
     id: 'late_night_sunrise',
@@ -381,6 +394,7 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [3, 12],
     numberSuffix: '',
+    subtext: '日出很好看\n但你太累了',
     soulText: '那不是熬夜\n是另一种作息'
   },
 
@@ -393,6 +407,7 @@ export const sceneLibrary: Scene[] = [
     numberRange: [3, 8],
     numberSuffix: '',
     hasRandomCity: true,
+    subtext: '最熟悉的：高铁站和酒店',
     soulText: '你对城市的记忆\n主要来自：高铁站和酒店'
   },
   {
@@ -400,25 +415,28 @@ export const sceneLibrary: Scene[] = [
     category: 'travel',
     template: '你今年最常吐槽的是：\n\n**{easterEgg}**',
     subtext: '没有机场的苏州人\n都知道这是什么意思',
-    soulText: '有些城市\n没有机场\n但有段子'
+    soulText: '机场\n可以没有\n梗必须有'
   },
   {
     id: 'travel_hotel_work',
     category: 'travel',
     template: '有一次出差\n你在酒店改文件\n改到忘了这是哪座城市',
-    subtext: '窗外的风景\n你完全没注意过'
+    subtext: '窗外的风景\n你完全没注意过',
+    soulText: '所有酒店房间\n看起来都一样'
   },
   {
     id: 'travel_hotel_criteria',
     category: 'travel',
     template: '你判断一家酒店好不好\n的标准是：\n\n**网速稳不稳**',
+    subtext: 'Wi-Fi 信号满格\n比早餐丰富重要',
     soulText: '五星级不重要\nWi-Fi 信号才重要'
   },
   {
     id: 'travel_landmark',
     category: 'travel',
     template: '你最熟悉的城市地标\n是打印店的位置',
-    subtext: '以及 24 小时便利店'
+    subtext: '以及 24 小时便利店',
+    soulText: '这些地方\n比景点重要'
   },
   {
     id: 'travel_photos',
@@ -427,6 +445,7 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [15, 45],
     numberSuffix: '张',
+    subtext: '有些风景只能自己看',
     soulText: '它们还在相册里\n等一个不会来的"有空"'
   },
   {
@@ -436,12 +455,14 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [24, 68],
     numberSuffix: '',
-    subtext: '已经能闭眼找到充电口的位置'
+    subtext: '已经能闭眼找到充电口的位置',
+    soulText: '高铁座位\n比你家沙发还熟悉'
   },
   {
     id: 'travel_airport',
     category: 'travel',
     template: '你对机场的熟悉程度\n已经超过了家附近的商场',
+    subtext: '你知道哪家的安检队伍最快',
     soulText: '安检员已经认识你了'
   },
 
@@ -451,38 +472,45 @@ export const sceneLibrary: Scene[] = [
     category: 'documents',
     template: '你今年创建了 **{number}** 个 Word 文件\n\n没有任何一个\n真正是"最终版"',
     hasRandomNumber: true,
-    numberRange: [300, 800],
+    numberRange: [1000, 2000],
     numberSuffix: '',
+    subtext: '平均每天 {number} 个',
     soulText: '律师的"最终版"\n是一种精神状态\n不是文件名'
   },
   {
     id: 'documents_filename',
     category: 'documents',
     template: '你最常见的文件名是：\n\n**{filename}**',
-    hasRandomFileName: true
+    hasRandomFileName: true,
+    subtext: '它躺在你的回收站里',
+    soulText: '文件名会暴露\n你的焦虑程度'
   },
   {
     id: 'documents_outsider',
     category: 'documents',
     template: '你已经能一眼看出\n一份文件\n是不是给外行看的',
+    subtext: '外行看的文件\n格式更花哨',
     soulText: '格式会说话'
   },
   {
     id: 'documents_one_more',
     category: 'documents',
     template: '你对"再补一个材料"的理解\n不再是数量\n而是心理准备',
-    subtext: '通常意味着：再补 5-10 个'
+    subtext: '通常意味着：再补 5-10 个',
+    soulText: '补材料\n是一个动词'
   },
   {
     id: 'documents_track_changes',
     category: 'documents',
     template: '你开始用颜色\n区分不同版本的修改痕迹',
-    subtext: '红色是客户的\n蓝色是自己的\n绿色是领导的'
+    subtext: '红色是客户的\n蓝色是自己的\n绿色是领导的',
+    soulText: '修订痕迹\n是权力的可视化'
   },
   {
     id: 'documents_find_file',
     category: 'documents',
     template: '你最熟练的技能之一\n是在三分钟内\n找到一份两年前的文件',
+    subtext: '归档混乱\n但你能找到',
     soulText: '这不是记忆力\n是生存本能'
   },
   {
@@ -492,17 +520,18 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [30, 90],
     numberSuffix: '',
-    subtext: '因为 Word 崩溃过'
+    subtext: '因为 Word 崩溃过',
+    soulText: '保存\n是一种安全感的仪式'
   },
   {
     id: 'documents_pdf',
     category: 'documents',
     template: '你今年转换了 **{number}** 次 PDF',
     hasRandomNumber: true,
-    numberRange: [200, 500],
+    numberRange: [1000, 2500],
     numberSuffix: '',
     subtext: '有 {ratio}% 的时候发现字体变了',
-    soulText: '然后重新转一遍'
+    soulText: '转 PDF\n是玄学'
   },
   // 非诉专属文档场景
   {
@@ -518,7 +547,7 @@ export const sceneLibrary: Scene[] = [
     category: 'documents',
     template: '你今年审查的合同\n加起来有 **{number}** 份',
     hasRandomNumber: true,
-    numberRange: [80, 200],
+    numberRange: [300, 600],
     numberSuffix: '',
     subtext: '每份都有\n至少3个版本',
     soulText: '你以为改完了\n客户说"再看看第12条"',
@@ -558,13 +587,15 @@ export const sceneLibrary: Scene[] = [
     id: 'time_no_weekend',
     category: 'time_disorder',
     template: '你不再区分\n工作日和周末\n\n只区分：\n**能不能回消息**',
+    subtext: '周末只是一个概念',
     soulText: '日历只是参考\n不是规则'
   },
   {
     id: 'time_later',
     category: 'time_disorder',
     template: '你最常说的一句话是：\n\n"我晚点看"',
-    subtext: '"晚点"的定义：不确定'
+    subtext: '"晚点"的定义：不确定',
+    soulText: '晚点\n就是不确定'
   },
   {
     id: 'time_holiday_work',
@@ -573,13 +604,15 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [12, 35],
     numberSuffix: '次',
+    subtext: '通常是假期',
     soulText: '休息是一种状态\n不是一个时间段'
   },
   {
     id: 'time_off_work',
     category: 'time_disorder',
     template: '你已经不太记得\n上一次\n完整下班是什么感觉',
-    subtext: '完整下班的定义：\n脑子里没有待办事项'
+    subtext: '完整下班的定义：\n脑子里没有待办事项',
+    soulText: '下班时间\n只是一个说法'
   },
   {
     id: 'time_deadline',
@@ -587,7 +620,9 @@ export const sceneLibrary: Scene[] = [
     template: '你听到"明天要"的次数\n已经多到\n不再有情绪波动',
     hasRandomNumber: true,
     numberRange: [80, 200],
-    numberSuffix: '次'
+    numberSuffix: '次',
+    subtext: '平均每天 {number} 次',
+    soulText: '明天\n永远是最忙的一天'
   },
   {
     id: 'time_lunch',
@@ -596,6 +631,7 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [45, 120],
     numberSuffix: '',
+    subtext: '忙起来会忘记吃饭',
     soulText: '有些时候\n午饭和晚饭合并了'
   },
 
@@ -604,19 +640,22 @@ export const sceneLibrary: Scene[] = [
     id: 'jargon_principle',
     category: 'industry_jargon',
     template: '你已经完全听懂\n"原则上可以"\n的全部含义',
-    subtext: '真实含义：实操可能不行'
+    subtext: '真实含义：实操可能不行',
+    soulText: '原则\n就是可以不遵守的规则'
   },
   {
     id: 'jargon_room',
     category: 'industry_jargon',
     template: '你知道\n哪些话\n是为了留下余地',
+    subtext: '留余地\n就是给自己留空间',
     soulText: '模糊不是逃避\n是专业'
   },
   {
     id: 'jargon_ambiguity',
     category: 'industry_jargon',
     template: '你学会用模糊\n对抗不确定性',
-    subtext: '因为法律本身就很模糊'
+    subtext: '因为法律本身就很模糊',
+    soulText: '确定性\n是奢侈品'
   },
   {
     id: 'jargon_no_repeat',
@@ -625,6 +664,7 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [15, 40],
     numberSuffix: '种',
+    subtext: '已经说过很多遍',
     soulText: '不是不耐烦\n是累了'
   },
   {
@@ -634,7 +674,8 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [120, 300],
     numberSuffix: '',
-    subtext: '真实含义：我现在也不确定'
+    subtext: '真实含义：我现在也不确定',
+    soulText: '核实\n是专业缓冲词'
   },
   {
     id: 'jargon_understand',
@@ -643,7 +684,8 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [80, 200],
     numberSuffix: '',
-    subtext: '真实含义：但规则不允许'
+    subtext: '真实含义：但规则不允许',
+    soulText: '理解\n不代表同意'
   },
 
   // ===== 认知变化 =====
@@ -651,25 +693,29 @@ export const sceneLibrary: Scene[] = [
     id: 'cognition_no_judge',
     category: 'cognition_change',
     template: '你不再轻易评价\n当事人"懂不懂法"',
+    subtext: '每个人都有自己的逻辑',
     soulText: '因为很多时候\n懂不懂\n不影响结果'
   },
   {
     id: 'cognition_executable',
     category: 'cognition_change',
     template: '你开始更在意\n**可执行性**\n而不是道理本身',
-    subtext: '道理赢不了官司'
+    subtext: '道理赢不了官司',
+    soulText: '可执行\n比正确重要'
   },
   {
     id: 'cognition_law_limit',
     category: 'cognition_change',
     template: '有些问题\n你已经知道\n法律解决不了',
+    subtext: '但当事人还是问',
     soulText: '但你还是会接\n因为那是工作'
   },
   {
     id: 'cognition_wont_change',
     category: 'cognition_change',
     template: '你比去年\n更清楚\n什么不会改变',
-    subtext: '这不是悲观\n是清醒'
+    subtext: '这不是悲观\n是清醒',
+    soulText: '有些事情\n永远不会变'
   },
   {
     id: 'cognition_confidence',
@@ -677,6 +723,7 @@ export const sceneLibrary: Scene[] = [
     template: '对行业前景的信心\n\n年初：**{start}%**\n年末：**{end}%**',
     hasRandomNumber: true,
     numberRange: [35, 48],
+    subtext: '下降的原因\n你知道',
     soulText: '你不是失望\n你只是更清楚\n什么不会改变'
   },
   {
@@ -686,13 +733,15 @@ export const sceneLibrary: Scene[] = [
     subtext: '信了 {number} 次',
     hasRandomNumber: true,
     numberRange: [8, 20],
-    numberSuffix: ''
+    numberSuffix: '',
+    soulText: '案子结束\n只是下一个开始'
   },
   {
     id: 'cognition_emotion',
     category: 'cognition_change',
     template: '你听到"就改一下"的心率反应\n\n**显著升高**',
-    subtext: '尤其是周五下午 6 点之后'
+    subtext: '尤其是周五下午 6 点之后',
+    soulText: '条件反射\n级别的恐惧'
   },
 
   // ===== 身份溢出（点睛类）=====
@@ -701,19 +750,22 @@ export const sceneLibrary: Scene[] = [
     category: 'identity_overflow',
     template: '有些名字\n你已经不记得\n是客户、同事\n还是你人生的一部分',
     hasRandomName: true,
+    subtext: '他们在你的联系人里',
     soulText: '工作和生活的边界\n早就模糊了'
   },
   {
     id: 'identity_case_end',
     category: 'identity_overflow',
     template: '有些案子\n你记得很清楚\n却已经不记得\n是什么时候结束的',
+    subtext: '好像一直没结束',
     soulText: '结案不是结束\n遗忘才是'
   },
   {
     id: 'identity_progress',
     category: 'identity_overflow',
     template: '有些关系\n只存在于\n工作进度里',
-    subtext: '项目结束后\n就再也没联系过'
+    subtext: '项目结束后\n就再也没联系过',
+    soulText: '项目结束\n关系也就结束了'
   },
   {
     id: 'identity_dream',
@@ -722,13 +774,15 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [5, 18],
     numberSuffix: '',
+    subtext: '通常梦到改文件',
     soulText: '梦里还在改合同'
   },
   {
     id: 'identity_self',
     category: 'identity_overflow',
     template: '有时候你会突然想起\n自己好像\n还有别的身份',
-    subtext: '但也只是想起而已'
+    subtext: '但也只是想起而已',
+    soulText: '律师身份\n已经成了主角'
   }
 ];
 
@@ -834,7 +888,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 function generateRandomTime(): string {
-  const hour = randomBetween(1, 4);
+  const hour = randomBetween(3, 5);  // 改为 3-5 点，更夸张的加班时间
   const minute = randomBetween(0, 59);
   return `${hour}:${minute.toString().padStart(2, '0')}`;
 }

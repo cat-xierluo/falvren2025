@@ -76,19 +76,9 @@ export function StartPage({ onStart }: StartPageProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-base sm:text-lg text-muted-foreground mb-2 sm:mb-4"
+              className="text-base sm:text-lg text-muted-foreground mb-8 sm:mb-12"
             >
               我们回顾了你这一年的使用情况
-            </motion.p>
-
-            {/* Disclaimer */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              className="text-xs sm:text-sm text-muted-foreground/60 mb-8 sm:mb-12"
-            >
-              数据为随机生成，但你会觉得很熟悉
             </motion.p>
 
             {/* Start buttons */}

@@ -6,13 +6,18 @@ import wechatQr from '@/assets/wechat-qr.png';
 
 interface SaveButtonProps {
   pageRef: React.RefObject<HTMLDivElement>;
+  currentPage: number;
+  totalPages: number;
 }
 
-export function SaveButton({ pageRef }: SaveButtonProps) {
+export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
+
+  // 判断是否是最后一页（推广页）
+  const isLastPage = currentPage === totalPages - 1;
 
   const handleSave = async () => {
     if (!pageRef.current || saving) return;
@@ -55,92 +60,114 @@ export function SaveButton({ pageRef }: SaveButtonProps) {
       });
       
       container.appendChild(pageClone);
-      
+
       // 添加分隔线
       const divider = document.createElement('div');
       divider.style.cssText = `
         height: 1px;
         background: rgba(255,255,255,0.1);
-        margin: 20px 0;
+        margin: 16px 0 12px 0;
       `;
       container.appendChild(divider);
-      
-      // 添加底部信息区域
-      const footer = document.createElement('div');
-      footer.style.cssText = `
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 16px;
-        background: rgba(255,255,255,0.05);
-        border-radius: 8px;
-      `;
-      
-      // 作者二维码
-      const qrWrapper = document.createElement('div');
-      qrWrapper.style.cssText = `
-        width: 56px;
-        height: 56px;
-        background: white;
-        border-radius: 6px;
-        padding: 4px;
-        flex-shrink: 0;
-      `;
-      const qrImg = document.createElement('img');
-      qrImg.src = wechatQr;
-      qrImg.style.cssText = 'width: 100%; height: 100%; object-fit: contain;';
-      qrWrapper.appendChild(qrImg);
-      footer.appendChild(qrWrapper);
-      
-      // 作者信息
-      const authorInfo = document.createElement('div');
-      authorInfo.style.cssText = 'flex: 1;';
-      authorInfo.innerHTML = `
-        <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-bottom: 2px;">作者</div>
-        <div style="font-size: 14px; color: white; font-weight: 500;">杨卫薪律师</div>
-        <div style="font-size: 12px; color: rgba(255,255,255,0.6); font-family: monospace;">微信 ywxlaw</div>
-      `;
-      footer.appendChild(authorInfo);
-      
-      // 网站二维码
-      const siteQrWrapper = document.createElement('div');
-      siteQrWrapper.style.cssText = `
-        width: 56px;
-        height: 56px;
-        background: white;
-        border-radius: 6px;
-        padding: 4px;
-        flex-shrink: 0;
-      `;
-      container.appendChild(footer);
-      
-      // 添加网站链接
-      const siteLink = document.createElement('div');
-      siteLink.style.cssText = `
-        text-align: center;
-        margin-top: 12px;
-        font-size: 10px;
-        color: rgba(255,255,255,0.3);
-      `;
-      siteLink.textContent = '扫码生成你的年度报告';
-      container.appendChild(siteLink);
-      
-      // 网站二维码容器
-      const siteQrContainer = document.createElement('div');
-      siteQrContainer.style.cssText = `
-        display: flex;
-        justify-content: center;
-        margin-top: 8px;
-      `;
-      const siteQrBox = document.createElement('div');
-      siteQrBox.style.cssText = `
-        background: white;
-        padding: 8px;
-        border-radius: 6px;
-      `;
-      siteQrBox.id = 'site-qr-placeholder';
-      siteQrContainer.appendChild(siteQrBox);
-      container.appendChild(siteQrContainer);
+
+      // 根据是否是最后一页决定底部内容
+      if (isLastPage) {
+        // 最后一页：显示作者信息 + 网站二维码
+        const footer = document.createElement('div');
+        footer.style.cssText = `
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px;
+          background: rgba(255,255,255,0.05);
+          border-radius: 8px;
+          margin-bottom: 8px;
+        `;
+
+        // 作者二维码
+        const qrWrapper = document.createElement('div');
+        qrWrapper.style.cssText = `
+          width: 48px;
+          height: 48px;
+          background: white;
+          border-radius: 6px;
+          padding: 4px;
+          flex-shrink: 0;
+        `;
+        const qrImg = document.createElement('img');
+        qrImg.src = wechatQr;
+        qrImg.style.cssText = 'width: 100%; height: 100%; object-fit: contain;';
+        qrWrapper.appendChild(qrImg);
+        footer.appendChild(qrWrapper);
+
+        // 作者信息
+        const authorInfo = document.createElement('div');
+        authorInfo.style.cssText = 'flex: 1;';
+        authorInfo.innerHTML = `
+          <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-bottom: 2px;">作者</div>
+          <div style="font-size: 13px; color: white; font-weight: 500;">杨卫薪律师</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.6); font-family: monospace;">微信 ywxlaw</div>
+        `;
+        footer.appendChild(authorInfo);
+        container.appendChild(footer);
+
+        // 网站链接文字
+        const siteLink = document.createElement('div');
+        siteLink.style.cssText = `
+          text-align: center;
+          margin-bottom: 8px;
+          font-size: 10px;
+          color: rgba(255,255,255,0.35);
+        `;
+        siteLink.textContent = '扫码生成你的法律人年度报告';
+        container.appendChild(siteLink);
+
+        // 网站二维码容器
+        const siteQrContainer = document.createElement('div');
+        siteQrContainer.style.cssText = `
+          display: flex;
+          justify-content: center;
+          padding-bottom: 4px;
+        `;
+        const siteQrBox = document.createElement('div');
+        siteQrBox.style.cssText = `
+          background: white;
+          padding: 5px;
+          border-radius: 6px;
+        `;
+        siteQrBox.id = 'site-qr-placeholder';
+        siteQrContainer.appendChild(siteQrBox);
+        container.appendChild(siteQrContainer);
+      } else {
+        // 其他页面：只显示网站二维码
+        // 添加网站链接文字
+        const siteLink = document.createElement('div');
+        siteLink.style.cssText = `
+          text-align: center;
+          margin-bottom: 8px;
+          font-size: 11px;
+          color: rgba(255,255,255,0.4);
+        `;
+        siteLink.textContent = '扫码生成你的法律人年度报告';
+        container.appendChild(siteLink);
+
+        // 网站二维码容器
+        const siteQrContainer = document.createElement('div');
+        siteQrContainer.style.cssText = `
+          display: flex;
+          justify-content: center;
+          padding-bottom: 8px;
+        `;
+        const siteQrBox = document.createElement('div');
+        siteQrBox.style.cssText = `
+          background: white;
+          padding: 6px;
+          border-radius: 6px;
+        `;
+        siteQrBox.id = 'site-qr-placeholder';
+        siteQrContainer.appendChild(siteQrBox);
+        container.appendChild(siteQrContainer);
+      }
       
       document.body.appendChild(container);
       
@@ -151,7 +178,7 @@ export function SaveButton({ pageRef }: SaveButtonProps) {
         const root = await import('react-dom/client');
         const reactRoot = root.createRoot(tempDiv);
         reactRoot.render(
-          <QRCodeSVG value={siteUrl} size={60} level="M" />
+          <QRCodeSVG value={siteUrl} size={50} level="M" />
         );
         await new Promise(resolve => setTimeout(resolve, 100));
         qrPlaceholder.appendChild(tempDiv);

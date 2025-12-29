@@ -152,9 +152,10 @@ const Index = () => {
 
   return (
     <>
-      <SaveButton pageRef={pageRef} />
-      <div 
+      <SaveButton pageRef={pageRef} currentPage={currentPage} totalPages={totalPages} />
+      <div
         ref={pageRef}
+        className="relative"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
