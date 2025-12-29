@@ -24,7 +24,7 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
         {/* Progress bar */}
         <div className="h-[2px] bg-muted/50">
           <div 
-            className="h-full bg-gradient-to-r from-purple-500/60 via-blue-500/60 to-teal-500/60 transition-all duration-500 ease-out"
+            className="h-full bg-gradient-to-r from-amber-500/60 via-orange-500/60 to-rose-500/60 transition-all duration-500 ease-out"
             style={{ width: `${(currentPage / totalPages) * 100}%` }}
           />
         </div>
