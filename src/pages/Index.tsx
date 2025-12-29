@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { StartPage } from '@/components/report/StartPage';
 import { ReportLayout } from '@/components/report/ReportLayout';
 import { IdentityPage } from '@/components/report/IdentityPage';
@@ -11,8 +11,11 @@ import { generateReport, GeneratedReport } from '@/lib/sceneLibrary';
 const Index = () => {
   const [started, setStarted] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const [reportKey, setReportKey] = useState(0);
   const pageRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   // Generate new report when key changes
   const report: GeneratedReport = useMemo(() => generateReport(), [reportKey]);
@@ -23,21 +26,77 @@ const Index = () => {
   const handleStart = useCallback(() => {
     setStarted(true);
     setCurrentPage(0);
+    setDirection(1);
   }, []);
 
   const handleNext = useCallback(() => {
-    setCurrentPage(prev => prev + 1);
-  }, []);
+    if (currentPage < totalPages - 1) {
+      setDirection(1);
+      setCurrentPage(prev => prev + 1);
+    }
+  }, [currentPage, totalPages]);
+
+  const handleBack = useCallback(() => {
+    if (currentPage > 0) {
+      setDirection(-1);
+      setCurrentPage(prev => prev - 1);
+    }
+  }, [currentPage]);
 
   const handleRestart = useCallback(() => {
     setReportKey(prev => prev + 1);
     setStarted(false);
     setCurrentPage(0);
+    setDirection(1);
   }, []);
+
+  // Touch handlers for swipe navigation
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 50; // minimum swipe distance
+
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        // Swipe left -> next page
+        handleNext();
+      } else {
+        // Swipe right -> previous page
+        handleBack();
+      }
+    }
+    
+    // Reset
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  }, [handleNext, handleBack]);
 
   if (!started) {
     return <StartPage onStart={handleStart} />;
   }
+
+  // Animation variants
+  const pageVariants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? 50 : -50,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (dir: number) => ({
+      x: dir > 0 ? -50 : 50,
+      opacity: 0,
+    }),
+  };
 
   const renderPage = () => {
     // Page 0: Identity page
@@ -70,12 +129,31 @@ const Index = () => {
   return (
     <>
       <SaveButton pageRef={pageRef} />
-      <div ref={pageRef}>
-        <ReportLayout currentPage={currentPage + 1} totalPages={totalPages}>
-          <AnimatePresence mode="wait">
-            <div key={`${reportKey}-${currentPage}`}>
+      <div 
+        ref={pageRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <ReportLayout 
+          currentPage={currentPage + 1} 
+          totalPages={totalPages}
+          onBack={handleBack}
+          canGoBack={currentPage > 0}
+        >
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div 
+              key={`${reportKey}-${currentPage}`}
+              custom={direction}
+              variants={pageVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              className="h-full"
+            >
               {renderPage()}
-            </div>
+            </motion.div>
           </AnimatePresence>
         </ReportLayout>
       </div>
