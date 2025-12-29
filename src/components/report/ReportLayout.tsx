@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { ChevronLeft } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface ReportLayoutProps {
   children: ReactNode;
@@ -9,6 +10,8 @@ interface ReportLayoutProps {
   canGoBack?: boolean;
 }
 
+const siteUrl = 'https://falvren2025.lovable.app';
+
 export function ReportLayout({ children, currentPage, totalPages, onBack, canGoBack }: ReportLayoutProps) {
   return (
     <div className="h-[100dvh] bg-gradient-dark relative flex flex-col overflow-hidden">
@@ -16,19 +19,19 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
       <div className="glow-orb glow-orb-1" />
       <div className="glow-orb glow-orb-2" />
       <div className="glow-orb glow-orb-3" />
-      
+
       {/* Noise texture overlay */}
       <div className="absolute inset-0 bg-noise pointer-events-none" />
       {/* Top bar with progress and back button */}
       <div className="flex-shrink-0 relative z-10">
         {/* Progress bar */}
         <div className="h-[2px] bg-muted/50">
-          <div 
+          <div
             className="h-full bg-gradient-to-r from-[hsl(var(--glow-amber)/0.7)] via-[hsl(var(--glow-orange)/0.6)] to-[hsl(var(--glow-rose)/0.55)] transition-all duration-500 ease-out"
             style={{ width: `${(currentPage / totalPages) * 100}%` }}
           />
         </div>
-        
+
         {/* Back button */}
         {canGoBack && onBack && (
           <button
@@ -49,20 +52,28 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
       </main>
 
       {/* Page indicator - clickable dots */}
-      <div className="flex-shrink-0 pb-3 sm:pb-6 flex justify-center relative z-10">
+      <div className="flex-shrink-0 pb-2 sm:pb-3 flex justify-center relative z-10">
         <div className="flex items-center gap-1.5 sm:gap-2">
           {Array.from({ length: totalPages }).map((_, i) => (
             <div
               key={i}
               className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-all duration-300 ${
-                i + 1 === currentPage 
-                  ? 'bg-foreground w-3 sm:w-4' 
-                  : i + 1 < currentPage 
-                    ? 'bg-muted-foreground/50' 
+                i + 1 === currentPage
+                  ? 'bg-foreground w-3 sm:w-4'
+                  : i + 1 < currentPage
+                    ? 'bg-muted-foreground/50'
                     : 'bg-muted'
               }`}
             />
           ))}
+        </div>
+      </div>
+
+      {/* Site QR code footer */}
+      <div className="save-footer flex-shrink-0 pb-4 sm:pb-5 flex flex-col items-center gap-1 relative z-10">
+        <p className="text-[10px] text-muted-foreground/35 text-center">扫码生成你的法律人年度报告</p>
+        <div className="bg-white p-2 rounded">
+          <QRCodeSVG value={siteUrl} size={52} level="M" />
         </div>
       </div>
     </div>

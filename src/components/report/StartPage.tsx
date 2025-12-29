@@ -212,6 +212,10 @@ export function StartPage({ onStart }: StartPageProps) {
                         onChange={(e) => setCustomCityInput(e.target.value)}
                         placeholder="输入你的城市"
                         maxLength={10}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck={false}
                         className="w-full px-4 py-2 bg-background/20 border border-border/50 rounded-lg text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
                       />
                       <p className="mt-1.5 text-xs text-muted-foreground/60">

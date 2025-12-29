@@ -132,6 +132,11 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 onChange={(e) => setUserName(e.target.value)}
                 placeholder="例如：张律师"
                 maxLength={20}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
+                enterKeyHint="done"
                 className="w-full px-4 py-3 bg-muted/30 border border-border rounded-lg text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 text-base"
               />
             </div>
