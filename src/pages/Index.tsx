@@ -1,16 +1,18 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { StartPage } from '@/components/report/StartPage';
 import { ReportLayout } from '@/components/report/ReportLayout';
 import { IdentityPage } from '@/components/report/IdentityPage';
 import { ScenePage } from '@/components/report/ScenePage';
 import { ConclusionPage } from '@/components/report/ConclusionPage';
+import { SaveButton } from '@/components/report/SaveButton';
 import { generateReport, GeneratedReport } from '@/lib/sceneLibrary';
 
 const Index = () => {
   const [started, setStarted] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [reportKey, setReportKey] = useState(0);
+  const pageRef = useRef<HTMLDivElement>(null);
 
   // Generate new report when key changes
   const report: GeneratedReport = useMemo(() => generateReport(), [reportKey]);
@@ -66,13 +68,18 @@ const Index = () => {
   };
 
   return (
-    <ReportLayout currentPage={currentPage + 1} totalPages={totalPages}>
-      <AnimatePresence mode="wait">
-        <div key={`${reportKey}-${currentPage}`}>
-          {renderPage()}
-        </div>
-      </AnimatePresence>
-    </ReportLayout>
+    <>
+      <SaveButton pageRef={pageRef} />
+      <div ref={pageRef}>
+        <ReportLayout currentPage={currentPage + 1} totalPages={totalPages}>
+          <AnimatePresence mode="wait">
+            <div key={`${reportKey}-${currentPage}`}>
+              {renderPage()}
+            </div>
+          </AnimatePresence>
+        </ReportLayout>
+      </div>
+    </>
   );
 };
 

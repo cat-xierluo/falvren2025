@@ -41,18 +41,18 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="space-y-10"
+      className="flex flex-col h-full justify-between py-2 sm:py-0 sm:block sm:space-y-6 md:space-y-10"
     >
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        className="space-y-3"
+        transition={{ delay: 0.2, duration: 0.4 }}
+        className="flex-shrink-0"
       >
-        <div className="flex items-center gap-3">
-          <span className="text-xl">{icon}</span>
-          <p className="font-mono text-sm text-muted-foreground tracking-wider">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-base sm:text-xl">{icon}</span>
+          <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider">
             {categoryName}
           </p>
         </div>
@@ -60,49 +60,51 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
 
       {/* Main content */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
-        className="card-report"
+        transition={{ delay: 0.3, duration: 0.4 }}
+        className="flex-1 flex flex-col justify-center sm:flex-none"
       >
-        <p className="text-xl md:text-2xl text-foreground leading-relaxed whitespace-pre-line">
-          {parseText(mainText)}
-        </p>
-        
-        {subtext && (
-          <motion.p
+        <div className="card-report py-4 px-5 sm:py-8 sm:px-8">
+          <p className="text-base sm:text-xl md:text-2xl text-foreground leading-relaxed whitespace-pre-line">
+            {parseText(mainText)}
+          </p>
+          
+          {subtext && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
+              className="mt-3 sm:mt-6 text-xs sm:text-sm text-muted-foreground"
+            >
+              {parseText(subtext)}
+            </motion.p>
+          )}
+        </div>
+
+        {/* Soul text */}
+        {soulText && (
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-            className="mt-6 text-sm text-muted-foreground"
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border/50"
           >
-            {parseText(subtext)}
-          </motion.p>
+            <p className="text-xs sm:text-base text-muted-foreground/70 italic whitespace-pre-line leading-relaxed">
+              {soulText}
+            </p>
+          </motion.div>
         )}
       </motion.div>
-
-      {/* Soul text */}
-      {soulText && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="pt-4 border-t border-border/50"
-        >
-          <p className="soul-text whitespace-pre-line">
-            {soulText}
-          </p>
-        </motion.div>
-      )}
 
       {/* Continue button */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        className="flex justify-center pt-4"
+        transition={{ delay: 0.7, duration: 0.4 }}
+        className="flex-shrink-0 flex justify-center pt-2 sm:pt-4"
       >
-        <button onClick={onNext} className="btn-secondary">
+        <button onClick={onNext} className="btn-secondary text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3">
           {isLast ? '查看年终结论 →' : '继续查看 →'}
         </button>
       </motion.div>

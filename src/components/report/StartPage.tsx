@@ -6,7 +6,7 @@ interface StartPageProps {
 
 export function StartPage({ onStart }: StartPageProps) {
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+    <div className="h-[100dvh] bg-background flex flex-col items-center justify-center px-6 overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -18,9 +18,9 @@ export function StartPage({ onStart }: StartPageProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="inline-block mb-8"
+          className="inline-block mb-6 sm:mb-8"
         >
-          <span className="font-mono text-sm tracking-widest text-muted-foreground border border-border px-4 py-2 rounded-full">
+          <span className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground border border-border px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
             2025
           </span>
         </motion.div>
@@ -30,7 +30,7 @@ export function StartPage({ onStart }: StartPageProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-foreground mb-6"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-foreground mb-4 sm:mb-6"
         >
           法律人年度报告生成器
         </motion.h1>
@@ -40,7 +40,7 @@ export function StartPage({ onStart }: StartPageProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-lg text-muted-foreground mb-4"
+          className="text-base sm:text-lg text-muted-foreground mb-2 sm:mb-4"
         >
           我们回顾了你这一年的使用情况
         </motion.p>
@@ -50,7 +50,7 @@ export function StartPage({ onStart }: StartPageProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="text-sm text-muted-foreground/60 mb-12"
+          className="text-xs sm:text-sm text-muted-foreground/60 mb-8 sm:mb-12"
         >
           数据为随机生成，但你会觉得很熟悉
         </motion.p>
@@ -63,7 +63,7 @@ export function StartPage({ onStart }: StartPageProps) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onStart}
-          className="btn-primary text-base"
+          className="btn-primary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
         >
           生成我的年度报告
         </motion.button>
@@ -73,7 +73,7 @@ export function StartPage({ onStart }: StartPageProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-16 text-xs text-muted-foreground/40"
+          className="mt-10 sm:mt-16 text-xs text-muted-foreground/40"
         >
           点击开始 · 预计阅读时间 2 分钟
         </motion.p>
@@ -86,8 +86,8 @@ export function StartPage({ onStart }: StartPageProps) {
         transition={{ delay: 1, duration: 2 }}
         className="fixed inset-0 pointer-events-none overflow-hidden"
       >
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-foreground rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-foreground rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-foreground rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-foreground rounded-full blur-3xl" />
       </motion.div>
     </div>
   );
