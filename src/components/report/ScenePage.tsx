@@ -57,7 +57,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
       </motion.div>
 
       {/* Main content area */}
-      <div className="flex-1 flex flex-col justify-center min-h-0">
+      <div className="flex-1 flex flex-col justify-start min-h-0 pt-2 sm:pt-4">
         {/* 主卡片 */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -103,7 +103,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.3 }}
-        className="flex-shrink-0 flex justify-center mt-3 sm:mt-6"
+        className="flex-shrink-0 flex justify-center mt-1 sm:mt-2"
       >
         <button 
           onClick={onNext} 

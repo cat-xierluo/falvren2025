@@ -97,7 +97,7 @@ export function LateNightPage({ data, onNext }: LateNightPageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.6 }}
-        className="flex justify-center pt-4"
+        className="flex justify-center pt-1"
       >
         <button onClick={onNext} className="btn-secondary">
           继续查看 →

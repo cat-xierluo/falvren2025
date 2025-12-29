@@ -108,26 +108,14 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col h-full"
+      className="h-full flex flex-col"
     >
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.3 }}
-        className="flex-shrink-0 text-center pt-4 pb-2"
-      >
-        <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider">
-          📤 分享你的年报
-        </p>
-      </motion.div>
-
       {/* Main content */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="flex-1 flex flex-col min-h-0 overflow-y-auto py-2 px-1"
+        className="flex-1 flex flex-col justify-center min-h-0 py-4"
       >
         {!showPreview ? (
           /* Customization form */
@@ -287,23 +275,6 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
               </button>
             </div>
           </div>
-        )}
-      </motion.div>
-
-      {/* Bottom hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.3 }}
-        className="flex-shrink-0 text-center pb-4 pt-2"
-      >
-        {!showPreview && (
-          <button
-            onClick={onNext}
-            className="text-sm text-muted-foreground/50 underline underline-offset-4 hover:text-muted-foreground transition-colors"
-          >
-            跳过，直接去推广页 →
-          </button>
         )}
       </motion.div>
     </motion.div>

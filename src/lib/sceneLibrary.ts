@@ -581,7 +581,7 @@ export const sceneLibrary: Scene[] = [
     category: 'documents',
     template: '你今年整理的\n证据清单有 **{number}** 份',
     hasRandomNumber: true,
-    numberRange: [50, 150],
+    numberRange: [150, 500],
     numberSuffix: '',
     subtext: '每一份都要\n编页码、做目录',
     soulText: '证据组织得好\n不一定能赢\n但不组织肯定输',
@@ -1075,7 +1075,8 @@ function generateRandomFileName(businessArea: BusinessArea = 'random'): string {
 export interface GeneratedScene {
   scene: Scene;
   randomNumber?: number;
-  dailyCount?: number;       // 平均每天次数
+  dailyCount?: number;       // 平均每天次数（特定场景用）
+  dailyNumber?: number;      // 平均每天数量（通用场景用）
   randomTime?: string;
   randomName?: string;
   randomCity?: string;
@@ -1207,6 +1208,12 @@ function generateSceneData(
       // 假设按 250 个工作日计算，平均每天拨打次数
       generated.dailyCount = Math.round(generated.randomNumber / 250);
     }
+
+    // 特殊处理：documents_word_count 场景需要计算平均每天数量
+    if (scene.id === 'documents_word_count') {
+      // 按全年 365 天计算平均每天
+      generated.dailyNumber = Math.round(generated.randomNumber / 365);
+    }
   }
 
   if (scene.hasRandomTime) {
@@ -1316,7 +1323,10 @@ export function formatSubtext(generated: GeneratedScene): string | undefined {
 
   let text = generated.scene.subtext;
 
-  if (generated.randomNumber !== undefined) {
+  // 对于 subtext 中的 {number}，优先使用 dailyNumber，如果没有则用 randomNumber
+  if (generated.dailyNumber !== undefined) {
+    text = text.replace('{number}', generated.dailyNumber.toString());
+  } else if (generated.randomNumber !== undefined) {
     text = text.replace('{number}', generated.randomNumber.toString());
     text = text.replace('{ratio}', randomBetween(30, 60).toString());
   }

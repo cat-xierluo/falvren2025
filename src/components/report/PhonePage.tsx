@@ -105,7 +105,7 @@ export function PhonePage({ data, onNext }: PhonePageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4, duration: 0.6 }}
-        className="flex justify-center pt-2"
+        className="flex justify-center pt-1"
       >
         <button onClick={onNext} className="btn-secondary">
           继续查看 →

@@ -25,14 +25,14 @@ export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps
     setSaving(true);
     
     try {
-      // iPhone 屏幕比例：390x844 (iPhone 12/13/14)
+      // iPhone 屏幕比例：390x700 (更紧凑的尺寸)
       const cardWidth = 390;
-      const cardHeight = 844;
-      const paddingTop = 24;
-      const paddingBottom = 20;
-      const contentGap = 12;
+      const cardHeight = 700;
+      const paddingTop = 20;
+      const paddingBottom = 16;
+      const contentGap = 10;
       const dividerHeight = 1;
-      const footerHeight = isLastPage ? 170 : 130;
+      const footerHeight = isLastPage ? 120 : 90;
       const contentHeight = cardHeight - paddingTop - paddingBottom - contentGap - dividerHeight - footerHeight;
 
       // 创建一个临时容器来组合页面内容和底部信息
@@ -112,23 +112,23 @@ export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps
         footer.style.cssText = `
           display: flex;
           align-items: center;
-          gap: 10px;
-          padding: 10px;
+          gap: 6px;
+          padding: 6px;
           background: rgba(255,255,255,0.05);
-          border-radius: 8px;
-          margin-bottom: 6px;
+          border-radius: 4px;
+          margin-bottom: 3px;
           flex-shrink: 0;
-          height: ${footerHeight - 56}px;
+          height: ${footerHeight - 22}px;
         `;
 
         // 作者二维码
         const qrWrapper = document.createElement('div');
         qrWrapper.style.cssText = `
-          width: 44px;
-          height: 44px;
+          width: 32px;
+          height: 32px;
           background: white;
-          border-radius: 6px;
-          padding: 3px;
+          border-radius: 3px;
+          padding: 1.5px;
           flex-shrink: 0;
         `;
         const qrImg = document.createElement('img');
@@ -141,9 +141,9 @@ export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps
         const authorInfo = document.createElement('div');
         authorInfo.style.cssText = 'flex: 1;';
         authorInfo.innerHTML = `
-          <div style="font-size: 9px; color: rgba(255,255,255,0.5); margin-bottom: 2px;">作者</div>
-          <div style="font-size: 12px; color: white; font-weight: 500;">杨卫薪律师</div>
-          <div style="font-size: 10px; color: rgba(255,255,255,0.6); font-family: monospace;">微信 ywxlaw</div>
+          <div style="font-size: 7px; color: rgba(255,255,255,0.5); margin-bottom: 0.5px;">作者</div>
+          <div style="font-size: 10px; color: white; font-weight: 500;">杨卫薪律师</div>
+          <div style="font-size: 8px; color: rgba(255,255,255,0.6); font-family: monospace;">微信 ywxlaw</div>
         `;
         footer.appendChild(authorInfo);
         container.appendChild(footer);
@@ -152,8 +152,8 @@ export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps
         const siteLink = document.createElement('div');
         siteLink.style.cssText = `
           text-align: center;
-          margin-bottom: 6px;
-          font-size: 9px;
+          margin-bottom: 3px;
+          font-size: 7px;
           color: rgba(255,255,255,0.35);
           flex-shrink: 0;
         `;
@@ -171,8 +171,8 @@ export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps
         const siteQrBox = document.createElement('div');
         siteQrBox.style.cssText = `
           background: white;
-          padding: 6px;
-          border-radius: 6px;
+          padding: 3px;
+          border-radius: 3px;
         `;
         siteQrBox.id = 'site-qr-placeholder';
         siteQrContainer.appendChild(siteQrBox);
@@ -183,8 +183,8 @@ export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps
         const siteLink = document.createElement('div');
         siteLink.style.cssText = `
           text-align: center;
-          margin-bottom: 6px;
-          font-size: 10px;
+          margin-bottom: 3px;
+          font-size: 8px;
           color: rgba(255,255,255,0.4);
           flex-shrink: 0;
         `;
@@ -202,8 +202,8 @@ export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps
         const siteQrBox = document.createElement('div');
         siteQrBox.style.cssText = `
           background: white;
-          padding: 6px;
-          border-radius: 6px;
+          padding: 3px;
+          border-radius: 3px;
         `;
         siteQrBox.id = 'site-qr-placeholder';
         siteQrContainer.appendChild(siteQrBox);
@@ -237,7 +237,7 @@ export function SaveButton({ pageRef, currentPage, totalPages }: SaveButtonProps
         const root = await import('react-dom/client');
         const reactRoot = root.createRoot(tempDiv);
         reactRoot.render(
-          <QRCodeSVG value={siteUrl} size={56} level="M" />
+          <QRCodeSVG value={siteUrl} size={48} level="M" />
         );
         await new Promise(resolve => setTimeout(resolve, 100));
         qrPlaceholder.appendChild(tempDiv);
