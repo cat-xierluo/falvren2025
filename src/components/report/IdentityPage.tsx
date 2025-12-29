@@ -12,65 +12,91 @@ export function IdentityPage({ report, onNext }: IdentityPageProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col h-full justify-between py-2 sm:py-0 sm:block sm:space-y-8 md:space-y-12"
+      className="flex flex-col h-full justify-between"
     >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.4 }}
-        className="flex-shrink-0 space-y-2 sm:space-y-4"
+        transition={{ delay: 0.1, duration: 0.4 }}
+        className="flex-shrink-0"
       >
-        <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider">
+        <p className="font-mono text-[10px] sm:text-sm text-muted-foreground tracking-wider mb-1 sm:mb-2">
           📅 2025
         </p>
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-foreground">
+        <h2 className="text-lg sm:text-2xl md:text-3xl font-medium text-foreground">
           你是一名法律人
         </h2>
-        <p className="text-sm sm:text-lg text-muted-foreground">
+        <p className="text-sm sm:text-lg text-muted-foreground mt-1">
           我们帮你回顾了这一年
         </p>
       </motion.div>
 
-      {/* Stats grid - more compact on mobile */}
-      <div className="flex-1 flex flex-col justify-center gap-3 sm:gap-6 sm:flex-none py-2 sm:py-0">
+      {/* Stats cards */}
+      <div className="flex-1 flex flex-col justify-center gap-2 sm:gap-4 min-h-0 py-2 sm:py-4">
+        {/* 工作天数 */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+          className="card-report py-3 px-4 sm:py-5 sm:px-6"
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] sm:text-sm text-muted-foreground">全年工作天数</p>
+            <div className="flex items-baseline gap-1">
+              <p className="text-2xl sm:text-4xl md:text-5xl font-mono font-bold tracking-tighter text-foreground">
+                {report.workDays}
+              </p>
+              <p className="text-xs sm:text-base text-muted-foreground">天</p>
+            </div>
+          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground/50 mt-1 sm:mt-2">
+            剩下的日子，你也没闲着
+          </p>
+        </motion.div>
+
+        {/* 完整休息的周末 */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3, duration: 0.4 }}
-          className="card-report py-3 px-5 sm:py-8 sm:px-8 flex items-center justify-between sm:block"
+          className="card-report py-3 px-4 sm:py-5 sm:px-6"
         >
-          <p className="text-xs sm:text-sm text-muted-foreground sm:mb-2">全年工作天数</p>
-          <div className="flex items-baseline gap-1">
-            <p className="text-3xl sm:text-5xl md:text-7xl font-mono font-semibold tracking-tighter">{report.workDays}</p>
-            <p className="text-sm sm:text-lg text-muted-foreground">天</p>
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] sm:text-sm text-muted-foreground">真正完整休息的周末</p>
+            <div className="flex items-baseline gap-1">
+              <p className="text-2xl sm:text-4xl md:text-5xl font-mono font-bold tracking-tighter text-foreground">
+                {report.fullRestWeekends}
+              </p>
+              <p className="text-xs sm:text-base text-muted-foreground">个</p>
+            </div>
           </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground/50 mt-1 sm:mt-2">
+            "完整"的定义：脑子里没有待办事项
+          </p>
         </motion.div>
 
+        {/* 信任度 */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4, duration: 0.4 }}
-          className="card-report py-3 px-5 sm:py-8 sm:px-8 flex items-center justify-between sm:block"
+          className="card-report py-3 px-4 sm:py-5 sm:px-6"
         >
-          <p className="text-xs sm:text-sm text-muted-foreground sm:mb-2">真正完整休息的周末</p>
-          <div className="flex items-baseline gap-1">
-            <p className="text-3xl sm:text-5xl md:text-7xl font-mono font-semibold tracking-tighter">{report.fullRestWeekends}</p>
-            <p className="text-sm sm:text-lg text-muted-foreground">个</p>
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] sm:text-sm text-muted-foreground flex-1 pr-2">
+              对"明年一定轻松点"的信任度
+            </p>
+            <div className="flex items-baseline gap-0.5">
+              <p className="text-2xl sm:text-4xl md:text-5xl font-mono font-bold tracking-tighter text-foreground">
+                {report.trustInNextYear}
+              </p>
+              <p className="text-xs sm:text-base text-muted-foreground">%</p>
+            </div>
           </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.4 }}
-          className="card-report py-3 px-5 sm:py-8 sm:px-8 flex items-center justify-between sm:block"
-        >
-          <p className="text-xs sm:text-sm text-muted-foreground sm:mb-2 flex-1">对"明年一定轻松点"的信任度</p>
-          <div className="flex items-baseline gap-0.5">
-            <p className="text-3xl sm:text-5xl md:text-7xl font-mono font-semibold tracking-tighter">{report.trustInNextYear}</p>
-            <p className="text-sm sm:text-lg text-muted-foreground">%</p>
-          </div>
+          <p className="text-[10px] sm:text-xs text-muted-foreground/50 mt-1 sm:mt-2">
+            去年这个数字是 {report.trustInNextYear + 15}%
+          </p>
         </motion.div>
       </div>
 
@@ -78,10 +104,13 @@ export function IdentityPage({ report, onNext }: IdentityPageProps) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.4 }}
-        className="flex-shrink-0 flex justify-center pt-2 sm:pt-4"
+        transition={{ delay: 0.5, duration: 0.3 }}
+        className="flex-shrink-0 flex justify-center"
       >
-        <button onClick={onNext} className="btn-secondary text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3">
+        <button 
+          onClick={onNext} 
+          className="btn-secondary text-xs sm:text-base px-5 py-2 sm:px-6 sm:py-3"
+        >
           继续查看 →
         </button>
       </motion.div>
