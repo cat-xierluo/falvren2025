@@ -55,7 +55,7 @@ ${narration.text.replace(/\n/g, ' ')}
         transition={{ delay: 0.1, duration: 0.3 }}
         className="flex-shrink-0 text-center"
       >
-        <p className="font-mono text-[10px] sm:text-sm text-muted-foreground tracking-wider">
+        <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider">
           📌 年终结论
         </p>
       </motion.div>
@@ -67,10 +67,10 @@ ${narration.text.replace(/\n/g, ' ')}
         transition={{ delay: 0.2, duration: 0.5 }}
         className="flex-1 flex flex-col justify-center text-center min-h-0"
       >
-        <p className="text-lg sm:text-2xl md:text-3xl font-light text-foreground leading-relaxed">
+        <p className="text-xl sm:text-2xl md:text-3xl font-light text-foreground leading-relaxed">
           你没有热爱法律
         </p>
-        <p className="text-sm sm:text-lg md:text-xl text-muted-foreground leading-relaxed mt-2 sm:mt-3">
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed mt-2 sm:mt-3">
           你只是比很多人<br />
           更能忍受复杂、模糊和不被回应
         </p>
@@ -79,7 +79,7 @@ ${narration.text.replace(/\n/g, ' ')}
         <div className="w-12 h-px bg-border mx-auto my-3 sm:my-4" />
         
         {/* System narration */}
-        <p className="text-[11px] sm:text-sm text-muted-foreground/50 whitespace-pre-line">
+        <p className="text-xs sm:text-sm text-muted-foreground/50 whitespace-pre-line">
           {narration.text}
         </p>
       </motion.div>
@@ -91,10 +91,10 @@ ${narration.text.replace(/\n/g, ' ')}
         transition={{ delay: 0.4, duration: 0.4 }}
         className="flex-shrink-0"
       >
-        <div className="card-report bg-muted/20 py-2.5 px-3 sm:py-4 sm:px-5">
+        <div className="card-report bg-muted/20 py-3 px-4 sm:py-4 sm:px-5">
           <div className="flex items-center gap-3 sm:gap-4">
             {/* QR Code */}
-            <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 bg-white rounded-lg p-1 sm:p-1.5">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 bg-white rounded-lg p-1.5 sm:p-1.5">
               <img 
                 src={wechatQr} 
                 alt="微信二维码" 
@@ -103,9 +103,9 @@ ${narration.text.replace(/\n/g, ' ')}
             </div>
             {/* Author info */}
             <div className="flex-1 text-left">
-              <p className="text-[10px] sm:text-xs text-muted-foreground">作者</p>
-              <p className="text-sm sm:text-base text-foreground font-medium">杨卫薪律师</p>
-              <p className="text-[11px] sm:text-sm text-muted-foreground font-mono">微信 ywxlaw</p>
+              <p className="text-xs sm:text-xs text-muted-foreground">作者</p>
+              <p className="text-base sm:text-base text-foreground font-medium">杨卫薪律师</p>
+              <p className="text-sm sm:text-sm text-muted-foreground font-mono">微信 ywxlaw</p>
             </div>
             {/* Share hint */}
             <div className="text-right hidden sm:block">
@@ -115,7 +115,7 @@ ${narration.text.replace(/\n/g, ' ')}
         </div>
         
         {/* 底部提示 */}
-        <p className="text-center text-[10px] sm:text-xs text-muted-foreground/40 mt-2">
+        <p className="text-center text-xs sm:text-xs text-muted-foreground/40 mt-2">
           欢迎转给那个凌晨还在回你消息的法律人
         </p>
       </motion.div>
@@ -129,16 +129,16 @@ ${narration.text.replace(/\n/g, ' ')}
       >
         <button 
           onClick={handleShare} 
-          className="btn-primary flex items-center gap-1.5 text-xs sm:text-base px-4 py-2 sm:px-6 sm:py-3"
+          className="btn-primary flex items-center gap-1.5 text-sm sm:text-base px-4 py-2.5 sm:px-6 sm:py-3"
         >
-          <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
+          <Share2 className="w-4 h-4 sm:w-4 sm:h-4" />
           分享报告
         </button>
         <button 
           onClick={onRestart} 
-          className="btn-secondary flex items-center gap-1.5 text-xs sm:text-base px-3 py-2 sm:px-5 sm:py-3"
+          className="btn-secondary flex items-center gap-1.5 text-sm sm:text-base px-4 py-2.5 sm:px-5 sm:py-3"
         >
-          <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
+          <RotateCcw className="w-4 h-4 sm:w-4 sm:h-4" />
           再来一次
         </button>
       </motion.div>

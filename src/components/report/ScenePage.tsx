@@ -50,8 +50,8 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
         transition={{ delay: 0.1, duration: 0.3 }}
         className="flex-shrink-0 flex items-center gap-2 mb-2 sm:mb-4"
       >
-        <span className="text-sm sm:text-lg">{icon}</span>
-        <p className="font-mono text-[10px] sm:text-sm text-muted-foreground tracking-wider uppercase">
+        <span className="text-base sm:text-lg">{icon}</span>
+        <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider uppercase">
           {categoryName}
         </p>
       </motion.div>
@@ -65,8 +65,8 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
           transition={{ delay: 0.2, duration: 0.4 }}
           className="card-report py-4 px-4 sm:py-6 sm:px-8"
         >
-          {/* 主文案 */}
-          <p className="text-[15px] leading-relaxed sm:text-xl md:text-2xl text-foreground whitespace-pre-line">
+          {/* 主文案 - 移动端字体加大 */}
+          <p className="text-lg leading-relaxed sm:text-xl md:text-2xl text-foreground whitespace-pre-line">
             {parseText(mainText)}
           </p>
           
@@ -76,7 +76,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.3 }}
-              className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-border/30 text-[11px] sm:text-sm text-muted-foreground"
+              className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-border/30 text-sm sm:text-sm text-muted-foreground"
             >
               {parseText(subtext)}
             </motion.p>
@@ -91,7 +91,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
             transition={{ delay: 0.5, duration: 0.5 }}
             className="mt-3 sm:mt-5 px-1"
           >
-            <p className="text-[12px] sm:text-base text-muted-foreground/60 italic whitespace-pre-line leading-relaxed">
+            <p className="text-sm sm:text-base text-muted-foreground/60 italic whitespace-pre-line leading-relaxed">
               {soulText}
             </p>
           </motion.div>
@@ -107,7 +107,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
       >
         <button 
           onClick={onNext} 
-          className="btn-secondary text-xs sm:text-base px-5 py-2 sm:px-6 sm:py-3"
+          className="btn-secondary text-sm sm:text-base px-5 py-2.5 sm:px-6 sm:py-3"
         >
           {isLast ? '查看年终结论 →' : '继续 →'}
         </button>
