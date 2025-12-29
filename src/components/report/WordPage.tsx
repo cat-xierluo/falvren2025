@@ -60,8 +60,8 @@ export function WordPage({ data, onNext }: WordPageProps) {
         <p className="text-muted-foreground">最常见的文件名：</p>
         <div className="card-report bg-muted/30 overflow-hidden">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600/20 rounded flex items-center justify-center flex-shrink-0">
-              <FileText className="w-5 h-5 text-blue-400" />
+            <div className="w-10 h-10 bg-[hsl(var(--data-accent)/0.18)] rounded flex items-center justify-center flex-shrink-0">
+              <FileText className="w-5 h-5 text-[hsl(var(--data-accent))]" />
             </div>
             <p className="font-mono text-sm md:text-base text-foreground break-all">
               {data.mostCommonFileName}
