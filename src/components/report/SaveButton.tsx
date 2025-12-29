@@ -44,6 +44,12 @@ export function SaveButton({ pageRef }: SaveButtonProps) {
         hiddenElements.push(pageDots);
       }
 
+      // 显示二维码 footer (只在保存时)
+      const qrFooter = element.querySelector('.save-footer-only');
+      if (qrFooter instanceof HTMLElement) {
+        qrFooter.classList.remove('hidden');
+      }
+
       await new Promise(resolve => setTimeout(resolve, 100));
 
       const canvas = await html2canvas(element, {
@@ -58,6 +64,11 @@ export function SaveButton({ pageRef }: SaveButtonProps) {
       hiddenElements.forEach(el => {
         el.style.visibility = 'visible';
       });
+
+      // 恢复二维码 footer 为隐藏
+      if (qrFooter instanceof HTMLElement) {
+        qrFooter.classList.add('hidden');
+      }
 
       // 转换为 blob
       canvas.toBlob(async (blob) => {

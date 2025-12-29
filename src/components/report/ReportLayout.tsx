@@ -69,8 +69,8 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
         </div>
       </div>
 
-      {/* Site QR code footer */}
-      <div className="save-footer flex-shrink-0 pb-4 sm:pb-5 flex flex-col items-center gap-1 relative z-10">
+      {/* Site QR code footer - 只在保存时显示 */}
+      <div className="save-footer-only flex-shrink-0 pb-4 sm:pb-5 flex flex-col items-center gap-1 relative z-10 hidden">
         <p className="text-[10px] text-muted-foreground/35 text-center">扫码生成你的法律人年度报告</p>
         <div className="bg-white p-2 rounded">
           <QRCodeSVG value={siteUrl} size={52} level="M" />
