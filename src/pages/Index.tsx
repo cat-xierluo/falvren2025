@@ -1,72 +1,74 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { StartPage } from '@/components/report/StartPage';
 import { ReportLayout } from '@/components/report/ReportLayout';
 import { IdentityPage } from '@/components/report/IdentityPage';
-import { PhonePage } from '@/components/report/PhonePage';
-import { LateNightPage } from '@/components/report/LateNightPage';
-import { WordPage } from '@/components/report/WordPage';
-import { PhrasesPage } from '@/components/report/PhrasesPage';
-import { ConfidencePage } from '@/components/report/ConfidencePage';
+import { ScenePage } from '@/components/report/ScenePage';
 import { ConclusionPage } from '@/components/report/ConclusionPage';
-import { generateReportData } from '@/lib/reportData';
-
-const TOTAL_PAGES = 7;
+import { generateReport, GeneratedReport } from '@/lib/sceneLibrary';
 
 const Index = () => {
   const [started, setStarted] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [reportKey, setReportKey] = useState(0);
 
-  // Generate new data when report key changes
-  const reportData = useMemo(() => generateReportData(), [reportKey]);
+  // Generate new report when key changes
+  const report: GeneratedReport = useMemo(() => generateReport(), [reportKey]);
 
-  const handleStart = () => {
+  // Total pages = 1 (identity) + scenes count + 1 (conclusion)
+  const totalPages = 1 + report.scenes.length + 1;
+
+  const handleStart = useCallback(() => {
     setStarted(true);
-    setCurrentPage(1);
-  };
+    setCurrentPage(0);
+  }, []);
 
-  const handleNext = () => {
-    if (currentPage < TOTAL_PAGES) {
-      setCurrentPage(prev => prev + 1);
-    }
-  };
+  const handleNext = useCallback(() => {
+    setCurrentPage(prev => prev + 1);
+  }, []);
 
-  const handleRestart = () => {
+  const handleRestart = useCallback(() => {
     setReportKey(prev => prev + 1);
     setStarted(false);
-    setCurrentPage(1);
-  };
+    setCurrentPage(0);
+  }, []);
 
   if (!started) {
     return <StartPage onStart={handleStart} />;
   }
 
   const renderPage = () => {
-    switch (currentPage) {
-      case 1:
-        return <IdentityPage data={reportData} onNext={handleNext} />;
-      case 2:
-        return <PhonePage data={reportData} onNext={handleNext} />;
-      case 3:
-        return <LateNightPage data={reportData} onNext={handleNext} />;
-      case 4:
-        return <WordPage data={reportData} onNext={handleNext} />;
-      case 5:
-        return <PhrasesPage data={reportData} onNext={handleNext} />;
-      case 6:
-        return <ConfidencePage data={reportData} onNext={handleNext} />;
-      case 7:
-        return <ConclusionPage onRestart={handleRestart} />;
-      default:
-        return null;
+    // Page 0: Identity page
+    if (currentPage === 0) {
+      return <IdentityPage report={report} onNext={handleNext} />;
     }
+    
+    // Pages 1 to scenes.length: Scene pages
+    const sceneIndex = currentPage - 1;
+    if (sceneIndex < report.scenes.length) {
+      const isLast = sceneIndex === report.scenes.length - 1;
+      return (
+        <ScenePage 
+          generated={report.scenes[sceneIndex]} 
+          onNext={handleNext}
+          isLast={isLast}
+        />
+      );
+    }
+    
+    // Last page: Conclusion
+    return (
+      <ConclusionPage 
+        narration={report.systemNarration} 
+        onRestart={handleRestart} 
+      />
+    );
   };
 
   return (
-    <ReportLayout currentPage={currentPage} totalPages={TOTAL_PAGES}>
+    <ReportLayout currentPage={currentPage + 1} totalPages={totalPages}>
       <AnimatePresence mode="wait">
-        <div key={currentPage}>
+        <div key={`${reportKey}-${currentPage}`}>
           {renderPage()}
         </div>
       </AnimatePresence>
