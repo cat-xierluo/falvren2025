@@ -48,7 +48,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.3 }}
-        className="flex-shrink-0 flex items-center gap-2 mb-4 sm:mb-6 pt-2"
+        className="flex-shrink-0 flex items-center gap-2 mb-6 sm:mb-8 pt-3"
       >
         <span className="text-2xl sm:text-3xl">{icon}</span>
         <p className="font-mono text-lg sm:text-xl text-muted-foreground tracking-wider uppercase">
@@ -57,13 +57,13 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
       </motion.div>
 
       {/* Main content area */}
-      <div className="flex-1 flex flex-col justify-start min-h-0 pt-2 sm:pt-4">
+      <div className="flex-1 flex flex-col justify-start min-h-0 pt-3 sm:pt-6">
         {/* 主卡片 */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.4 }}
-          className="card-report py-4 px-4 sm:py-6 sm:px-8"
+          className="card-report py-5 px-5 sm:py-8 sm:px-10"
         >
           {/* 主文案 - 移动端字体加大 */}
           <p className="text-lg leading-relaxed sm:text-xl md:text-2xl text-foreground whitespace-pre-line">
@@ -76,7 +76,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.3 }}
-              className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-border/30 text-sm sm:text-sm text-muted-foreground"
+              className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-border/30 text-sm sm:text-base text-muted-foreground"
             >
               {parseText(subtext)}
             </motion.p>
@@ -89,7 +89,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="mt-3 sm:mt-5 px-1"
+            className="mt-4 sm:mt-6 px-1"
           >
             <p className="text-sm sm:text-base text-muted-foreground/60 italic whitespace-pre-line leading-relaxed">
               {soulText}
@@ -103,7 +103,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.3 }}
-        className="flex-shrink-0 flex justify-center mt-1 sm:mt-2"
+        className="flex-shrink-0 flex justify-center mt-0.5 sm:mt-1"
       >
         <button 
           onClick={onNext} 

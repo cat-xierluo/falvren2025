@@ -42,7 +42,7 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
       </div>
 
       {/* Main content - fills remaining space */}
-      <main className="flex-1 flex items-center justify-center px-4 py-3 sm:px-6 sm:py-8 overflow-hidden relative z-10">
+      <main className="flex-1 flex items-center justify-center px-4 py-4 sm:px-8 sm:py-10 overflow-hidden relative z-10">
         <div className="w-full max-w-2xl mx-auto h-full flex flex-col justify-center">
           {children}
         </div>
