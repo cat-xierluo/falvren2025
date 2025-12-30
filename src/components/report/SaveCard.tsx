@@ -8,6 +8,7 @@ import {
   GeneratedReport,
 } from '@/lib/sceneLibrary';
 import wechatQr from '@/assets/wechat-qr.png';
+import { getRandomTagline } from '@/lib/taglines';
 
 interface SaveCardProps {
   report: GeneratedReport;
@@ -17,6 +18,8 @@ interface SaveCardProps {
 const siteUrl = 'https://falvren2025.lovable.app';
 
 export function SaveCard({ report, currentPage }: SaveCardProps) {
+  const tagline = getRandomTagline();
+
   const renderWithBold = (text: string) => {
     const parts = text.split(/(\\*\\*[^*]+\\*\\*)/g);
     return parts.map((part, index) => {
@@ -115,7 +118,7 @@ export function SaveCard({ report, currentPage }: SaveCardProps) {
                   <p style={{ fontSize: '16px', color: '#fafafa', fontWeight: 500 }}>杨卫薪律师</p>
                   <p style={{ fontSize: '14px', color: '#a1a1aa', fontFamily: 'monospace' }}>微信 ywxlaw</p>
                   <p style={{ fontSize: '10px', color: 'rgba(250, 250, 250, 0.5)', marginTop: '2px', lineHeight: 1.2 }}>
-                    那个也还在改文书的律师
+                    {tagline}
                   </p>
                 </div>
               </div>

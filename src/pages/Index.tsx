@@ -138,10 +138,12 @@ const Index = () => {
 
   return (
     <>
-      <SaveButton
-        pageRef={pageRef}
-        currentPage={currentPage}
-      />
+      {currentPage !== totalPages - 2 && (
+        <SaveButton
+          pageRef={pageRef}
+          currentPage={currentPage}
+        />
+      )}
       <div ref={pageRef} className="relative">
         <ReportLayout
           currentPage={currentPage + 1}

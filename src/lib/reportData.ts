@@ -23,12 +23,12 @@ const fileNameSuffixes = [
 ];
 
 const highFrequencyPhrases = [
-  { phrase: '"这个问题我需要再核实一下"', meaning: '我现在也不确定' },
-  { phrase: '"我们这边原则上是可以的"', meaning: '实操很可能不行' },
-  { phrase: '"我理解您的感受"', meaning: '但规则不允许' },
-  { phrase: '"这个时间节点比较紧张"', meaning: '根本做不完' },
-  { phrase: '"我们会尽快处理"', meaning: '不知道什么时候' },
-  { phrase: '"需要综合考虑各方面因素"', meaning: '没有标准答案' },
+  { phrase: '“这个问题我需要再核实一下”', meaning: '我现在也不确定' },
+  { phrase: '“我们这边原则上是可以的”', meaning: '实操很可能不行' },
+  { phrase: '“我理解您的感受”', meaning: '但规则不允许' },
+  { phrase: '“这个时间节点比较紧张”', meaning: '根本做不完' },
+  { phrase: '“我们会尽快处理”', meaning: '不知道什么时候' },
+  { phrase: '“需要综合考虑各方面因素”', meaning: '没有标准答案' },
 ];
 
 const emailSubjects = [
@@ -44,25 +44,25 @@ export interface ReportData {
   // 12368 data
   calls12368: number;
   connectionRate: number;
-  
+
   // Late night data
   latestWorkTime: string;
   latestWorkHour: number;
   latestWorkMinute: number;
   recipientName: string;
   emailSubject: string;
-  
+
   // Word data
   wordDocuments: number;
   mostCommonFileName: string;
-  
+
   // Phrases data
   topPhrases: typeof highFrequencyPhrases;
-  
+
   // Confidence data
   confidenceStart: number;
   confidenceEnd: number;
-  
+
   // Work days
   workDays: number;
   fullRestWeekends: number;
@@ -89,30 +89,30 @@ function shuffleArray<T>(arr: T[]): T[] {
 export function generateReportData(): ReportData {
   const latestHour = randomBetween(1, 4);
   const latestMinute = randomBetween(0, 59);
-  
+
   return {
     // 12368 data
     calls12368: randomBetween(240, 520),
     connectionRate: randomBetween(18, 36),
-    
+
     // Late night data
     latestWorkTime: `${latestHour.toString().padStart(2, '0')}:${latestMinute.toString().padStart(2, '0')}`,
     latestWorkHour: latestHour,
     latestWorkMinute: latestMinute,
     recipientName: randomFromArray(names),
     emailSubject: randomFromArray(emailSubjects),
-    
+
     // Word data
     wordDocuments: randomBetween(300, 800),
     mostCommonFileName: randomFromArray(fileNamePrefixes) + randomFromArray(fileNameSuffixes) + '.docx',
-    
+
     // Phrases data
     topPhrases: shuffleArray(highFrequencyPhrases).slice(0, 3),
-    
+
     // Confidence data
     confidenceStart: randomBetween(72, 85),
     confidenceEnd: randomBetween(35, 48),
-    
+
     // Work days
     workDays: randomBetween(295, 335),
     fullRestWeekends: randomBetween(1, 4) + (Math.random() > 0.5 ? 0.5 : 0),

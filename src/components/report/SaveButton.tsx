@@ -28,7 +28,7 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
       // 720 / 390 ≈ 1.85，但我们直接让容器宽 720，让流式布局自适应
 
       const container = document.createElement('div');
-      container.className = 'font-sans text-foreground'; // 继承基础字体颜色
+      container.className = 'font-serif text-foreground'; // 继承基础字体颜色
       container.style.cssText = `
         position: fixed;
         left: -9999px;
@@ -59,15 +59,14 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
 
       // 强制内容全屏适配
       pageClone.style.cssText = `
-        // 调整为 480x854 (1.5倍放大)，宽度更宽，避免文字被裁切
-        width: 480px;
-        height: 854px;
+        width: 390px;
+        height: 692px;
         position: absolute;
         inset: 0;
         z-index: 0;
         padding: 0;
         box-sizing: border-box;
-        transform: scale(1.5);
+        transform: scale(1.85);
         transform-origin: top left;
       `;
 
@@ -78,11 +77,15 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
         reportLayoutDiv.style.height = '100%';
         reportLayoutDiv.classList.remove('h-[100dvh]');
 
-        // 关键：找到 main 容器并增加底部 padding，从而把居中的内容"顶"上去，避免遮挡二维码
+        // 关键：重置 main 容器的 Padding，使其适应海报布局而不是网页响应式布局
+        // 网页版有 pt-40 (160px) 的顶部留白，这对海报来说太大，导致内容被压缩剪切
         const mainEl = reportLayoutDiv.querySelector('main') as HTMLElement;
         if (mainEl) {
-          // 480px 宽度下，适当调整底部推顶的高度
-          mainEl.style.paddingBottom = '140px';
+          mainEl.classList.remove('pt-40', 'overflow-hidden', 'h-full'); // 移除网页版的大额留白和高度限制
+          mainEl.style.paddingTop = '80px'; // 留出顶部 LEGAL ANNUAL REPORT Header 的空间 (100px / 2 + buffer)
+          mainEl.style.paddingBottom = '80px'; // 留出底部二维码 Footer 的空间
+          mainEl.style.height = 'auto'; // 允许高度自适应
+          mainEl.style.overflow = 'visible'; // 允许溢出显示
         }
       }
 
@@ -123,8 +126,8 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
           justify-content: center;
           padding-top: 30px;
         ">
-           <div style="color: rgba(170,142,74,0.9); font-family: monospace; font-size: 16px; letter-spacing: 4px; margin-bottom: 8px; font-weight: 700;">LEGAL REPORT</div>
-           <div style="color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 300; letter-spacing: 2px;">记录我的法律人年度足迹</div>
+           <div style="color: rgba(170,142,74,0.9); font-family: monospace; font-size: 20px; letter-spacing: 4px; margin-bottom: 8px; font-weight: 700;">LEGAL ANNUAL REPORT</div>
+           <div style="color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 300; letter-spacing: 2px;">记录我的法律人年度足迹</div>
         </div>
       `;
       overlay.appendChild(header);
@@ -143,7 +146,7 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
 
       footer.innerHTML = `
          <div style="width: 80%; height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 20px;"></div>
-         <div style="color: rgba(255,255,255,0.5); font-size: 12px; margin-bottom: 15px; letter-spacing: 1px;">扫码生成你的法律人年度报告</div>
+         <div style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 15px; letter-spacing: 1px;">扫码生成你的法律人年度报告</div>
       `;
 
       // QR Code

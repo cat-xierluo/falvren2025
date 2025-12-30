@@ -7,6 +7,7 @@
 - 新增「AI 时代冲突场景」分类与 23 条场景条目。
 - 新增 AI 主题系统旁白 3 条。
 - [UI] 新增全局衬线字体 `Noto Serif SC` 及烫金文字/边框特效。
+- [UI] 更改主要中文字体为 `Noto Serif SC`，新增 `LXGW WenKai` 备选。
 - [Export] 新增 `720x1280` 高清海报导出模板（含金色边框、水印 Header/Footer）。
 
 ### Changed
@@ -14,6 +15,23 @@
 - [Export] 升级 `SaveButton` 导出逻辑，支持主内容自动缩放以适应边框海报模板。
 - [UX] 将页面切换动画时长从 0.4s 延长至 0.7s。
 - [UI] 移除背景噪点效果 (`.bg-noise`)，提升画面纯净度。
+- [Export] 实施 **Container-Aware Layout** 导出策略，模拟 390px (iPhone 13) 视口并重置 Padding，解决内容裁切问题。
+- [Export] 增大海报 Header 与 Footer 的文字字号，提升移动端阅读体验。
+- [Export] 增大海报 Header 与 Footer 的文字字号，提升移动端阅读体验。
+- [UI] 调整分享卡标题文案排版并对齐用户标签位置。
+- [UI] 导出海报标题统一为 “LEGAL ANNUAL REPORT”。
+- [Punctuation] 全局文本统一使用中文双引号，优化排版。
+
+- [UI] 调整分享卡用户 ID 徽标的居中对齐表现。
+- [UI] 优化分享卡用户 ID 徽标的对齐，并修正全局居中文本的视觉重心偏移。
+
+### Fixed
+- 修复苏州梅友机场彩蛋在非苏州城市随机出现的问题（增加 `exclusive` 独占属性）。
+- 修复彩蛋场景中变量名 `{easterEgg}` 未被正确替换的问题。
+- [Export] 修复保存图片导出时因样式注释导致的内容缩放异常。
+- [Export] 修复 SharePage 导出预览不一致导致的画面裁切问题。
+- [Export] 移除分享卡导出中误显示的操作按钮图标。
+- [Export] 提升 SharePage 导出清晰度。
 
 ### Changed
 - 更新主题配色为“深海蓝 + 黄铜 + 墨绿”，同步调整背景渐变与进度条/图标颜色。

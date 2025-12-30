@@ -30,6 +30,7 @@ export interface Scene {
   hasRandomFileName?: boolean;
   businessArea?: BusinessArea; // 业务领域限制（可选）
   negative?: boolean;        // 是否包含否定内容（不在随机选择时出现）
+  exclusive?: boolean;       // 是否独占（不在随机池中出现，仅通过特定逻辑触发）
 }
 
 export interface SystemNarration {
@@ -248,7 +249,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'phone_simple_consult',
     category: 'phone',
-    template: '通话时间最长的一次\n开头是：\n\n"我就简单咨询一下"',
+    template: '通话时间最长的一次\n开头是：\n\n“我就简单咨询一下”',
     subtext: '实际通话时长：{number} 分钟',
     hasRandomNumber: true,
     numberRange: [47, 89],
@@ -258,7 +259,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'phone_friend_said',
     category: 'phone',
-    template: '你听到最多的一句话是：\n\n"我朋友说这个不复杂"',
+    template: '你听到最多的一句话是：\n\n“我朋友说这个不复杂”',
     subtext: '朋友的判断标准\n通常只有两个：难不难、贵不贵',
     soulText: '你已经学会\n在心里默数三秒'
   },
@@ -287,12 +288,12 @@ export const sceneLibrary: Scene[] = [
     category: 'phone',
     template: '有几次你接起电话\n却下意识地\n先看了一眼日历',
     subtext: '条件反射级别的动作',
-    soulText: '你在确认\n这是不是一个\n可以说"不方便"的日子'
+    soulText: '你在确认\n这是不是一个\n可以说“不方便”的日子'
   },
   {
     id: 'phone_later_contact',
     category: 'phone',
-    template: '你对"回头再联系"的理解\n已经非常具体',
+    template: '你对“回头再联系”的理解\n已经非常具体',
     subtext: '通常意味着：不会再联系',
     soulText: '这不是冷漠\n这是经验'
   },
@@ -421,7 +422,8 @@ export const sceneLibrary: Scene[] = [
     category: 'travel',
     template: '你今年最常吐槽的是：\n\n**{easterEgg}**',
     subtext: '没有机场的苏州人\n都知道这是什么意思',
-    soulText: '机场\n可以没有\n梗必须有'
+    soulText: '机场\n可以没有\n梗必须有',
+    exclusive: true // 仅通过彩蛋逻辑触发
   },
   {
     id: 'travel_hotel_work',
@@ -452,7 +454,7 @@ export const sceneLibrary: Scene[] = [
     numberRange: [15, 45],
     numberSuffix: '张',
     subtext: '有些风景只能自己看',
-    soulText: '它们还在相册里\n等一个不会来的"有空"'
+    soulText: '它们还在相册里\n等一个不会来的“有空”'
   },
   {
     id: 'travel_high_speed_rail',
@@ -476,12 +478,12 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'documents_word_count',
     category: 'documents',
-    template: '你今年创建了 **{number}** 个 Word 文件\n\n没有任何一个\n真正是"最终版"',
+    template: '你今年创建了 **{number}** 个 Word 文件\n\n没有任何一个\n真正是“最终版”',
     hasRandomNumber: true,
     numberRange: [1000, 2000],
     numberSuffix: '',
     subtext: '平均每天 {number} 个',
-    soulText: '律师的"最终版"\n是一种精神状态\n不是文件名'
+    soulText: '律师的“最终版”\n是一种精神状态\n不是文件名'
   },
   {
     id: 'documents_filename',
@@ -501,7 +503,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'documents_one_more',
     category: 'documents',
-    template: '你对"再补一个材料"的理解\n不再是数量\n而是心理准备',
+    template: '你对“再补一个材料”的理解\n不再是数量\n而是心理准备',
     subtext: '通常意味着：再补 5-10 个',
     soulText: '补材料\n是一个动词'
   },
@@ -556,13 +558,13 @@ export const sceneLibrary: Scene[] = [
     numberRange: [300, 600],
     numberSuffix: '',
     subtext: '每份都有\n至少3个版本',
-    soulText: '你以为改完了\n客户说"再看看第12条"',
+    soulText: '你以为改完了\n客户说“再看看第12条”',
     businessArea: 'non_litigation'
   },
   {
     id: 'documents_dd_changes',
     category: 'documents',
-    template: '你最怕听到的一句话：\n\n"这个条款我们再讨论一下"',
+    template: '你最怕听到的一句话：\n\n“这个条款我们再讨论一下”',
     subtext: '通常意味着\n还要再开3次会',
     soulText: '讨论不是结束\n是新一轮修改的开始',
     businessArea: 'non_litigation'
@@ -599,8 +601,8 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'time_later',
     category: 'time_disorder',
-    template: '你最常说的一句话是：\n\n"我晚点看"',
-    subtext: '"晚点"的定义：不确定',
+    template: '你最常说的一句话是：\n\n“我晚点看”',
+    subtext: '“晚点”的定义：不确定',
     soulText: '晚点\n就是不确定'
   },
   {
@@ -623,7 +625,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'time_deadline',
     category: 'time_disorder',
-    template: '你听到"明天要"的次数\n已经多到\n不再有情绪波动',
+    template: '你听到“明天要”的次数\n已经多到\n不再有情绪波动',
     hasRandomNumber: true,
     numberRange: [80, 200],
     numberSuffix: '次',
@@ -645,7 +647,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'jargon_principle',
     category: 'industry_jargon',
-    template: '你已经完全听懂\n"原则上可以"\n的全部含义',
+    template: '你已经完全听懂\n“原则上可以”\n的全部含义',
     subtext: '真实含义：实操可能不行',
     soulText: '原则\n就是可以不遵守的规则'
   },
@@ -676,7 +678,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'jargon_verify',
     category: 'industry_jargon',
-    template: '"我需要再核实一下"\n\n你今年说了 **{number}** 次',
+    template: '“我需要再核实一下”\n\n你今年说了 **{number}** 次',
     hasRandomNumber: true,
     numberRange: [120, 300],
     numberSuffix: '',
@@ -686,7 +688,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'jargon_understand',
     category: 'industry_jargon',
-    template: '"我理解您的感受"\n\n你今年说了 **{number}** 次',
+    template: '“我理解您的感受”\n\n你今年说了 **{number}** 次',
     hasRandomNumber: true,
     numberRange: [80, 200],
     numberSuffix: '',
@@ -698,7 +700,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'cognition_no_judge',
     category: 'cognition_change',
-    template: '你不再轻易评价\n当事人"懂不懂法"',
+    template: '你不再轻易评价\n当事人“懂不懂法”',
     subtext: '每个人都有自己的逻辑',
     soulText: '因为很多时候\n懂不懂\n不影响结果'
   },
@@ -735,7 +737,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'cognition_illusion',
     category: 'cognition_change',
-    template: '你这一年最大的幻觉：\n\n"这个案子结束我就轻松了"',
+    template: '你这一年最大的幻觉：\n\n“这个案子结束我就轻松了”',
     subtext: '信了 {number} 次',
     hasRandomNumber: true,
     numberRange: [8, 20],
@@ -745,7 +747,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'cognition_emotion',
     category: 'cognition_change',
-    template: '你听到"就改一下"的心率反应\n\n**显著升高**',
+    template: '你听到“就改一下”的心率反应\n\n**显著升高**',
     subtext: '尤其是周五下午 6 点之后',
     soulText: '条件反射\n级别的恐惧'
   },
@@ -795,7 +797,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'ai_first_lawyer',
     category: 'ai_conflict',
-    template: '你这一年\n听到过无数次这句话：\n\n"{aiName} 不是这么说的"',
+    template: '你这一年\n听到过无数次这句话：\n\n“{aiName} 不是这么说的”',
     subtext: 'AI 成了当事人的第一位律师',
     soulText: '你还没开始解释\n他已经先引用完了'
   },
@@ -823,14 +825,14 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'ai_proofread',
     category: 'ai_conflict',
-    template: '有些咨询\n本质上已经变成了：\n\n"请你帮我校对一下 AI 的判断"',
+    template: '有些咨询\n本质上已经变成了：\n\n“请你帮我校对一下 AI 的判断”',
     subtext: 'AI 先写结论\n你来背后果',
     soulText: '看起来是省时\n其实是转移'
   },
   {
     id: 'ai_generate_evidence',
     category: 'ai_conflict',
-    template: '当事人发现\n缺少关键证据之后\n问你：\n\n"能不能让豆包生成一张图？"',
+    template: '当事人发现\n缺少关键证据之后\n问你：\n\n“能不能让豆包生成一张图？”',
     subtext: '证据被当成素材库',
     soulText: '那一刻\n你突然不知道从哪解释起'
   },
@@ -851,7 +853,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'ai_evidence_silence',
     category: 'ai_conflict',
-    template: '有些沉默\n出现在你解释\n"证据真实性"的那一刻',
+    template: '有些沉默\n出现在你解释\n“证据真实性”的那一刻',
     subtext: '对方第一次意识到\n生成 ≠ 发生',
     soulText: '你看见了\n规则的边界'
   },
@@ -865,7 +867,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'ai_doc_review',
     category: 'ai_conflict',
-    template: '当事人递给你一份文书\n说：\n\n"我用豆包写的，你帮我看看？"',
+    template: '当事人递给你一份文书\n说：\n\n“我用豆包写的，你帮我看看？”',
     subtext: '这是 2025 的新常态',
     soulText: '你知道\n这不是最后一次'
   },
@@ -879,7 +881,7 @@ export const sceneLibrary: Scene[] = [
   {
     id: 'ai_explain_usability',
     category: 'ai_conflict',
-    template: '你需要花很长时间\n才能解释清楚：\n\n"看起来像对，不等于能用"',
+    template: '你需要花很长时间\n才能解释清楚：\n\n“看起来像对，不等于能用”',
     subtext: '解释成本\n比重写还高',
     soulText: '有些话\n必须重复很多遍'
   },
@@ -976,49 +978,109 @@ export interface Conclusion {
 
 export const conclusions: Conclusion[] = [
   {
+    id: 'conclusion_1',
+    mainText: '这一年你处理了很多案卷',
+    subText: '但真正有分量的\n是你替别人扛过的那些夜'
+  },
+  {
     id: 'conclusion_2',
-    mainText: '你不是变冷漠了',
-    subText: '你只是学会了\n在情绪和规则之间选择后者'
+    mainText: '法律条文没有变',
+    subText: '但你驾驭它们的能力\n已经不一样了'
   },
   {
     id: 'conclusion_3',
-    mainText: '你没有麻木',
-    subText: '你只是把敏感\n藏在了专业的外壳里'
+    mainText: '你比去年更稳了',
+    subText: '稳到可以接住\n更多人的期待'
   },
   {
     id: 'conclusion_4',
-    mainText: '你不是不累',
-    subText: '你只是习惯了\n把疲惫当成工作的一部分'
+    mainText: '专业不是天生的',
+    subText: '是你一个案子一个案子\n熬出来的'
+  },
+  {
+    id: 'conclusion_5',
+    mainText: '你做对了多少事',
+    subText: '没人会记得\n但你心里有数'
   },
   {
     id: 'conclusion_6',
-    mainText: '你不是无所谓',
-    subText: '你只是学会了\n在失望之前降低预期'
+    mainText: '明年还会忙',
+    subText: '但你已经知道\n该怎么忙得值得'
   },
   {
     id: 'conclusion_7',
-    mainText: '你没有看透一切',
-    subText: '你只是比去年\n更清楚什么不会改变'
+    mainText: '你没辜负这个职业',
+    subText: '这个职业\n也没辜负你'
+  },
+  {
+    id: 'conclusion_8',
+    mainText: '有些案子你赢了',
+    subText: '有些案子你输了\n但你成长了'
   },
   {
     id: 'conclusion_9',
-    mainText: '你没有放弃理想',
-    subText: '你只是把它\n放在了更安全的地方'
+    mainText: '你还在做这一行',
+    subText: '这本身就是\n一种答案'
   },
   {
     id: 'conclusion_10',
-    mainText: '你不是不在乎了',
-    subText: '你只是学会了\n选择性在乎'
+    mainText: '你今年做得很好',
+    subText: '明年会更好\n不是因为运气\n是因为你'
   },
   {
     id: 'conclusion_11',
-    mainText: '你没有变得世故',
-    subText: '你只是知道了\n哪些话不用再说第二遍'
+    mainText: '法律是你的武器',
+    subText: '但你的善良\n才是底色'
   },
   {
     id: 'conclusion_12',
-    mainText: '你不是失去热情',
-    subText: '你只是把热情\n分配给了更值得的事'
+    mainText: '你比想象中能扛',
+    subText: '也想象中更温柔'
+  },
+  {
+    id: 'conclusion_13',
+    mainText: '这一年不算轻松',
+    subText: '但你没有认输'
+  },
+  {
+    id: 'conclusion_14',
+    mainText: '你帮过的人',
+    subText: '有些会忘记你\n有些会记得你\n但都因为你\n过上了更好的人生'
+  },
+  {
+    id: 'conclusion_15',
+    mainText: '你的价值',
+    subText: '不在别人嘴里\n在你接住的每一个案子'
+  },
+  {
+    id: 'conclusion_16',
+    mainText: '这一年你走得很实',
+    subText: '每一步\n都算数'
+  },
+  {
+    id: 'conclusion_17',
+    mainText: '你还在路上',
+    subText: '这就够了'
+  },
+  {
+    id: 'conclusion_18',
+    mainText: '专业是护城河',
+    subText: '你把它挖得更深了'
+  },
+  {
+    id: 'conclusion_19',
+    mainText: '这一年的疲惫',
+    subText: '换来的是\n明年更从容的底气'
+  },
+  {
+    id: 'conclusion_20',
+    mainText: '你值得一次',
+    subText: '好好的休息'
+  },
+  {
+    id: 'conclusion_21',
+    mainText: '新年快乐',
+    subText: '你配得上'
   },
 ];
 
@@ -1114,12 +1176,13 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
   // 辅助函数：过滤适合当前业务领域的场景
   const filterScenesByBusinessArea = (scenes: Scene[]): Scene[] => {
     if (businessArea === 'random') {
-      // 过滤掉包含否定内容的场景
-      return scenes.filter(scene => !scene.negative);
+      // 过滤掉包含否定内容和独占内容的场景
+      return scenes.filter(scene => !scene.negative && !scene.exclusive);
     }
-    // 如果指定了业务领域，只返回没有限制或匹配该领域的场景，同时过滤掉否定内容
+    // 如果指定了业务领域，只返回没有限制或匹配该领域的场景，同时过滤掉否定内容和独占内容
     return scenes.filter(scene =>
       !scene.negative &&
+      !scene.exclusive &&
       (!scene.businessArea || scene.businessArea === businessArea || scene.businessArea === 'random')
     );
   };
@@ -1331,13 +1394,13 @@ export function formatSubtext(generated: GeneratedScene): string | undefined {
 
 export function formatSoulText(generated: GeneratedScene): string | undefined {
   if (!generated.scene.soulText) return undefined;
-  
+
   let text = generated.scene.soulText;
-  
+
   if (generated.randomName) {
     text = text.replace('{name}', generated.randomName);
   }
-  
+
   return text;
 }
 

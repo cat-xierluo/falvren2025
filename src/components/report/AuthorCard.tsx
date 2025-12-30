@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import wechatQr from '@/assets/wechat-qr.png';
+import { getRandomTagline } from '@/lib/taglines';
 
 export function AuthorCard() {
+  const tagline = getRandomTagline();
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -25,7 +28,7 @@ export function AuthorCard() {
             <p className="text-base sm:text-base text-foreground font-medium">杨卫薪律师</p>
             <p className="text-sm sm:text-sm text-muted-foreground font-mono">微信 ywxlaw</p>
             <p className="text-[10px] sm:text-[10px] text-muted-foreground/50 mt-0.5 leading-tight">
-              那个也还在改文书的律师
+              {tagline}
             </p>
           </div>
           {/* Share hint */}

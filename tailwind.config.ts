@@ -64,6 +64,8 @@ export default {
       },
       fontFamily: {
         sans: ['Noto Sans SC', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        serif: ['Noto Serif SC', 'Songti SC', 'serif'],
+        calligraphic: ['LXGW WenKai', 'KaiTi', '楷体', 'serif'],
         mono: ['JetBrains Mono', 'SF Mono', 'monospace'],
       },
       borderRadius: {

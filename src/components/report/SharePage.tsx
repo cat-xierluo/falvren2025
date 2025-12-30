@@ -45,6 +45,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
     }
   };
 
+  // 确保引入 createRoot
   const handleSaveCard = async () => {
     if (!cardRef.current) return;
 
@@ -55,50 +56,107 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
     }
 
     try {
-      // 保持海报比例 9:16
-      const exportWidth = 720; // 提高基础分辨率
-      const exportHeight = 1280;
+      // 目标分辨率: 720x1280 (HD 9:16)
+      const baseWidth = 360;
+      const baseHeight = 640;
+      const exportScale = 3;
+      const exportWidth = baseWidth * exportScale;
+      const exportHeight = baseHeight * exportScale;
 
-      const exportContainer = document.createElement('div');
-      exportContainer.style.cssText = `
+      const container = document.createElement('div');
+      container.className = 'font-serif text-foreground';
+      container.style.cssText = `
         position: fixed;
         left: -9999px;
         top: 0;
-        width: ${exportWidth}px;
-        height: ${exportHeight}px;
+        width: ${baseWidth}px;
+        height: ${baseHeight}px;
+        background-color: #0a0f1e;
+        overflow: hidden;
       `;
 
+      // 1. 内容层 (Cloned Page)
       const cardClone = cardRef.current.cloneNode(true) as HTMLElement;
-      // 强制应用导出样式
-      cardClone.style.width = `${exportWidth}px`;
-      cardClone.style.height = `${exportHeight}px`;
+      const cloneShuffleButton = cardClone.querySelector('button[title="换一句"]');
+      if (cloneShuffleButton) {
+        cloneShuffleButton.remove();
+      }
+
+      // 强制内容全屏适配 - 模拟手机视口并放大
+      cardClone.style.cssText = `
+        width: ${baseWidth}px;
+        height: ${baseHeight}px;
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        border-radius: 0;
+      `;
+
+      // 确保内容铺满
       cardClone.style.maxWidth = 'none';
       cardClone.style.maxHeight = 'none';
-      cardClone.style.borderRadius = '0'; // 导出时不需要圆角
-      cardClone.style.margin = '0';
-      cardClone.style.overflow = 'hidden';
 
-      // 调整内容比例以适应更高分辨率的导出
-      // 注意：这里简单缩放可能不够，但为了保持 React 组件的一致性，
-      // 我们依赖 HTML/CSS 的流式布局自动适应更大的容器
+      // 修复 Clone 后的一些样式差异
+      const contentContainer = cardClone.querySelector('.relative.z-10.flex.flex-col.h-full.p-8') as HTMLElement;
+      if (contentContainer) {
+        // 可以在这里微调 padding
+      }
 
-      exportContainer.appendChild(cardClone);
-      document.body.appendChild(exportContainer);
-      await new Promise(resolve => setTimeout(resolve, 300)); // 增加等待时间确保渲染
+      container.appendChild(cardClone);
+      document.body.appendChild(container);
 
-      const canvas = await html2canvas(cardClone, {
-        scale: 2, // 已经放大了基础尺寸，scale 2 足够
-        backgroundColor: '#0a0f1e', // 确保背景色
+      // Wait for DOM layout
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const canvas = await html2canvas(container, {
+        scale: exportScale,
+        backgroundColor: '#0a0f1e',
         useCORS: true,
         logging: false,
+        width: baseWidth,
+        height: baseHeight
       });
 
-      document.body.removeChild(exportContainer);
+      document.body.removeChild(container);
 
-      const link = document.createElement('a');
-      link.download = `法律人2025年报-${userName || '我的'}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      // Export Blob & Share (Logic from SaveButton)
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob), 'image/png', 0.95);
+      });
+
+      if (!blob) throw new Error('Blob generation failed');
+
+      const url = URL.createObjectURL(blob);
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const supportsWebShare = 'share' in navigator;
+
+      if (isMobile && supportsWebShare) {
+        const file = new File([blob], `法律人年度报告.png`, { type: 'image/png' });
+        try {
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: '法律人年度报告',
+              text: '我的2025法律人年度报告'
+            });
+          } else {
+            throw new Error('Share not supported');
+          }
+        } catch (e) {
+          window.open(url, '_blank');
+        }
+      } else {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `法律人年度报告-${userName || '我的'}.png`;
+        link.click();
+      }
+
+      URL.revokeObjectURL(url);
+
     } catch (error) {
       console.error('保存失败', error);
       alert('保存失败，请重试');
@@ -222,27 +280,21 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 <div className="relative z-10 flex flex-col h-full p-8">
 
                   {/* Header */}
-                  <div className="flex flex-col items-center space-y-3 mb-8">
+                  <div className="flex flex-col items-center space-y-2 mb-8">
                     <div className="w-1 h-8 bg-gradient-to-b from-transparent via-[#AA8E4A] to-transparent opacity-50 mb-2"></div>
-                    <h1 className="text-xs font-mono tracking-[0.4em] text-[#AA8E4A]/80 uppercase">Legal Annual Report</h1>
-                    <div className="flex items-center gap-3 w-full justify-center">
-                      <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#AA8E4A]/30"></div>
-                      <span className="text-base font-serif text-gradient-gold font-bold tracking-widest whitespace-nowrap">2025 · 法律人</span>
-                      <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#AA8E4A]/30"></div>
-                    </div>
+                    <h1 className="text-xs font-mono tracking-[0.4em] text-[#AA8E4A]/80 uppercase pl-[0.4em] translate-y-[0.5px]">LEGAL ANNUAL REPORT</h1>
+                    <p className="text-sm font-serif text-[#AA8E4A]/70 tracking-[0.25em] pl-[0.25em] translate-y-[0.5px]">法律人 2025 年度报告</p>
                   </div>
 
                   {/* Main Content Area */}
                   <div className="flex-1 flex flex-col justify-center relative">
-                    {/* User ID - Badge Style */}
-                    {userName && (
-                      <div className="absolute -top-2 right-0 bg-[#AA8E4A]/10 border border-[#AA8E4A]/20 px-3 py-1 rounded-full backdrop-blur-sm">
-                        <span className="text-xs font-mono text-[#F3EAC2] tracking-wider">{userName}</span>
-                      </div>
-                    )}
-
                     {/* Checkbox / Quote Area */}
                     <div className="relative my-6 p-6 border-l-2 border-[#AA8E4A]/40 bg-gradient-to-r from-[#AA8E4A]/5 to-transparent rounded-r-lg">
+                      {userName && (
+                        <div className="absolute -top-[14px] right-6 inline-flex h-7 items-center justify-center bg-[#AA8E4A]/10 border border-[#AA8E4A]/20 px-3 rounded-full backdrop-blur-sm z-20">
+                          <span className="text-xs font-mono text-[#F3EAC2] tracking-[0.1em] pl-[0.1em] translate-y-[0.5px] whitespace-nowrap">{userName}</span>
+                        </div>
+                      )}
                       <motion.button
                         onClick={shuffleConclusion}
                         className="absolute right-2 top-2 p-2 text-[#AA8E4A]/30 hover:text-[#AA8E4A] transition-colors z-20"
@@ -259,7 +311,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                         {currentConclusion.subText && (
                           <div className="flex items-start gap-3 mt-4 pt-4 border-t border-[#AA8E4A]/10">
                             <span className="text-4xl text-[#AA8E4A]/20 font-serif leading-none">“</span>
-                            <p className="text-sm sm:text-base font-light leading-7 text-muted-foreground/90 font-sans">
+                            <p className="text-sm sm:text-base font-light leading-7 text-muted-foreground/90 font-serif">
                               {currentConclusion.subText}
                             </p>
                           </div>
@@ -271,7 +323,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                   {/* Footer Area */}
                   <div className="mt-auto space-y-6 pt-6 border-t border-[#AA8E4A]/10 relative">
                     {/* Narration Text */}
-                    <p className="text-xs text-center text-muted-foreground/50 font-sans leading-relaxed px-4">
+                    <p className="text-xs text-center text-muted-foreground/50 font-serif leading-relaxed px-4">
                       {narration.text}
                     </p>
 
