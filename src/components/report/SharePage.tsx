@@ -102,14 +102,19 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       // 修复 Clone 后的一些样式差异
       const contentContainer = cardClone.querySelector('.relative.z-10.flex.flex-col.h-full.p-8') as HTMLElement;
       if (contentContainer) {
-        // 可以在这里微调 padding
+        contentContainer.style.display = 'flex';
+        contentContainer.style.flexDirection = 'column';
+        contentContainer.style.height = '100%';
+        contentContainer.style.width = '100%';
+        contentContainer.style.padding = '32px';
+        contentContainer.style.boxSizing = 'border-box';
       }
 
       container.appendChild(cardClone);
       document.body.appendChild(container);
 
-      // Wait for DOM layout
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Wait longer for DOM layout and fonts
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const canvas = await html2canvas(container, {
         scale: exportScale,
@@ -281,13 +286,13 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 <div className="relative z-10 flex flex-col h-full p-8">
 
                   {/* Header */}
-                  <div className="text-center mb-8">
+                  <div className="text-center mb-8 w-full block">
                     <div className="w-1 h-8 bg-gradient-to-b from-transparent via-[#AA8E4A] to-transparent opacity-50 mx-auto mb-4"></div>
-                    <div className="block">
-                      <span className="text-[10px] font-mono tracking-[0.3em] text-[#AA8E4A]/80 uppercase pl-[0.3em] whitespace-nowrap mb-2 inline-block">LEGAL ANNUAL REPORT</span>
+                    <div className="block w-full">
+                      <span className="text-[10px] font-mono tracking-[0.3em] text-[#AA8E4A]/80 uppercase pl-[0.3em] whitespace-nowrap inline-block leading-none">LEGAL ANNUAL REPORT</span>
                     </div>
-                    <div className="block mt-1">
-                      <span className="text-xs font-serif text-[#AA8E4A]/70 tracking-[0.1em] pl-[0.1em] whitespace-nowrap inline-block">法律人 2025 年度报告</span>
+                    <div className="block w-full mt-2">
+                      <span className="text-xs font-serif text-[#AA8E4A]/70 tracking-[0.1em] pl-[0.1em] whitespace-nowrap inline-block leading-none">法律人 2025 年度报告</span>
                     </div>
                   </div>
 
