@@ -131,10 +131,10 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
         const headerContainer = contentContainer.querySelector('div[style*="textAlign"]') as HTMLElement;
         if (headerContainer) {
           headerContainer.innerHTML = `
-            <div style="width: 1px; height: 40px; background-color: rgba(170, 142, 74, 0.2); margin: 0 auto 24px;"></div>
+            <div style="width: 2px; height: 40px; background-color: rgba(170, 142, 74, 0.4); margin: 0 auto 24px; border-radius: 99px; box-shadow: 0 0 12px 4px rgba(170, 142, 74, 0.4);"></div>
             <div style="
               color: rgba(170, 142, 74, 0.9);
-              font-family: monospace;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
               font-size: 11px;
               font-weight: 700;
               letter-spacing: 4px;
@@ -335,15 +335,20 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
 
                   {/* Header - Clean dual-line structure */}
                   <div className="w-full mb-12 sm:mb-16" style={{ textAlign: 'center' }}>
-                    {/* Vertical Line - Subtle decorative element */}
-                    <div className="w-[1px] h-10 bg-[#AA8E4A] opacity-20 mx-auto mb-6"></div>
+                    {/* Vertical Line - Stable Glow effect */}
+                    <div
+                      className="w-[1.5px] h-10 bg-[#AA8E4A]/50 mx-auto mb-6 rounded-full"
+                      style={{
+                        boxShadow: '0 0 12px 4px rgba(170, 142, 74, 0.4)',
+                      }}
+                    />
 
                     {/* Line 1: English only */}
                     <h1
                       className="text-[#AA8E4A] uppercase whitespace-nowrap leading-none mb-3 font-bold"
                       style={{
                         fontSize: '11px',
-                        fontFamily: 'monospace',
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
                         letterSpacing: '4px',
                         display: 'block',
                         textAlign: 'center',
