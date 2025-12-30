@@ -100,7 +100,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       cardClone.style.maxHeight = 'none';
 
       // 修复 Clone 后的一些样式差异
-      const contentContainer = cardClone.querySelector('.relative.z-10.flex.flex-col.h-full.p-8') as HTMLElement;
+      const contentContainer = cardClone.querySelector('#share-card-content') as HTMLElement;
       if (contentContainer) {
         contentContainer.style.display = 'flex';
         contentContainer.style.flexDirection = 'column';
@@ -108,6 +108,8 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
         contentContainer.style.width = '100%';
         contentContainer.style.padding = '32px';
         contentContainer.style.boxSizing = 'border-box';
+        contentContainer.style.visibility = 'visible';
+        contentContainer.style.opacity = '1';
       }
 
       container.appendChild(cardClone);
@@ -283,16 +285,26 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 <div className="absolute bottom-4 left-4 w-24 h-24 border-b border-l border-[#AA8E4A]/20 rounded-bl-3xl z-0" />
 
                 {/* Content Container */}
-                <div className="relative z-10 flex flex-col h-full p-8">
+                <div id="share-card-content" className="relative z-10 flex flex-col h-full p-8">
 
                   {/* Header */}
-                  <div className="flex flex-col items-center w-full mb-10">
-                    <div className="w-[1.5px] h-8 bg-[#AA8E4A] opacity-40 mb-4"></div>
-                    <div className="text-[10px] font-mono text-[#AA8E4A] uppercase whitespace-nowrap leading-none" style={{ letterSpacing: '4px' }}>
-                      LEGAL ANNUAL REPORT
+                  <div className="w-full mb-10 text-center block">
+                    <div className="w-[1.5px] h-8 bg-[#AA8E4A]/40 mx-auto mb-4"></div>
+                    <div className="block w-full">
+                      <span
+                        className="text-[10px] font-mono text-[#AA8E4A] uppercase whitespace-nowrap inline-block leading-none"
+                        style={{ letterSpacing: '4px' }}
+                      >
+                        LEGAL ANNUAL REPORT
+                      </span>
                     </div>
-                    <div className="text-xs font-serif text-[#AA8E4A]/80 whitespace-nowrap leading-none mt-2.5" style={{ letterSpacing: '1.5px' }}>
-                      法律人 2025 年度报告
+                    <div className="block w-full mt-3">
+                      <span
+                        className="text-xs font-serif text-[#AA8E4A]/80 whitespace-nowrap inline-block leading-none"
+                        style={{ letterSpacing: '1.5px' }}
+                      >
+                        法律人 2025 年度报告
+                      </span>
                     </div>
                   </div>
 

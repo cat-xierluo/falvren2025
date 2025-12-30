@@ -138,7 +138,7 @@ const Index = () => {
 
   return (
     <>
-      {currentPage !== totalPages - 2 && (
+      {currentPage < totalPages - 3 && (
         <SaveButton
           pageRef={pageRef}
           currentPage={currentPage}
