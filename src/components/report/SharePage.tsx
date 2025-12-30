@@ -55,8 +55,9 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
     }
 
     try {
-      const exportWidth = 390;
-      const exportHeight = 700;
+      // 保持海报比例 9:16
+      const exportWidth = 720; // 提高基础分辨率
+      const exportHeight = 1280;
 
       const exportContainer = document.createElement('div');
       exportContainer.style.cssText = `
@@ -68,22 +69,28 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       `;
 
       const cardClone = cardRef.current.cloneNode(true) as HTMLElement;
+      // 强制应用导出样式
       cardClone.style.width = `${exportWidth}px`;
       cardClone.style.height = `${exportHeight}px`;
       cardClone.style.maxWidth = 'none';
       cardClone.style.maxHeight = 'none';
-      cardClone.style.aspectRatio = 'auto';
+      cardClone.style.borderRadius = '0'; // 导出时不需要圆角
       cardClone.style.margin = '0';
       cardClone.style.overflow = 'hidden';
 
+      // 调整内容比例以适应更高分辨率的导出
+      // 注意：这里简单缩放可能不够，但为了保持 React 组件的一致性，
+      // 我们依赖 HTML/CSS 的流式布局自动适应更大的容器
+
       exportContainer.appendChild(cardClone);
       document.body.appendChild(exportContainer);
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 300)); // 增加等待时间确保渲染
 
       const canvas = await html2canvas(cardClone, {
-        scale: 3,
-        backgroundColor: null,
+        scale: 2, // 已经放大了基础尺寸，scale 2 足够
+        backgroundColor: '#0a0f1e', // 确保背景色
         useCORS: true,
+        logging: false,
       });
 
       document.body.removeChild(exportContainer);
@@ -119,12 +126,17 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       >
         {!showPreview ? (
           /* Customization form */
-          <div className="space-y-4">
+          <div className="space-y-4 px-4 w-full max-w-sm mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-serif text-gradient-gold mb-2">生成你的年度报告</h2>
+              <p className="text-muted-foreground text-sm">定制专属法律人名片，记录2025</p>
+            </div>
+
             {/* Name input */}
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground flex items-center gap-2">
-                <User className="w-4 h-4" />
-                你的名字或ID（可选）
+                <User className="w-4 h-4 text-[hsl(var(--gold-mid))]" />
+                你的名字或ID
               </label>
               <input
                 type="text"
@@ -132,32 +144,29 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 onChange={(e) => setUserName(e.target.value)}
                 placeholder="例如：张律师"
                 maxLength={20}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck={false}
-                enterKeyHint="done"
-                className="w-full px-4 py-3 bg-muted/30 border border-border rounded-lg text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 text-base"
+                className="w-full px-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-[hsl(var(--gold-mid))] focus:border-[hsl(var(--gold-mid))] transition-all text-base"
               />
             </div>
 
             {/* QR code upload */}
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground flex items-center gap-2">
-                <Upload className="w-4 h-4" />
-                上传你的微信二维码（可选）
+                <Upload className="w-4 h-4 text-[hsl(var(--gold-mid))]" />
+                上传微信二维码
               </label>
-              
+
               {userQrImage ? (
-                <div className="relative inline-block">
-                  <img 
-                    src={userQrImage} 
-                    alt="我的二维码" 
-                    className="w-24 h-24 object-contain bg-white rounded-lg p-1"
-                  />
+                <div className="relative inline-block group">
+                  <div className="border border-border rounded-lg p-1 bg-white/5">
+                    <img
+                      src={userQrImage}
+                      alt="我的二维码"
+                      className="w-24 h-24 object-contain bg-white rounded flex-none"
+                    />
+                  </div>
                   <button
                     onClick={removeQrImage}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center"
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-md transform transition-transform group-hover:scale-110"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -165,10 +174,12 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
               ) : (
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full py-6 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/50 transition-colors"
+                  className="w-full py-8 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-[hsl(var(--gold-mid))/50] hover:bg-card/50 transition-all group"
                 >
-                  <Upload className="w-8 h-8 text-muted-foreground/50" />
-                  <p className="text-sm text-muted-foreground/50">点击上传二维码图片</p>
+                  <div className="w-12 h-12 rounded-full bg-muted/30 flex items-center justify-center group-hover:bg-[hsl(var(--gold-mid))/10] transition-colors">
+                    <Upload className="w-6 h-6 text-muted-foreground group-hover:text-[hsl(var(--gold-mid))]" />
+                  </div>
+                  <p className="text-sm text-muted-foreground/70">点击上传图片</p>
                 </div>
               )}
               <input
@@ -183,116 +194,133 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
             {/* Preview button */}
             <button
               onClick={() => setShowPreview(true)}
-              className="w-full btn-primary flex items-center justify-center gap-2 text-base py-3"
+              className="w-full btn-primary flex items-center justify-center gap-2 text-base py-4 mt-4 font-serif tracking-wide shadow-lg shadow-primary/20"
             >
-              生成分享卡片
-              <ArrowRight className="w-4 h-4" />
+              生成预览
+              <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         ) : (
           /* Share card preview */
-          <div className="space-y-4">
-            <div
-              ref={cardRef}
-              className="relative border border-border/60 rounded-3xl w-full max-w-[360px] aspect-[9/16] mx-auto overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
-            >
-              <div className="absolute inset-0 bg-gradient-dark" />
+          <div className="h-full flex flex-col items-center">
+            <div className="flex-1 w-full flex items-center justify-center p-4 min-h-0 overflow-hidden">
+              {/* CARD BEGINS */}
               <div
-                className="absolute -top-10 -right-6 w-44 h-44 rounded-full blur-[50px] opacity-35"
-                style={{ background: 'hsl(var(--glow-amber)/0.35)' }}
-              />
-              <div
-                className="absolute top-24 -left-10 w-36 h-36 rounded-full blur-[60px] opacity-35"
-                style={{ background: 'hsl(var(--glow-rose)/0.3)' }}
-              />
-              <div
-                className="absolute bottom-24 right-6 w-40 h-40 rounded-full blur-[60px] opacity-35"
-                style={{ background: 'hsl(var(--glow-orange)/0.3)' }}
-              />
+                ref={cardRef}
+                className="relative bg-[#0a0f1e] text-foreground w-full max-w-[360px] aspect-[9/16] shadow-2xl overflow-hidden flex flex-col select-none group"
+              >
+                {/* Premium Background Layers */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#1a2333] via-[#0d1221] to-[#050810] z-0" />
 
-              <div className="relative z-10 h-full px-5 py-6 flex flex-col">
-                {/* Card header */}
-                <div className="text-center space-y-1">
-                  <p className="text-[11px] text-muted-foreground/70 font-mono tracking-[0.24em]">2025 法律人年度报告</p>
-                  {userName && (
-                    <p className="text-lg sm:text-xl font-semibold text-foreground">{userName}</p>
-                  )}
-                </div>
+                {/* Decorative Elements */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#AA8E4A] to-transparent opacity-60 z-10" />
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#AA8E4A] to-transparent opacity-60 z-10" />
+                <div className="absolute top-4 right-4 w-24 h-24 border-t border-r border-[#AA8E4A]/20 rounded-tr-3xl z-0" />
+                <div className="absolute bottom-4 left-4 w-24 h-24 border-b border-l border-[#AA8E4A]/20 rounded-bl-3xl z-0" />
 
-                {/* Conclusion */}
-                <div className="flex-1 flex flex-col justify-center text-center px-2 relative">
-                  <motion.button
-                    onClick={shuffleConclusion}
-                    className="absolute -right-2 -top-2 p-2 text-muted-foreground/40 hover:text-muted-foreground/80 transition-colors"
-                    whileHover={{ scale: 1.1, rotate: 180 }}
-                    whileTap={{ scale: 0.9 }}
-                    title="换一句"
-                  >
-                    <Shuffle className="w-4 h-4" />
-                  </motion.button>
-                  <p className="text-xl sm:text-2xl font-light text-foreground leading-relaxed tracking-wide">
-                    {currentConclusion.mainText}
-                  </p>
-                  <p className="text-sm sm:text-base text-muted-foreground/80 leading-relaxed mt-2 whitespace-pre-line font-light">
-                    {currentConclusion.subText}
-                  </p>
-                </div>
+                {/* Content Container */}
+                <div className="relative z-10 flex flex-col h-full p-8">
 
-                {/* Narration */}
-                <div className="text-center space-y-2">
-                  <div className="w-12 h-px bg-border/70 mx-auto" />
-                  <p className="text-[11px] text-muted-foreground/60 whitespace-pre-line">
-                    {narration.text}
-                  </p>
-                </div>
+                  {/* Header */}
+                  <div className="flex flex-col items-center space-y-3 mb-8">
+                    <div className="w-1 h-8 bg-gradient-to-b from-transparent via-[#AA8E4A] to-transparent opacity-50 mb-2"></div>
+                    <h1 className="text-xs font-mono tracking-[0.4em] text-[#AA8E4A]/80 uppercase">Legal Annual Report</h1>
+                    <div className="flex items-center gap-3 w-full justify-center">
+                      <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#AA8E4A]/30"></div>
+                      <span className="text-base font-serif text-gradient-gold font-bold tracking-widest whitespace-nowrap">2025 · 法律人</span>
+                      <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#AA8E4A]/30"></div>
+                    </div>
+                  </div>
 
-                {/* Footer with QR codes */}
-                <div className="flex items-center justify-between gap-3 pt-4">
-                  {/* User QR (if uploaded) */}
-                  {userQrImage && (
-                    <div className="flex flex-col items-center gap-1.5">
-                      <div className="w-[68px] h-[68px] bg-white rounded-lg p-1.5 shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
-                        <img
-                          src={userQrImage}
-                          alt="我的二维码"
-                          className="w-full h-full object-contain"
-                        />
+                  {/* Main Content Area */}
+                  <div className="flex-1 flex flex-col justify-center relative">
+                    {/* User ID - Badge Style */}
+                    {userName && (
+                      <div className="absolute -top-2 right-0 bg-[#AA8E4A]/10 border border-[#AA8E4A]/20 px-3 py-1 rounded-full backdrop-blur-sm">
+                        <span className="text-xs font-mono text-[#F3EAC2] tracking-wider">{userName}</span>
                       </div>
-                      <p className="text-[10px] text-muted-foreground/60 text-center leading-tight">
-                        {userName ? `添加${userName}` : '添加我'}
-                      </p>
-                    </div>
-                  )}
+                    )}
 
-                  {/* Project QR */}
-                  <div className={`flex flex-col items-center gap-1.5 ${!userQrImage ? 'mx-auto' : ''}`}>
-                    <div className="w-[68px] h-[68px] bg-white rounded-lg p-1.5 flex items-center justify-center shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
-                      <QRCodeSVG
-                        value={projectUrl}
-                        size={52}
-                        level="M"
-                      />
+                    {/* Checkbox / Quote Area */}
+                    <div className="relative my-6 p-6 border-l-2 border-[#AA8E4A]/40 bg-gradient-to-r from-[#AA8E4A]/5 to-transparent rounded-r-lg">
+                      <motion.button
+                        onClick={shuffleConclusion}
+                        className="absolute right-2 top-2 p-2 text-[#AA8E4A]/30 hover:text-[#AA8E4A] transition-colors z-20"
+                        whileHover={{ rotate: 180 }}
+                        title="换一句"
+                      >
+                        <Shuffle className="w-4 h-4" />
+                      </motion.button>
+
+                      <div className="space-y-4">
+                        <h3 className="text-2xl sm:text-3xl font-serif leading-relaxed text-[#e0e0e0] font-medium tracking-wide">
+                          {currentConclusion.mainText}
+                        </h3>
+                        {currentConclusion.subText && (
+                          <div className="flex items-start gap-3 mt-4 pt-4 border-t border-[#AA8E4A]/10">
+                            <span className="text-4xl text-[#AA8E4A]/20 font-serif leading-none">“</span>
+                            <p className="text-sm sm:text-base font-light leading-7 text-muted-foreground/90 font-sans">
+                              {currentConclusion.subText}
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-[10px] text-muted-foreground/60 text-center leading-tight whitespace-nowrap">扫码生成你的年报</p>
+                  </div>
+
+                  {/* Footer Area */}
+                  <div className="mt-auto space-y-6 pt-6 border-t border-[#AA8E4A]/10 relative">
+                    {/* Narration Text */}
+                    <p className="text-xs text-center text-muted-foreground/50 font-sans leading-relaxed px-4">
+                      {narration.text}
+                    </p>
+
+                    {/* QR Codes Grid */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Left QR (User) or Placeholder */}
+                      <div className="flex flex-col items-center justify-end gap-2">
+                        {userQrImage ? (
+                          <>
+                            <div className="p-1 bg-white rounded shadow-lg">
+                              <img src={userQrImage} className="w-16 h-16 object-contain" alt="QR" />
+                            </div>
+                            <span className="text-[10px] text-[#AA8E4A]/60 font-mono tracking-wider">CONNECT WITH ME</span>
+                          </>
+                        ) : (
+                          <div className="h-full flex items-end opacity-30">
+                            <span className="text-[10px] font-mono tracking-widest text-center w-full block">LAW & AI<br />2025</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Right QR (Project) */}
+                      <div className="flex flex-col items-center justify-end gap-2 border-l border-[#AA8E4A]/10 pl-4">
+                        <div className="p-1 bg-white rounded shadow-lg">
+                          <QRCodeSVG value={projectUrl} size={64} level="M" />
+                        </div>
+                        <span className="text-[10px] text-[#AA8E4A]/60 font-mono tracking-wider">GET YOUR REPORT</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+              {/* CARD ENDS */}
             </div>
 
             {/* Action buttons */}
-            <div className="flex gap-3">
+            <div className="w-full max-w-sm mx-auto px-4 mt-4 pb-4 flex gap-3">
               <button
                 onClick={() => setShowPreview(false)}
-                className="flex-1 btn-secondary py-3 text-base"
+                className="flex-[2] btn-secondary py-3 text-sm sm:text-base font-medium rounded-xl border-border/50 hover:bg-card"
               >
                 返回编辑
               </button>
               <button
                 onClick={handleSaveCard}
-                className="flex-1 btn-primary flex items-center justify-center gap-2 py-3 text-base"
+                className="flex-[3] btn-primary flex items-center justify-center gap-2 py-3 text-sm sm:text-base font-medium rounded-xl bg-[#AA8E4A] hover:bg-[#8e753b] text-white border-none shadow-[0_4px_12px_rgba(170,142,74,0.3)]"
               >
                 <Download className="w-4 h-4" />
-                保存图片
+                保存海报
               </button>
             </div>
           </div>

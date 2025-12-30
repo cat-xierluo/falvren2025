@@ -18,7 +18,7 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
       <div className="glow-orb glow-orb-3" />
 
       {/* Noise texture overlay */}
-      <div className="absolute inset-0 bg-noise pointer-events-none" />
+
       {/* Top bar with progress and back button */}
       <div className="flex-shrink-0 relative z-10">
         {/* Progress bar */}
@@ -54,13 +54,12 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
           {Array.from({ length: totalPages }).map((_, i) => (
             <div
               key={i}
-              className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-all duration-300 ${
-                i + 1 === currentPage
+              className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-all duration-300 ${i + 1 === currentPage
                   ? 'bg-foreground w-3 sm:w-4'
                   : i + 1 < currentPage
                     ? 'bg-muted-foreground/50'
                     : 'bg-muted'
-              }`}
+                }`}
             />
           ))}
         </div>

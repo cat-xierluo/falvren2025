@@ -1089,6 +1089,7 @@ export interface GeneratedScene {
 
 export interface GeneratedReport {
   scenes: GeneratedScene[];
+  easterEggScene?: GeneratedScene; // 苏州彩蛋场景（独立显示，不包含在随机场景中）
   systemNarration: SystemNarration;
   conclusion: Conclusion;
   workDays: number;
@@ -1148,16 +1149,6 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
   for (let i = 0; i < Math.min(optionalCount, shuffledOptional.length); i++) {
     const category = shuffledOptional[i];
     const categoryScenes = filterScenesByBusinessArea(sceneLibrary.filter(s => s.category === category));
-
-    // 苏州彩蛋：如果是苏州且选择了 travel 类别，必定显示"苏州梅友机场"彩蛋
-    if (category === 'travel' && selectedCity === '苏州') {
-      const easterEggScene = sceneLibrary.find(s => s.id === 'travel_suzhou_easter_egg');
-      if (easterEggScene) {
-        selectedScenes.push(generateSceneData(easterEggScene, selectedCity, businessArea));
-        continue;
-      }
-    }
-
     const scene = randomFromArray(categoryScenes);
     selectedScenes.push(generateSceneData(scene, selectedCity, businessArea));
   }
@@ -1166,11 +1157,21 @@ export function generateReport(userOptions?: UserOptions): GeneratedReport {
   const first = selectedScenes[0];
   const rest = shuffleArray(selectedScenes.slice(1));
 
+  // 苏州彩蛋：如果用户选择苏州，生成独立彩蛋（不在随机场景中）
+  let easterEggScene: GeneratedScene | undefined;
+  if (selectedCity === '苏州') {
+    const eggScene = sceneLibrary.find(s => s.id === 'travel_suzhou_easter_egg');
+    if (eggScene) {
+      easterEggScene = generateSceneData(eggScene, selectedCity, businessArea);
+    }
+  }
+
   // 随机选择一个年终结论
   const conclusion = randomFromArray(conclusions);
 
   return {
     scenes: [first, ...rest],
+    easterEggScene,
     systemNarration: randomFromArray(systemNarrations),
     conclusion,
     workDays: randomBetween(295, 335),

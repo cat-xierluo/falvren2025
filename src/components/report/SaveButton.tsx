@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Download, Check } from 'lucide-react';
-import { QRCodeCanvas } from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 import html2canvas from 'html2canvas';
 
 interface SaveButtonProps {
@@ -20,323 +20,205 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
     setSaving(true);
 
     try {
-      const cardWidth = 390;
-      const cardHeight = 844;
-      const footerSpace = 140;
-      const qrSize = 56;
-      const scaleFactor = 3;
+      // 目标分辨率: 720x1280 (HD 9:16)
+      const exportWidth = 720;
+      const exportHeight = 1280;
+      // 缩放因子：内容适配到 720 宽度的缩放比例
+      // 假设移动端基准宽度约 390
+      // 720 / 390 ≈ 1.85，但我们直接让容器宽 720，让流式布局自适应
 
-      // 创建临时容器
       const container = document.createElement('div');
-      container.className = 'bg-gradient-dark';
+      container.className = 'font-sans text-foreground'; // 继承基础字体颜色
       container.style.cssText = `
         position: fixed;
         left: -9999px;
         top: 0;
-        width: ${cardWidth}px;
-        height: ${cardHeight}px;
+        width: ${exportWidth}px;
+        height: ${exportHeight}px;
+        background-color: #0a0f1e; /* Deep Blue Background */
         overflow: hidden;
-        z-index: 9999;
       `;
 
-      // 克隆当前页面
+      // 1. 内容层 (Cloned Page)
       const pageClone = pageRef.current.cloneNode(true) as HTMLElement;
+
+      // 清理不需要的元素
+      const uiElementsToRemove = [
+        '.h-\\[2px\\]', // 顶部进度条
+        '.fixed.top-3', // 自身按钮 (如果被克隆进去的话)
+        'button', // 所有按钮
+      ];
+      uiElementsToRemove.forEach(selector => {
+        pageClone.querySelectorAll(selector).forEach(el => el.remove());
+      });
+
+      // 移除底部页码指示器 (通常是 flex 容器中的圆点)
+      // 这比较依赖结构，尝试移除所有仅包含 unicode 或空 div 的 flex 容器
+      const bottomIndicators = pageClone.querySelectorAll('.flex.items-center.gap-1\\.5, .flex.items-center.gap-2, .absolute.bottom-8');
+      bottomIndicators.forEach(el => el.remove());
+
+      // 强制内容全屏适配
       pageClone.style.cssText = `
-        width: 100%;
-        height: 100%;
-        position: relative;
-        margin: 0;
+        // 调整为 480x854 (1.5倍放大)，宽度更宽，避免文字被裁切
+        width: 480px;
+        height: 854px;
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        padding: 0;
+        box-sizing: border-box;
+        transform: scale(1.5);
+        transform-origin: top left;
       `;
 
-      // 移除进度条
-      const progressBar = pageClone.querySelector('.h-\\[2px\\]');
-      if (progressBar?.parentElement) {
-        progressBar.parentElement.remove();
+      // 强制让内部的 ReportLayout 铺满
+      const reportLayoutDiv = pageClone.firstElementChild as HTMLElement;
+      if (reportLayoutDiv) {
+        reportLayoutDiv.style.width = '100%';
+        reportLayoutDiv.style.height = '100%';
+        reportLayoutDiv.classList.remove('h-[100dvh]');
+
+        // 关键：找到 main 容器并增加底部 padding，从而把居中的内容"顶"上去，避免遮挡二维码
+        const mainEl = reportLayoutDiv.querySelector('main') as HTMLElement;
+        if (mainEl) {
+          // 480px 宽度下，适当调整底部推顶的高度
+          mainEl.style.paddingBottom = '140px';
+        }
       }
 
-      // 移除底部页码
-      const dots = pageClone.querySelectorAll('.flex.items-center.gap-1\\.5, .flex.items-center.gap-2');
-      dots.forEach(dot => {
-        if (dot.querySelector('.rounded-full')) {
-          dot.parentElement?.remove();
-        }
+      // 强制重置 transform 避免定位偏移
+      const animatedElements = pageClone.querySelectorAll('*');
+      animatedElements.forEach((el: Element) => {
+        const hEl = el as HTMLElement;
+        hEl.style.transform = 'none';
+        hEl.style.opacity = '1';
+        if (hEl.style.animation) hEl.style.animation = 'none';
+        hEl.style.transition = 'none';
       });
-
-      // 隐藏按钮区域，避免导出显示
-      pageClone.querySelectorAll('button').forEach(btn => {
-        (btn as HTMLElement).style.visibility = 'hidden';
-      });
-
-      const layoutRoot = pageClone.querySelector<HTMLElement>('.h-\\[100dvh\\]');
-      const contentRoot = layoutRoot ?? pageClone;
-      contentRoot.style.height = `${cardHeight}px`;
-      contentRoot.style.boxSizing = 'border-box';
-      contentRoot.style.position = 'relative';
-      contentRoot.style.paddingBottom = `${footerSpace}px`;
 
       container.appendChild(pageClone);
-      document.body.appendChild(container);
 
-      // 强制显示动画元素，避免导出时仍处于初始透明状态
-      pageClone.querySelectorAll<HTMLElement>('[style]').forEach(node => {
-        if (node.style.opacity === '0') {
-          node.style.opacity = '1';
-        }
-        if (node.style.transform && node.style.transform.includes('translate')) {
-          node.style.transform = 'none';
-        }
-        if (node.style.transition) {
-          node.style.transition = 'none';
-        }
-      });
+      // 2. 装饰层 (Overlay)
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      `;
 
-      const baseCanvas = await html2canvas(container, {
-        scale: scaleFactor,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-        width: cardWidth,
-        height: cardHeight,
-        windowWidth: cardWidth,
-        windowHeight: cardHeight,
-      });
-
-      // 清理
-      document.body.removeChild(container);
-
-      // 渲染二维码（离屏）
-      const qrHolder = document.createElement('div');
-      const qrRoot = createRoot(qrHolder);
-      qrRoot.render(<QRCodeCanvas value={siteUrl} size={qrSize} level="M" />);
-      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-      const qrCanvas = qrHolder.querySelector('canvas') as HTMLCanvasElement | null;
-      qrRoot.unmount();
-
-      // 合成导出画布：固定手机比例 + 底部二维码区
-      const exportCanvas = document.createElement('canvas');
-      exportCanvas.width = cardWidth * scaleFactor;
-      exportCanvas.height = cardHeight * scaleFactor;
-      const ctx = exportCanvas.getContext('2d');
-      if (!ctx) throw new Error('Canvas context unavailable');
-
-      const footerPx = footerSpace * scaleFactor;
-      const contentHeight = (cardHeight - footerSpace) * scaleFactor;
-
-      // 绘制主内容（与移动端一致）
-      ctx.drawImage(baseCanvas, 0, 0, exportCanvas.width, exportCanvas.height);
-
-      // 分隔线
-      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(exportCanvas.width * 0.12, contentHeight + footerPx * 0.18);
-      ctx.lineTo(exportCanvas.width * 0.88, contentHeight + footerPx * 0.18);
-      ctx.stroke();
-
-      // 文案
-      ctx.fillStyle = 'rgba(255,255,255,0.45)';
-      ctx.font = '30px "Noto Sans SC", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('扫码生成你的法律人年度报告', exportCanvas.width / 2, contentHeight + footerPx * 0.42);
-
-      // 绘制二维码
-      if (qrCanvas) {
-        const qrSizePx = qrSize * scaleFactor;
-        const padding = 24 * scaleFactor;
-        const qrBox = qrSizePx + padding;
-        const qrX = (exportCanvas.width - qrBox) / 2;
-        const qrY = contentHeight + footerPx * 0.5;
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(qrX, qrY, qrBox, qrBox);
-        ctx.drawImage(qrCanvas, qrX + padding / 2, qrY + padding / 2, qrSizePx, qrSizePx);
-      }
-
-      // 转换为 blob（使用 Promise 包装）
-      const blob = await new Promise<Blob | null>((resolve) => {
-        exportCanvas.toBlob((blob) => resolve(blob), 'image/png');
-      });
-
-      if (!blob) {
-        throw new Error('Failed to generate image blob');
-      }
-
-      // 检测环境
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-      const supportsWebShare = 'share' in navigator;
-
-      const url = URL.createObjectURL(blob);
-
-      // 策略1: 微信浏览器 - 使用全屏模态框预览
-      if (isWeChat) {
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0,0,0,0.95);
-          z-index: 99999;
+      // Header Decoration
+      const header = document.createElement('div');
+      header.innerHTML = `
+        <div style="
+          width: 100%; 
+          height: 100px; 
+          background: linear-gradient(to bottom, #0a0f1e 0%, transparent 100%);
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-        `;
+          padding-top: 30px;
+        ">
+           <div style="color: rgba(170,142,74,0.9); font-family: monospace; font-size: 16px; letter-spacing: 4px; margin-bottom: 8px; font-weight: 700;">LEGAL REPORT</div>
+           <div style="color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 300; letter-spacing: 2px;">记录我的法律人年度足迹</div>
+        </div>
+      `;
+      overlay.appendChild(header);
 
-        // 提示文字
-        const tip = document.createElement('div');
-        tip.innerHTML = `
-          <div style="color: #ffd700; font-size: 18px; margin-bottom: 8px; font-weight: 500;">👆 长按图片保存到相册</div>
-          <div style="color: rgba(255,255,255,0.5); font-size: 13px;">保存后点击右上角关闭</div>
-        `;
-        tip.style.cssText = `
-          position: absolute;
-          top: 70px;
-          text-align: center;
-          pointer-events: none;
-          padding: 0 20px;
-        `;
-        modal.appendChild(tip);
+      // Footer Decoration
+      const footer = document.createElement('div');
+      footer.style.cssText = `
+        width: 100%;
+        padding-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        background: linear-gradient(to top, #0a0f1e 0%, transparent 100%);
+      `;
 
-        // 图片容器
-        const imgContainer = document.createElement('div');
-        imgContainer.style.cssText = `
-          max-width: 90%;
-          max-height: 75%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        `;
+      footer.innerHTML = `
+         <div style="width: 80%; height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 20px;"></div>
+         <div style="color: rgba(255,255,255,0.5); font-size: 12px; margin-bottom: 15px; letter-spacing: 1px;">扫码生成你的法律人年度报告</div>
+      `;
 
-        const img = document.createElement('img');
-        img.src = url;
-        img.style.cssText = `
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
-          border-radius: 8px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        `;
-        imgContainer.appendChild(img);
-        modal.appendChild(imgContainer);
+      // QR Code
+      const qrContainerBox = document.createElement('div');
+      qrContainerBox.style.cssText = `
+        background: white;
+        padding: 6px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      `;
+      const qrContainer = document.createElement('div');
+      const qrRoot = createRoot(qrContainer);
+      qrRoot.render(<QRCodeSVG value={siteUrl} size={80} level="M" />);
 
-        // 关闭按钮
-        const closeBtn = document.createElement('button');
-        closeBtn.textContent = '✕ 关闭';
-        closeBtn.style.cssText = `
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          padding: 10px 18px;
-          background: rgba(255,255,255,0.15);
-          color: white;
-          border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 24px;
-          font-size: 15px;
-          cursor: pointer;
-          backdrop-filter: blur(10px);
-          transition: background 0.2s;
-        `;
-        closeBtn.onmouseenter = () => {
-          closeBtn.style.background = 'rgba(255,255,255,0.25)';
-        };
-        closeBtn.onmouseleave = () => {
-          closeBtn.style.background = 'rgba(255,255,255,0.15)';
-        };
-        closeBtn.onclick = () => {
-          document.body.removeChild(modal);
-          URL.revokeObjectURL(url);
-        };
-        modal.appendChild(closeBtn);
+      qrContainerBox.appendChild(qrContainer);
+      footer.appendChild(qrContainerBox);
+      overlay.appendChild(footer);
 
-        // 点击背景关闭
-        modal.onclick = (e) => {
-          if (e.target === modal) {
-            document.body.removeChild(modal);
-            URL.revokeObjectURL(url);
-          }
-        };
+      // Gold Border
 
-        document.body.appendChild(modal);
-      }
-      // 策略2: 其他移动端 - Web Share API
-      else if (isMobile && supportsWebShare) {
-        const file = new File([blob], `法律人年度报告-${Date.now()}.png`, { type: 'image/png' });
 
+      container.appendChild(overlay);
+      document.body.appendChild(container);
+
+      // Wait for QR render and DOM layout
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const canvas = await html2canvas(container, {
+        scale: 2, // 2x scale for retina-like sharpness (resulting in 1440x2560 pixels internally, but outputting consistent size)
+        backgroundColor: '#0a0f1e',
+        useCORS: true,
+        logging: false,
+        width: exportWidth, // Force canvas size
+        height: exportHeight
+      });
+
+      // Cleanup
+      document.body.removeChild(container);
+      qrRoot.unmount();
+
+      // Export Blob & Share
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob), 'image/png', 0.95);
+      });
+
+      if (!blob) throw new Error('Blob generation failed');
+
+      const url = URL.createObjectURL(blob);
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const supportsWebShare = 'share' in navigator;
+
+      if (isMobile && supportsWebShare) {
+        const file = new File([blob], `法律人年度报告.png`, { type: 'image/png' });
         try {
-          if (navigator.canShare?.({ files: [file] })) {
+          if (navigator.canShare({ files: [file] })) {
             await navigator.share({
               files: [file],
               title: '法律人年度报告',
-              text: '查看我的2025年度报告'
+              text: '我的2025法律人年度报告'
             });
           } else {
-            throw new Error('File sharing not supported');
+            throw new Error('Share not supported');
           }
-        } catch (err) {
-          // 用户取消或分享失败，降级到新窗口方案
-          const imgWindow = window.open();
-          if (imgWindow) {
-            imgWindow.document.write(`
-              <!DOCTYPE html>
-              <html>
-              <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                <title>长按保存图片</title>
-                <style>
-                  * { margin: 0; padding: 0; box-sizing: border-box; }
-                  body {
-                    background: #000;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    min-height: 100vh;
-                    padding: 20px;
-                  }
-                  .tip {
-                    color: #fff;
-                    text-align: center;
-                    margin-bottom: 20px;
-                    font-size: 16px;
-                  }
-                  .tip strong {
-                    color: #ffd700;
-                  }
-                  img {
-                    max-width: 100%;
-                    height: auto;
-                    box-shadow: 0 4px 20px rgba(255,255,255,0.1);
-                  }
-                </style>
-              </head>
-              <body>
-                <div class="tip">
-                  <strong>长按图片</strong><br>
-                  选择"保存图片"<br>
-                  <small style="opacity: 0.6; margin-top: 10px; display: block;">（iOS 选择"存储到"照片"）</small>
-                </div>
-                <img src="${url}" alt="法律人年度报告" />
-              </body>
-              </html>
-            `);
-          }
+        } catch (e) {
+          // Fallback to opening image
+          window.open(url, '_blank');
         }
-        URL.revokeObjectURL(url);
-      }
-      // 策略3: 桌面端 - 直接下载
-      else {
+      } else {
         const link = document.createElement('a');
         link.href = url;
         link.download = `法律人年度报告-${Date.now()}.png`;
-        document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
       }
 
+      URL.revokeObjectURL(url);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
 
@@ -352,12 +234,12 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
     <button
       onClick={handleSave}
       disabled={saving}
-      className="fixed top-3 right-3 sm:top-4 sm:right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 bg-secondary/80 backdrop-blur-sm text-secondary-foreground text-xs rounded-full border border-border hover:bg-secondary transition-all disabled:opacity-50"
+      className="fixed top-3 right-3 sm:top-4 sm:right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 bg-secondary/80 backdrop-blur-sm text-secondary-foreground text-xs rounded-full border border-border hover:bg-secondary transition-all disabled:opacity-50 shadow-lg"
     >
       {saving ? (
         <>
           <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
-          <span className="hidden sm:inline">保存中</span>
+          <span className="hidden sm:inline">生成中</span>
         </>
       ) : saved ? (
         <>

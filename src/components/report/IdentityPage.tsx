@@ -18,7 +18,7 @@ export function IdentityPage({ report, onNext }: IdentityPageProps) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.4 }}
+        transition={{ delay: 0.1, duration: 0.6 }}
         className="flex-shrink-0"
       >
         <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider mb-1 sm:mb-2">
@@ -38,7 +38,7 @@ export function IdentityPage({ report, onNext }: IdentityPageProps) {
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
           className="card-report py-3 px-4 sm:py-5 sm:px-6"
         >
           <div className="flex items-center justify-between">
@@ -59,7 +59,7 @@ export function IdentityPage({ report, onNext }: IdentityPageProps) {
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
+          transition={{ delay: 0.35, duration: 0.6 }}
           className="card-report py-3 px-4 sm:py-5 sm:px-6"
         >
           <div className="flex items-center justify-between">
@@ -80,7 +80,7 @@ export function IdentityPage({ report, onNext }: IdentityPageProps) {
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4, duration: 0.4 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
           className="card-report py-3 px-4 sm:py-5 sm:px-6"
         >
           <div className="flex items-center justify-between">
@@ -104,7 +104,7 @@ export function IdentityPage({ report, onNext }: IdentityPageProps) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.3 }}
+        transition={{ delay: 0.7, duration: 0.5 }}
         className="flex-shrink-0 flex justify-center"
       >
         <button 

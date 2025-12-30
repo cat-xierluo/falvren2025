@@ -21,8 +21,8 @@ const Index = () => {
   // Generate new report when key changes or user options change
   const report: GeneratedReport = useMemo(() => generateReport(userOptions), [reportKey, userOptions]);
 
-  // Total pages = 1 (identity) + scenes count + 1 (conclusion) + 1 (share) + 1 (promote)
-  const totalPages = 1 + report.scenes.length + 1 + 1 + 1;
+  // Total pages = 1 (identity) + (1 if easter egg) + scenes count + 1 (conclusion) + 1 (share) + 1 (promote)
+  const totalPages = 1 + (report.easterEggScene ? 1 : 0) + report.scenes.length + 1 + 1 + 1;
 
   const handleStart = useCallback((options?: UserOptions) => {
     setUserOptions(options);
@@ -78,9 +78,22 @@ const Index = () => {
       return <IdentityPage report={report} onNext={handleNext} />;
     }
 
-    // Pages 1 to scenes.length: Scene pages
-    const sceneIndex = currentPage - 1;
-    if (sceneIndex < report.scenes.length) {
+    // Page 1: Easter egg page (if exists, only for 苏州)
+    if (report.easterEggScene && currentPage === 1) {
+      return (
+        <ScenePage
+          generated={report.easterEggScene}
+          onNext={handleNext}
+        />
+      );
+    }
+
+    // Calculate offset for scene pages
+    const easterEggOffset = report.easterEggScene ? 1 : 0;
+
+    // Scene pages (after identity and easter egg)
+    const sceneIndex = currentPage - 1 - easterEggOffset;
+    if (sceneIndex >= 0 && sceneIndex < report.scenes.length) {
       const isLast = sceneIndex === report.scenes.length - 1;
       return (
         <ScenePage
@@ -144,7 +157,7 @@ const Index = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
               className="h-full"
             >
               {renderPage()}

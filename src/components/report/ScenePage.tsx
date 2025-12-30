@@ -47,7 +47,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.3 }}
+        transition={{ delay: 0.1, duration: 0.6 }}
         className="flex-shrink-0 flex items-center gap-2 mb-6 sm:mb-8 pt-3"
       >
         <span className="text-3xl sm:text-3xl">{icon}</span>
@@ -62,7 +62,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
+          transition={{ delay: 0.2, duration: 0.7 }}
           className="card-report py-5 px-5 sm:py-8 sm:px-10"
         >
           {/* 主文案 - 移动端字体加大 */}
@@ -75,7 +75,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.3 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
               className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-border/30 text-base sm:text-base text-muted-foreground"
             >
               {parseText(subtext)}
@@ -88,7 +88,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+            transition={{ delay: 0.7, duration: 0.7 }}
             className="mt-6 sm:mt-8 px-1"
           >
             <p className="text-lg sm:text-xl text-muted-foreground/70 italic whitespace-pre-line leading-relaxed text-center">
@@ -102,7 +102,7 @@ export function ScenePage({ generated, onNext, isLast }: ScenePageProps) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.3 }}
+        transition={{ delay: 0.9, duration: 0.5 }}
         className="flex-shrink-0 flex justify-center -mt-1 sm:mt-0"
       >
         <button
