@@ -15,3 +15,4 @@
 - [x] 调整 SharePage 标题文案与用户标签对齐
 - [x] 统一导出与分享页标题为 LEGAL ANNUAL REPORT
 - [x] 分享卡 UI 像素级对齐优化 (Badge & Centered Text)
+- [x] 优化分享卡抬头为标准双行结构并对齐 ID 标签

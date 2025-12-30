@@ -56,10 +56,10 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
     }
 
     try {
-      // 目标分辨率: 720x1280 (HD 9:16)
+      // 目标分辨率: 1080x1920 (Full HD 9:16) - 提升清晰度
       const baseWidth = 360;
       const baseHeight = 640;
-      const exportScale = 2;
+      const exportScale = 3; // 提升到3倍以获得更高清晰度
       const exportWidth = baseWidth * exportScale;
       const exportHeight = baseHeight * exportScale;
 
@@ -107,6 +107,8 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
         hEl.style.opacity = '1';
         hEl.style.transition = 'none';
         hEl.style.animation = 'none';
+        // 清除伪元素内容
+        hEl.style.setProperty('content', 'none', 'important');
         if (hEl.hasAttribute('style')) {
           // 允许保留特定的内联样式，但清除 transform
           hEl.style.transform = 'none';
@@ -124,6 +126,36 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
         contentContainer.style.boxSizing = 'border-box';
         contentContainer.style.visibility = 'visible';
         contentContainer.style.opacity = '1';
+
+        // 完全重写抬头HTML，确保文本不重复
+        const headerContainer = contentContainer.querySelector('div[style*="textAlign"]') as HTMLElement;
+        if (headerContainer) {
+          headerContainer.innerHTML = `
+            <div style="width: 1px; height: 40px; background-color: rgba(170, 142, 74, 0.2); margin: 0 auto 24px;"></div>
+            <div style="
+              color: rgba(170, 142, 74, 0.9);
+              font-family: monospace;
+              font-size: 11px;
+              font-weight: 700;
+              letter-spacing: 4px;
+              text-align: center;
+              text-transform: uppercase;
+              margin-bottom: 12px;
+              line-height: 1;
+              padding-left: 4px;
+            ">LEGAL ANNUAL REPORT</div>
+            <div style="
+              color: rgba(170, 142, 74, 0.8);
+              font-family: 'Noto Serif SC', serif;
+              font-size: 14px;
+              font-weight: 500;
+              letter-spacing: 2px;
+              text-align: center;
+              line-height: 1;
+              padding-left: 2px;
+            ">法律人 2025 年度报告</div>
+          `;
+        }
       }
 
       container.appendChild(cardClone);
@@ -301,31 +333,36 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 {/* Content Container */}
                 <div id="share-card-content" className="relative z-10 flex flex-col h-full p-8 px-10">
 
-                  {/* Header - Using ultra-stable block centering for html2canvas */}
+                  {/* Header - Clean dual-line structure */}
                   <div className="w-full mb-12 sm:mb-16" style={{ textAlign: 'center' }}>
-                    <div className="w-[1.5px] h-10 bg-[#AA8E4A] opacity-30 mx-auto mb-6"></div>
+                    {/* Vertical Line - Subtle decorative element */}
+                    <div className="w-[1px] h-10 bg-[#AA8E4A] opacity-20 mx-auto mb-6"></div>
 
+                    {/* Line 1: English only */}
                     <h1
                       className="text-[#AA8E4A] uppercase whitespace-nowrap leading-none mb-3 font-bold"
                       style={{
                         fontSize: '11px',
                         fontFamily: 'monospace',
-                        letterSpacing: '3px',
+                        letterSpacing: '4px',
                         display: 'block',
-                        textAlign: 'center'
+                        textAlign: 'center',
+                        marginLeft: '4px'
                       }}
                     >
                       LEGAL ANNUAL REPORT
                     </h1>
 
+                    {/* Line 2: Chinese only */}
                     <p
                       className="text-[#AA8E4A]/80 whitespace-nowrap leading-none font-medium"
                       style={{
                         fontSize: '14px',
                         fontFamily: '"Noto Serif SC", serif',
-                        letterSpacing: '1px',
+                        letterSpacing: '2px',
                         display: 'block',
-                        textAlign: 'center'
+                        textAlign: 'center',
+                        marginLeft: '2px'
                       }}
                     >
                       法律人 2025 年度报告
@@ -337,13 +374,14 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                     {/* Checkbox / Quote Area */}
                     <div className="relative my-6 p-6 border-l-2 border-[#AA8E4A]/40 bg-gradient-to-r from-[#AA8E4A]/5 to-transparent rounded-r-lg">
                       {userName && (
-                        <div className="absolute -top-[14px] right-2 inline-flex h-7 items-center justify-center bg-[#AA8E4A]/20 border border-[#AA8E4A]/30 px-3 rounded-full backdrop-blur-md z-20">
+                        <div className="absolute -top-[14px] right-6 inline-flex h-7 items-center justify-center bg-[#AA8E4A]/20 border border-[#AA8E4A]/30 px-3 rounded-full backdrop-blur-md z-20">
                           <span
                             className="text-[#F3EAC2] whitespace-nowrap"
                             style={{
                               fontSize: '11px',
                               fontFamily: 'monospace',
-                              letterSpacing: '1px'
+                              letterSpacing: '1px',
+                              paddingLeft: '1px' // Symmetry compensation
                             }}
                           >
                             {userName}
@@ -391,7 +429,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                             <div className="p-1 bg-white rounded shadow-lg">
                               <img src={userQrImage} className="w-16 h-16 object-contain" alt="QR" />
                             </div>
-                            <span className="text-[10px] text-[#AA8E4A]/60 font-mono tracking-wider">CONNECT WITH ME</span>
+                            <span className="text-[10px] text-[#AA8E4A]/60 font-serif tracking-wide">添加{userName || '我'}微信</span>
                           </>
                         ) : (
                           <div className="h-full flex items-end opacity-30">
@@ -405,7 +443,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                         <div className="p-1 bg-white rounded shadow-lg">
                           <QRCodeSVG value={projectUrl} size={64} level="M" />
                         </div>
-                        <span className="text-[10px] text-[#AA8E4A]/60 font-mono tracking-wider">GET YOUR REPORT</span>
+                        <span className="text-[10px] text-[#AA8E4A]/60 font-serif tracking-wide">获取你的专属报告</span>
                       </div>
                     </div>
                   </div>
