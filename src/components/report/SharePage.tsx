@@ -283,8 +283,12 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                   {/* Header */}
                   <div className="text-center mb-8">
                     <div className="w-1 h-8 bg-gradient-to-b from-transparent via-[#AA8E4A] to-transparent opacity-50 mx-auto mb-4"></div>
-                    <div className="text-[10px] font-mono tracking-[0.3em] text-[#AA8E4A]/80 uppercase pl-[0.3em] whitespace-nowrap mb-2">LEGAL ANNUAL REPORT</div>
-                    <div className="text-xs font-serif text-[#AA8E4A]/70 tracking-[0.1em] pl-[0.1em] whitespace-nowrap">法律人 2025 年度报告</div>
+                    <div className="block">
+                      <span className="text-[10px] font-mono tracking-[0.3em] text-[#AA8E4A]/80 uppercase pl-[0.3em] whitespace-nowrap mb-2 inline-block">LEGAL ANNUAL REPORT</span>
+                    </div>
+                    <div className="block mt-1">
+                      <span className="text-xs font-serif text-[#AA8E4A]/70 tracking-[0.1em] pl-[0.1em] whitespace-nowrap inline-block">法律人 2025 年度报告</span>
+                    </div>
                   </div>
 
                   {/* Main Content Area */}
