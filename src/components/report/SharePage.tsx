@@ -307,9 +307,10 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                       className="text-[#AA8E4A]/80 whitespace-nowrap leading-none font-medium"
                       style={{
                         fontSize: '14px',
-                        fontFamily: 'serif',
+                        fontFamily: '"Noto Serif SC", serif',
                         letterSpacing: '1px',
-                        display: 'block'
+                        display: 'block',
+                        textAlign: 'center'
                       }}
                     >
                       法律人 2025 年度报告
