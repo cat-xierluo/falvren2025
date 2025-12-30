@@ -171,8 +171,8 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
       container.appendChild(overlay);
       document.body.appendChild(container);
 
-      // Wait for QR render and DOM layout
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Wait for QR render and DOM layout - increased for font stability
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
       const canvas = await html2canvas(container, {
         scale: 2, // 2x scale for retina-like sharpness (resulting in 1440x2560 pixels internally, but outputting consistent size)
@@ -242,17 +242,17 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
       {saving ? (
         <>
           <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
-          <span className="hidden sm:inline">生成中</span>
+          <span>生成中</span>
         </>
       ) : saved ? (
         <>
           <Check className="w-3 h-3" />
-          <span className="hidden sm:inline">已保存</span>
+          <span>已保存</span>
         </>
       ) : (
         <>
           <Download className="w-3 h-3" />
-          <span className="hidden sm:inline">保存图片</span>
+          <span>保存本页</span>
         </>
       )}
     </button>

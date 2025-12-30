@@ -99,6 +99,20 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       cardClone.style.maxWidth = 'none';
       cardClone.style.maxHeight = 'none';
 
+      // 强制重置所有动画和变换，避免 html2canvas 渲染出重影
+      const animatedElements = cardClone.querySelectorAll('*');
+      animatedElements.forEach((el: Element) => {
+        const hEl = el as HTMLElement;
+        hEl.style.transform = 'none';
+        hEl.style.opacity = '1';
+        hEl.style.transition = 'none';
+        hEl.style.animation = 'none';
+        if (hEl.hasAttribute('style')) {
+          // 允许保留特定的内联样式，但清除 transform
+          hEl.style.transform = 'none';
+        }
+      });
+
       // 修复 Clone 后的一些样式差异
       const contentContainer = cardClone.querySelector('#share-card-content') as HTMLElement;
       if (contentContainer) {
@@ -115,8 +129,8 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       container.appendChild(cardClone);
       document.body.appendChild(container);
 
-      // Wait for DOM layout and fonts
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Wait longer for DOM layout and fonts - extremely important for serif fonts
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
       const canvas = await html2canvas(container, {
         scale: exportScale,
@@ -288,8 +302,8 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 <div id="share-card-content" className="relative z-10 flex flex-col h-full p-8 px-10">
 
                   {/* Header - Using ultra-stable block centering for html2canvas */}
-                  <div className="w-full mb-16" style={{ textAlign: 'center' }}>
-                    <div className="w-[1px] h-8 bg-[#AA8E4A] opacity-40 mx-auto mb-6"></div>
+                  <div className="w-full mb-12 sm:mb-16" style={{ textAlign: 'center' }}>
+                    <div className="w-[1.5px] h-10 bg-[#AA8E4A] opacity-30 mx-auto mb-6"></div>
 
                     <h1
                       className="text-[#AA8E4A] uppercase whitespace-nowrap leading-none mb-3 font-bold"
@@ -297,7 +311,8 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                         fontSize: '11px',
                         fontFamily: 'monospace',
                         letterSpacing: '3px',
-                        display: 'block'
+                        display: 'block',
+                        textAlign: 'center'
                       }}
                     >
                       LEGAL ANNUAL REPORT
