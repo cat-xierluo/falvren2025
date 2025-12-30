@@ -289,10 +289,10 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
 
                   {/* Header - Using ultra-stable block centering for html2canvas */}
                   <div className="w-full mb-12" style={{ textAlign: 'center' }}>
-                    <div className="w-[1.5px] h-8 bg-[#AA8E4A]/40 mx-auto mb-6"></div>
+                    <div className="w-[2px] h-8 bg-[#AA8E4A] opacity-60 mx-auto mb-6"></div>
 
                     <div
-                      className="text-[#AA8E4A] uppercase whitespace-nowrap leading-none mb-3"
+                      className="text-[#AA8E4A] uppercase whitespace-nowrap leading-none mb-3 font-bold"
                       style={{
                         fontSize: '10px',
                         fontFamily: 'monospace',
@@ -305,13 +305,14 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                     </div>
 
                     <div
-                      className="text-[#AA8E4A]/80 whitespace-nowrap leading-none"
+                      className="text-[#AA8E4A] whitespace-nowrap leading-none font-medium"
                       style={{
                         fontSize: '13px',
                         fontFamily: '"Noto Serif SC", serif',
                         letterSpacing: '1.5px',
                         display: 'block',
-                        width: '100%'
+                        width: '100%',
+                        opacity: 0.9
                       }}
                     >
                       法律人 2025 年度报告
@@ -419,6 +420,6 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
           </div>
         )}
       </motion.div>
-    </motion.div>
+    </motion.div >
   );
 }
