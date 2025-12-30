@@ -126,8 +126,8 @@ export function SaveButton({ pageRef, currentPage }: SaveButtonProps) {
           justify-content: center;
           padding-top: 30px;
         ">
-           <div style="color: rgba(170,142,74,0.9); font-family: monospace; font-size: 20px; letter-spacing: 4px; margin-bottom: 8px; font-weight: 700;">LEGAL ANNUAL REPORT</div>
-           <div style="color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 300; letter-spacing: 2px;">记录我的法律人年度足迹</div>
+            <div style="color: rgba(170,142,74,0.9); font-family: monospace; font-size: 20px; letter-spacing: 4px; margin-bottom: 8px; font-weight: 700; white-space: nowrap;">LEGAL ANNUAL REPORT</div>
+            <div style="color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 300; letter-spacing: 2px; white-space: nowrap;">记录我的法律人年度足迹</div>
         </div>
       `;
       overlay.appendChild(header);

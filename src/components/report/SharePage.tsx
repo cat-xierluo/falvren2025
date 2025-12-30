@@ -117,7 +117,8 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
         useCORS: true,
         logging: false,
         width: baseWidth,
-        height: baseHeight
+        height: baseHeight,
+        windowWidth: baseWidth
       });
 
       document.body.removeChild(container);
@@ -280,10 +281,10 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 <div className="relative z-10 flex flex-col h-full p-8">
 
                   {/* Header */}
-                  <div className="flex flex-col items-center space-y-2 mb-8">
-                    <div className="w-1 h-8 bg-gradient-to-b from-transparent via-[#AA8E4A] to-transparent opacity-50 mb-2"></div>
-                    <h1 className="text-xs font-mono tracking-[0.4em] text-[#AA8E4A]/80 uppercase pl-[0.4em] translate-y-[0.5px]">LEGAL ANNUAL REPORT</h1>
-                    <p className="text-sm font-serif text-[#AA8E4A]/70 tracking-[0.25em] pl-[0.25em] translate-y-[0.5px]">法律人 2025 年度报告</p>
+                  <div className="text-center mb-8">
+                    <div className="w-1 h-8 bg-gradient-to-b from-transparent via-[#AA8E4A] to-transparent opacity-50 mx-auto mb-4"></div>
+                    <div className="text-[10px] font-mono tracking-[0.3em] text-[#AA8E4A]/80 uppercase pl-[0.3em] whitespace-nowrap mb-2">LEGAL ANNUAL REPORT</div>
+                    <div className="text-xs font-serif text-[#AA8E4A]/70 tracking-[0.1em] pl-[0.1em] whitespace-nowrap">法律人 2025 年度报告</div>
                   </div>
 
                   {/* Main Content Area */}
@@ -292,7 +293,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                     <div className="relative my-6 p-6 border-l-2 border-[#AA8E4A]/40 bg-gradient-to-r from-[#AA8E4A]/5 to-transparent rounded-r-lg">
                       {userName && (
                         <div className="absolute -top-[14px] right-6 inline-flex h-7 items-center justify-center bg-[#AA8E4A]/10 border border-[#AA8E4A]/20 px-3 rounded-full backdrop-blur-sm z-20">
-                          <span className="text-xs font-mono text-[#F3EAC2] tracking-[0.1em] pl-[0.1em] translate-y-[0.5px] whitespace-nowrap">{userName}</span>
+                          <span className="text-xs font-mono text-[#F3EAC2] tracking-[0.1em] pl-[0.1em] whitespace-nowrap">{userName}</span>
                         </div>
                       )}
                       <motion.button
