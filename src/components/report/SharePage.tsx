@@ -115,8 +115,8 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       container.appendChild(cardClone);
       document.body.appendChild(container);
 
-      // Wait longer for DOM layout and fonts
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Wait longer for DOM layout and fonts - extremely important for serif fonts
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
       const canvas = await html2canvas(container, {
         scale: exportScale,
@@ -285,36 +285,55 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 <div className="absolute bottom-4 left-4 w-24 h-24 border-b border-l border-[#AA8E4A]/20 rounded-bl-3xl z-0" />
 
                 {/* Content Container */}
-                <div id="share-card-content" className="relative z-10 flex flex-col h-full p-8">
+                <div id="share-card-content" className="relative z-10 flex flex-col h-full p-8 px-10">
 
-                  {/* Header */}
-                  <div className="w-full mb-10 text-center block">
-                    <div className="w-[1.5px] h-8 bg-[#AA8E4A]/40 mx-auto mb-4"></div>
-                    <div className="block w-full">
-                      <span
-                        className="text-[10px] font-mono text-[#AA8E4A] uppercase whitespace-nowrap inline-block leading-none"
-                        style={{ letterSpacing: '4px' }}
-                      >
-                        LEGAL ANNUAL REPORT
-                      </span>
+                  {/* Header - Using ultra-stable block centering for html2canvas */}
+                  <div className="w-full mb-12" style={{ textAlign: 'center' }}>
+                    <div className="w-[1.5px] h-8 bg-[#AA8E4A]/40 mx-auto mb-6"></div>
+
+                    <div
+                      className="text-[#AA8E4A] uppercase whitespace-nowrap leading-none mb-3"
+                      style={{
+                        fontSize: '10px',
+                        fontFamily: 'monospace',
+                        letterSpacing: '4px',
+                        display: 'block',
+                        width: '100%'
+                      }}
+                    >
+                      LEGAL ANNUAL REPORT
                     </div>
-                    <div className="block w-full mt-3">
-                      <span
-                        className="text-xs font-serif text-[#AA8E4A]/80 whitespace-nowrap inline-block leading-none"
-                        style={{ letterSpacing: '1.5px' }}
-                      >
-                        法律人 2025 年度报告
-                      </span>
+
+                    <div
+                      className="text-[#AA8E4A]/80 whitespace-nowrap leading-none"
+                      style={{
+                        fontSize: '13px',
+                        fontFamily: '"Noto Serif SC", serif',
+                        letterSpacing: '1.5px',
+                        display: 'block',
+                        width: '100%'
+                      }}
+                    >
+                      法律人 2025 年度报告
                     </div>
                   </div>
 
                   {/* Main Content Area */}
-                  <div className="flex-1 flex flex-col justify-center relative">
+                  <div className="flex-1 flex flex-col justify-center relative -mt-4">
                     {/* Checkbox / Quote Area */}
                     <div className="relative my-6 p-6 border-l-2 border-[#AA8E4A]/40 bg-gradient-to-r from-[#AA8E4A]/5 to-transparent rounded-r-lg">
                       {userName && (
-                        <div className="absolute -top-[14px] right-6 inline-flex h-7 items-center justify-center bg-[#AA8E4A]/10 border border-[#AA8E4A]/20 px-3 rounded-full backdrop-blur-sm z-20">
-                          <span className="text-xs font-mono text-[#F3EAC2] tracking-[0.1em] pl-[0.1em] whitespace-nowrap">{userName}</span>
+                        <div className="absolute -top-[14px] right-2 inline-flex h-7 items-center justify-center bg-[#AA8E4A]/20 border border-[#AA8E4A]/30 px-3 rounded-full backdrop-blur-md z-20">
+                          <span
+                            className="text-[#F3EAC2] whitespace-nowrap"
+                            style={{
+                              fontSize: '11px',
+                              fontFamily: 'monospace',
+                              letterSpacing: '1px'
+                            }}
+                          >
+                            {userName}
+                          </span>
                         </div>
                       )}
                       <motion.button
