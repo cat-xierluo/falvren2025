@@ -114,7 +114,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       document.body.appendChild(container);
 
       // Wait longer for DOM layout and fonts
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const canvas = await html2canvas(container, {
         scale: exportScale,
@@ -286,13 +286,13 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 <div className="relative z-10 flex flex-col h-full p-8">
 
                   {/* Header */}
-                  <div className="text-center mb-8 w-full block">
-                    <div className="w-1 h-8 bg-gradient-to-b from-transparent via-[#AA8E4A] to-transparent opacity-50 mx-auto mb-4"></div>
-                    <div className="block w-full">
-                      <span className="text-[10px] font-mono tracking-[0.3em] text-[#AA8E4A]/80 uppercase pl-[0.3em] whitespace-nowrap inline-block leading-none">LEGAL ANNUAL REPORT</span>
+                  <div className="flex flex-col items-center w-full mb-10">
+                    <div className="w-[1.5px] h-8 bg-[#AA8E4A] opacity-40 mb-4"></div>
+                    <div className="text-[10px] font-mono text-[#AA8E4A] uppercase whitespace-nowrap leading-none" style={{ letterSpacing: '4px' }}>
+                      LEGAL ANNUAL REPORT
                     </div>
-                    <div className="block w-full mt-2">
-                      <span className="text-xs font-serif text-[#AA8E4A]/70 tracking-[0.1em] pl-[0.1em] whitespace-nowrap inline-block leading-none">法律人 2025 年度报告</span>
+                    <div className="text-xs font-serif text-[#AA8E4A]/80 whitespace-nowrap leading-none mt-2.5" style={{ letterSpacing: '1.5px' }}>
+                      法律人 2025 年度报告
                     </div>
                   </div>
 
