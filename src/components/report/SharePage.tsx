@@ -59,7 +59,7 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       // 目标分辨率: 720x1280 (HD 9:16)
       const baseWidth = 360;
       const baseHeight = 640;
-      const exportScale = 3;
+      const exportScale = 2;
       const exportWidth = baseWidth * exportScale;
       const exportHeight = baseHeight * exportScale;
 
@@ -115,8 +115,8 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
       container.appendChild(cardClone);
       document.body.appendChild(container);
 
-      // Wait longer for DOM layout and fonts - extremely important for serif fonts
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Wait for DOM layout and fonts
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const canvas = await html2canvas(container, {
         scale: exportScale,
@@ -288,39 +288,36 @@ export function SharePage({ conclusion: initialConclusion, narration, onNext }: 
                 <div id="share-card-content" className="relative z-10 flex flex-col h-full p-8 px-10">
 
                   {/* Header - Using ultra-stable block centering for html2canvas */}
-                  <div className="w-full mb-12" style={{ textAlign: 'center' }}>
-                    <div className="w-[2px] h-8 bg-[#AA8E4A] opacity-60 mx-auto mb-6"></div>
+                  <div className="w-full mb-16" style={{ textAlign: 'center' }}>
+                    <div className="w-[1px] h-8 bg-[#AA8E4A] opacity-40 mx-auto mb-6"></div>
 
-                    <div
+                    <h1
                       className="text-[#AA8E4A] uppercase whitespace-nowrap leading-none mb-3 font-bold"
                       style={{
-                        fontSize: '10px',
+                        fontSize: '11px',
                         fontFamily: 'monospace',
-                        letterSpacing: '4px',
-                        display: 'block',
-                        width: '100%'
+                        letterSpacing: '3px',
+                        display: 'block'
                       }}
                     >
                       LEGAL ANNUAL REPORT
-                    </div>
+                    </h1>
 
-                    <div
-                      className="text-[#AA8E4A] whitespace-nowrap leading-none font-medium"
+                    <p
+                      className="text-[#AA8E4A]/80 whitespace-nowrap leading-none font-medium"
                       style={{
-                        fontSize: '13px',
-                        fontFamily: '"Noto Serif SC", serif',
-                        letterSpacing: '1.5px',
-                        display: 'block',
-                        width: '100%',
-                        opacity: 0.9
+                        fontSize: '14px',
+                        fontFamily: 'serif',
+                        letterSpacing: '1px',
+                        display: 'block'
                       }}
                     >
                       法律人 2025 年度报告
-                    </div>
+                    </p>
                   </div>
 
                   {/* Main Content Area */}
-                  <div className="flex-1 flex flex-col justify-center relative -mt-4">
+                  <div className="flex-1 flex flex-col justify-center relative">
                     {/* Checkbox / Quote Area */}
                     <div className="relative my-6 p-6 border-l-2 border-[#AA8E4A]/40 bg-gradient-to-r from-[#AA8E4A]/5 to-transparent rounded-r-lg">
                       {userName && (
