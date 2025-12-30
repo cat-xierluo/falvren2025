@@ -345,7 +345,7 @@ export const sceneLibrary: Scene[] = [
     hasRandomNumber: true,
     numberRange: [500, 1500],
     numberSuffix: '',
-    subtext: '主要是帮当事人查',
+    subtext: '都是帮当事人查',
     soulText: '法院系统\n还是有用的',
     businessArea: 'non_litigation' // 非诉专属
   },

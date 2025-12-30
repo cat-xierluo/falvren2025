@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    strictPort: false, // 允许自动切换端口
+    strictPort: true, // 固定端口，如果被占用则报错
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {

@@ -33,7 +33,7 @@ export function ReportLayout({ children, currentPage, totalPages, onBack, canGoB
         {canGoBack && onBack && (
           <button
             onClick={onBack}
-            className="absolute top-3 left-3 sm:top-4 sm:left-4 z-50 flex items-center gap-1 px-2 py-1.5 text-muted-foreground hover:text-foreground text-xs transition-colors backdrop-blur-sm bg-background/20 rounded-full"
+            className="absolute top-3 left-3 sm:top-4 sm:left-4 z-[60] flex items-center gap-1 px-2 py-1.5 text-muted-foreground hover:text-foreground text-xs transition-colors backdrop-blur-sm bg-background/20 rounded-full"
           >
             <ChevronLeft className="w-4 h-4" />
             <span className="hidden sm:inline">返回</span>

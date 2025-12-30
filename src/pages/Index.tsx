@@ -120,6 +120,9 @@ const Index = () => {
     );
   };
 
+  // 最后一个页面（PromotePage）不显示返回按钮
+  const isLastPage = currentPage === totalPages - 1;
+
   return (
     <>
       <SaveButton
@@ -131,7 +134,7 @@ const Index = () => {
           currentPage={currentPage + 1}
           totalPages={totalPages}
           onBack={handleBack}
-          canGoBack={currentPage > 0}
+          canGoBack={currentPage > 0 && !isLastPage}
         >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -141,7 +144,7 @@ const Index = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              transition={{ duration: 0.4, ease: 'easeInOut' }}
               className="h-full"
             >
               {renderPage()}

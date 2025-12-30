@@ -49,24 +49,28 @@ export function StartPage({ onStart }: StartPageProps) {
         transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
         className="text-center max-w-xl relative z-10 w-full"
       >
-        {/* Year badge */}
+        {/* Year badge - 大而突出 */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="inline-block mb-6 sm:mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.8, type: "spring" }}
+          className="mb-8 sm:mb-10"
         >
-          <span className="font-mono text-xs sm:text-sm tracking-widest text-muted-foreground border border-border/50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm bg-background/20">
-            2025
-          </span>
+          <div className="inline-block relative">
+            <span className="font-mono text-7xl sm:text-8xl md:text-9xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-foreground via-foreground to-muted-foreground">
+              2025
+            </span>
+            {/* 装饰性光晕 */}
+            <div className="absolute inset-0 blur-3xl bg-primary/20 rounded-full -z-10" />
+          </div>
         </motion.div>
 
         {/* Main title */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight text-foreground mb-4 sm:mb-6"
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="text-xl sm:text-2xl md:text-3xl font-medium tracking-tight text-foreground mb-4 sm:mb-6"
         >
           法律人年度报告生成器
         </motion.h1>
